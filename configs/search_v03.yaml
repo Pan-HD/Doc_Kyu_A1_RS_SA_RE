@@ -1,0 +1,38 @@
+experiment:
+  method: RE
+  mode: formal
+  search_seed: 1001
+
+dataset:
+  name: CIFAR10
+  split_seed: 20260823
+  train_size: 20000
+  val_size: 5000
+  num_workers: 2
+
+training:
+  epochs: 5
+  batch_size: 128
+  optimizer: SGD
+  learning_rate: 0.05
+  momentum: 0.9
+  weight_decay: 0.0005
+  deterministic: true
+
+evolution:
+  population_size: 10
+  tournament_size: 3
+  budget: 60
+
+search_space:
+  num_conv_blocks: [2, 3, 4]
+  initial_channels: [16, 24, 32]
+  channel_multiplier: [1, 2]
+  kernel_size: [3, 5]
+  dropout: [0.0, 0.25, 0.5]
+  use_batchnorm: [false, true]
+  activation: [relu, gelu]
+  pooling: [max, avg]
+
+device:
+  use_cuda: true
