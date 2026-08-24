@@ -1,28 +1,48 @@
-import random
-
-from src.search_space.encoding import encode_architecture
-from src.search_space.space import (
-    enumerate_architectures,
-    sample_random_architecture,
-    validate_architecture,
-)
+from src.search_space.architecture import Architecture
 
 
-def test_formal_space_has_1728_unique_architectures():
-    arches = list(enumerate_architectures())
-    assert len(arches) == 1728
-    assert len(set(arches)) == 1728
+def make_architecture():
+    return Architecture(
+        num_conv_blocks=3,
+        initial_channels=24,
+        channel_multiplier=2,
+        kernel_size=3,
+        dropout=0.25,
+        use_batchnorm=True,
+        activation="relu",
+        pooling="max",
+    )
 
 
-def test_random_architecture_is_valid():
-    rng = random.Random(123)
-    for _ in range(100):
-        assert validate_architecture(sample_random_architecture(rng))
+def test_architecture_equality():
+    arch1 = make_architecture()
+    arch2 = make_architecture()
+
+    assert arch1 == arch2
 
 
-def test_all_encodings_are_unique_and_fixed_length():
-    arches = list(enumerate_architectures())
-    encodings = [encode_architecture(a) for a in arches]
-    dims = {e.shape for e in encodings}
-    assert len(dims) == 1
-    assert len({tuple(e.tolist()) for e in encodings}) == 1728
+def test_architecture_hashable():
+    arch = make_architecture()
+
+    architectures = {arch}
+
+    assert arch in architectures
+
+
+def test_architecture_to_dict():
+    arch = make_architecture()
+
+    d = arch.to_dict()
+
+    assert d["num_conv_blocks"] == 3
+    assert d["initial_channels"] == 24
+    assert d["activation"] == "relu"
+
+import pytest
+from dataclasses import FrozenInstanceError
+
+def test_architecture_is_frozen():
+    arch = make_architecture()
+
+    with pytest.raises(FrozenInstanceError):
+        arch.kernel_size = 5

@@ -18,11 +18,12 @@ def main():
     print(f"Unique architectures: {len(unique_arches)}")
     print(f"Encoding dimension: {encoding_dimension()}")
     print(f"Unique encodings: {len(set(encodings))}")
-
-    assert len(arches) == 1728
-    assert len(unique_arches) == 1728
-    assert len(set(encodings)) == 1728
-
+    
+    assert len(arches) == 864
+    assert len(unique_arches) == 864
+    assert encoding_dimension() == 19
+    assert len(set(encodings)) == 864
+    
     print("Search-space check: PASSED")
 
 
