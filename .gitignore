@@ -16,3 +16,4 @@ experiments/**/checkpoints/
 .vscode/
 
 .DS_Store
+data/cifar10/
