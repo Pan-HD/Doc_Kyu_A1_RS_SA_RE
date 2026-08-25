@@ -45,3 +45,38 @@ Do **not** describe this experiment as an exact full-scale reproduction of Real 
 ## Local archive note
 
 `google_re_regularized_evolution.ipynb` in this folder is a lightweight reference-pointer notebook linking to the official Google Research upstream notebook; use the upstream link when checking exact source code.
+
+
+
+## 2026-08-25 Tensor-Level Builder Decisions
+
+Cell mechanics:
+- Source: TensorFlow NASNet reference implementation.
+- Each cell contains exactly 5 pairwise combinations.
+- Pair outputs are combined by elementwise addition.
+- Unused hidden states are concatenated.
+
+Stride rule:
+- In a reduction cell, stride=2 is applied only when a branch
+  reads one of the two original cell inputs (state 0 or 1).
+- Branches reading states generated inside the same reduction cell
+  use stride=1.
+
+Current-input preprocessing:
+- ReLU
+- 1x1 Conv
+- BatchNorm
+
+Previous-input preprocessing:
+- factorized reduction when spatial size differs
+- 1x1 projection when only channel count differs
+
+BatchNorm for the PyTorch CIFAR implementation:
+- eps = 1e-5
+- momentum = 0.1
+
+Search-space operation names remain those frozen on 2026-08-24.
+
+Drop-path:
+- deferred until training-protocol freeze;
+- disabled in 2026-08-25 structural tests.
