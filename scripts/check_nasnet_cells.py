@@ -51,18 +51,52 @@ def _resolve_device(device_name: str) -> torch.device:
     return device
 
 
-def _expected_channels(gene, cell_channels: int) -> int:
+def _expected_channels(
+    gene,
+    cell_channels: int,
+) -> int:
     unused_indices = get_unused_states(gene)
 
     if not unused_indices:
-        raise AssertionError("cell has no unused generated state")
-    if not all(2 <= index <= 6 for index in unused_indices):
         raise AssertionError(
-            "get_unused_states() must return only generated states 2..6; "
+            "get_unused_states() returned no output states"
+        )
+
+    if not all(
+        index in range(7)
+        for index in unused_indices
+    ):
+        raise AssertionError(
+            "get_unused_states() must return hidden states in 0..6; "
             f"got {unused_indices}"
         )
 
-    return len(unused_indices) * cell_channels
+    used_states = {
+        branch.input_state
+        for pair in gene.pairs
+        for branch in (
+            pair.branch_1,
+            pair.branch_2,
+        )
+    }
+
+    expected_unused = tuple(
+        sorted(
+            set(range(7))
+            - used_states
+        )
+    )
+
+    if unused_indices != expected_unused:
+        raise AssertionError(
+            "get_unused_states() does not match all unconsumed states: "
+            f"expected {expected_unused}, got {unused_indices}"
+        )
+
+    return (
+        len(unused_indices)
+        * cell_channels
+    )
 
 
 def check_random_cells(

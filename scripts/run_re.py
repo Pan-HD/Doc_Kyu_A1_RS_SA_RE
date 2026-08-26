@@ -1,88 +1,121 @@
-from argparse import ArgumentParser
-from datetime import datetime
-from pathlib import Path
+"""Run the Part F NASNet + official RE debug experiment."""
+
+from __future__ import annotations
+
+import argparse
 import sys
+from pathlib import Path
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 
 import torch
+import yaml
 
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
-
-from src.data.cifar10 import build_cifar10_loaders
-from src.evolution.regularized_evolution import run_regularized_evolution
-from src.training.trainer import train_and_evaluate
-from src.utils.io import load_yaml
-from src.utils.logger import save_config_copy, save_search_history
+from src.data.nasnet_cifar10 import build_cifar10_search_loaders
+from src.search.nasnet_re import NASNetTrainingEvaluator, run_nasnet_re
 
 
-def main():
-    parser = ArgumentParser()
-    parser.add_argument("--config", required=True)
-    args = parser.parse_args()
-
-    config = load_yaml(args.config)
-
-    use_cuda = config.get("device", {}).get("use_cuda", True)
-    device = torch.device(
-        "cuda" if use_cuda and torch.cuda.is_available() else "cpu"
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Run NASNet regularized-evolution debug search."
     )
-    print("Device:", device)
-
-    ds_cfg = config["dataset"]
-    tr_cfg = config["training"]
-    ev_cfg = config["evolution"]
-    exp_cfg = config["experiment"]
-
-    train_loader, val_loader, _ = build_cifar10_loaders(
-        data_root=ROOT / "data" / "raw",
-        split_dir=ROOT / "data" / "splits",
-        train_size=ds_cfg["train_size"],
-        val_size=ds_cfg["val_size"],
-        split_seed=ds_cfg["split_seed"],
-        batch_size=tr_cfg["batch_size"],
-        num_workers=ds_cfg.get("num_workers", 2),
-        pin_memory=(device.type == "cuda"),
+    parser.add_argument(
+        "--config",
+        type=Path,
+        default=Path("configs/nasnet_re_debug.yaml"),
     )
+    return parser.parse_args()
 
-    def evaluate_fn(architecture, training_seed):
-        return train_and_evaluate(
-            architecture=architecture,
-            training_seed=training_seed,
-            epochs=tr_cfg["epochs"],
-            train_loader=train_loader,
-            val_loader=val_loader,
-            device=device,
-            learning_rate=tr_cfg["learning_rate"],
-            momentum=tr_cfg["momentum"],
-            weight_decay=tr_cfg["weight_decay"],
-            deterministic=tr_cfg.get("deterministic", True),
+
+def load_config(path: Path) -> tuple[dict, str]:
+    config_text = path.read_text(encoding="utf-8")
+    config = yaml.safe_load(config_text)
+    if not isinstance(config, dict):
+        raise ValueError("RE configuration must be a YAML mapping")
+    return config, config_text
+
+
+def _select_device(device_config: dict) -> torch.device:
+    use_cuda = bool(device_config.get("use_cuda", True))
+    if use_cuda:
+        if not torch.cuda.is_available():
+            raise RuntimeError(
+                "device.use_cuda=true, but CUDA is unavailable"
+            )
+        cuda_index = int(device_config.get("cuda_index", 0))
+        return torch.device(f"cuda:{cuda_index}")
+    return torch.device("cpu")
+
+
+def main() -> None:
+    args = parse_args()
+    config, config_text = load_config(args.config)
+
+    experiment = config["experiment"]
+    dataset = config["dataset"]
+    network = config["network"]
+    training = dict(config["training"])
+    evolution = config["evolution"]
+    device = _select_device(config.get("device", {}))
+
+    if str(dataset.get("name", "")).upper() != "CIFAR10":
+        raise ValueError("Part F supports only dataset.name=CIFAR10")
+    if int(dataset["split_seed"]) != 20_260_823:
+        raise ValueError("Part F requires split_seed=20260823")
+    if int(dataset["train_size"]) != 45_000:
+        raise ValueError("Part F requires train_size=45000")
+    if int(dataset["val_size"]) != 5_000:
+        raise ValueError("Part F requires val_size=5000")
+
+    training_seed_base = int(training.pop("training_seed_base"))
+    training.pop("training_seed", None)
+    batch_size = int(training.get("batch_size", 128))
+
+    def loader_factory(training_seed: int):
+        loaders = build_cifar10_search_loaders(
+            data_root=dataset["data_root"],
+            split_dir=dataset["split_dir"],
+            batch_size=batch_size,
+            num_workers=int(dataset.get("num_workers", 0)),
+            pin_memory=bool(dataset.get("pin_memory", True)),
+            download=bool(dataset.get("download", False)),
+            augment_train=bool(dataset.get("augment_train", True)),
+            loader_seed=training_seed,
         )
+        # official_test_loader is deliberately not returned or used by search.
+        return loaders.train_loader, loaders.val_loader
 
-    _, history = run_regularized_evolution(
-        evaluate_fn=evaluate_fn,
-        population_size=ev_cfg["population_size"],
-        tournament_size=ev_cfg["tournament_size"],
-        budget=ev_cfg["budget"],
-        search_seed=exp_cfg["search_seed"],
+    evaluator = NASNetTrainingEvaluator(
+        loader_factory=loader_factory,
+        training_config_values=training,
+        training_seed_base=training_seed_base,
+        device=device,
+        N=int(network["N"]),
+        F=int(network["F"]),
+        num_classes=int(network.get("num_classes", 10)),
     )
 
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_dir = ROOT / "experiments" / exp_cfg["mode"] / f"re_{timestamp}"
-
-    save_config_copy(config, out_dir)
-    save_search_history(
-        history,
-        out_dir,
-        metadata={
-            "method": "RE",
-            "search_seed": exp_cfg["search_seed"],
-        },
+    result = run_nasnet_re(
+        evaluator=evaluator,
+        output_dir=experiment["output_dir"],
+        config_text=config_text,
+        method=experiment["method"],
+        search_seed=int(experiment["search_seed"]),
+        population_size=int(evolution["population_size"]),
+        tournament_size=int(evolution["tournament_size"]),
+        budget=int(evolution["budget"]),
+        overwrite=bool(experiment.get("overwrite", False)),
     )
 
-    best = max(history, key=lambda r: r.validation_accuracy)
-    print(f"RE search completed. Budget = {len(history)}")
-    print(f"Best validation accuracy = {best.validation_accuracy:.3f}%")
-    print(f"Results saved to: {out_dir}")
+    print(f"output directory: {result.output_dir}")
+    print(f"evaluations: {result.real_training_runs}")
+    print(f"best fitness: {result.best_fitness:.6f}")
+    print(f"evaluations CSV: {result.evaluations_csv_path}")
+    print(f"history JSON: {result.history_json_path}")
 
 
 if __name__ == "__main__":

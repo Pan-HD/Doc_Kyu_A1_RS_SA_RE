@@ -1,11 +1,12 @@
 """Structural tests for the generic PyTorch NASNet cell.
 
-These tests cover the 2026-08-25 definition of done:
+These tests cover the 2026-08-26 definition of done:
 
 * current/previous input projection;
 * factorized reduction for a spatially mismatched previous input;
 * Normal Cell shape and variable output-channel count;
 * Reduction Cell one-time spatial reduction;
+* alignment of unused original states 0/1 before output concatenation;
 * cell output metadata; and
 * 100 deterministic random Normal/Reduction architecture forwards.
 
@@ -15,6 +16,7 @@ Drop-path and training behavior are intentionally outside this test module.
 from __future__ import annotations
 
 import random
+from dataclasses import replace
 
 import pytest
 import torch
@@ -38,12 +40,37 @@ def _assert_finite(tensor: torch.Tensor) -> None:
 
 
 def _expected_output_channels(gene, cell_channels: int) -> int:
-    """Derive the concat channel count from unused generated states."""
+    """Derive concat channels from every unused hidden state in 0..6."""
 
     unused_indices = get_unused_states(gene)
     assert len(unused_indices) >= 1
-    assert all(2 <= index <= 6 for index in unused_indices)
+    assert all(index in range(7) for index in unused_indices)
     return len(unused_indices) * cell_channels
+
+
+def _replace_input_state(gene, old_state: int, new_state: int):
+    """Return a frozen CellGene with one input-state value replaced."""
+
+    pairs = []
+
+    for pair in gene.pairs:
+        branch_1 = pair.branch_1
+        branch_2 = pair.branch_2
+
+        if branch_1.input_state == old_state:
+            branch_1 = replace(branch_1, input_state=new_state)
+        if branch_2.input_state == old_state:
+            branch_2 = replace(branch_2, input_state=new_state)
+
+        pairs.append(
+            replace(
+                pair,
+                branch_1=branch_1,
+                branch_2=branch_2,
+            )
+        )
+
+    return replace(gene, pairs=tuple(pairs))
 
 
 def test_projection_changes_channels_without_resizing() -> None:
@@ -124,6 +151,65 @@ def test_normal_cell_preserves_spatial_size_and_concatenates_unused_states(
     _assert_finite(y)
 
 
+@pytest.mark.parametrize(
+    ("unused_state", "replacement_state"),
+    ((0, 1), (1, 0)),
+)
+def test_normal_cell_concatenates_unused_original_state(
+    unused_state: int,
+    replacement_state: int,
+) -> None:
+    """A Normal Cell can directly concatenate unused state 0 or state 1."""
+
+    rng = random.Random(SEED)
+    gene = _replace_input_state(
+        random_architecture(rng).normal,
+        old_state=unused_state,
+        new_state=replacement_state,
+    )
+    unused_indices = get_unused_states(gene)
+
+    assert unused_state in unused_indices
+
+    cell = NASNetCell(
+        gene=gene,
+        prev_channels=BASE_CHANNELS,
+        curr_channels=BASE_CHANNELS,
+        cell_channels=BASE_CHANNELS,
+        reduction=False,
+    )
+    cell.eval()
+
+    s0 = torch.randn(
+        BATCH_SIZE,
+        BASE_CHANNELS,
+        INPUT_SIZE,
+        INPUT_SIZE,
+    )
+    s1 = torch.randn_like(s0)
+
+    with torch.no_grad():
+        y = cell(s0, s1)
+
+    expected_channels = len(unused_indices) * BASE_CHANNELS
+
+    assert y.shape == (
+        BATCH_SIZE,
+        expected_channels,
+        INPUT_SIZE,
+        INPUT_SIZE,
+    )
+    assert cell.output_multiplier == len(unused_indices)
+    assert cell.output_channels == expected_channels
+
+    alignment_index = unused_indices.index(unused_state)
+    assert isinstance(
+        cell.output_alignments[alignment_index],
+        torch.nn.Identity,
+    )
+    _assert_finite(y)
+
+
 def test_reduction_cell_halves_spatial_size_once() -> None:
     rng = random.Random(SEED)
     arch = random_architecture(rng)
@@ -164,6 +250,65 @@ def test_reduction_cell_halves_spatial_size_once() -> None:
     _assert_finite(y)
 
 
+@pytest.mark.parametrize(
+    ("unused_state", "replacement_state"),
+    ((0, 1), (1, 0)),
+)
+def test_reduction_cell_aligns_unused_original_state(
+    unused_state: int,
+    replacement_state: int,
+) -> None:
+    """An unused original state is reduced before Reduction Cell concat."""
+
+    rng = random.Random(SEED)
+    gene = _replace_input_state(
+        random_architecture(rng).reduction,
+        old_state=unused_state,
+        new_state=replacement_state,
+    )
+    unused_indices = get_unused_states(gene)
+
+    assert unused_state in unused_indices
+
+    cell = NASNetCell(
+        gene=gene,
+        prev_channels=BASE_CHANNELS,
+        curr_channels=BASE_CHANNELS,
+        cell_channels=REDUCTION_CHANNELS,
+        reduction=True,
+    )
+    cell.eval()
+
+    s0 = torch.randn(
+        BATCH_SIZE,
+        BASE_CHANNELS,
+        INPUT_SIZE,
+        INPUT_SIZE,
+    )
+    s1 = torch.randn_like(s0)
+
+    with torch.no_grad():
+        y = cell(s0, s1)
+
+    expected_channels = len(unused_indices) * REDUCTION_CHANNELS
+
+    assert y.shape == (
+        BATCH_SIZE,
+        expected_channels,
+        INPUT_SIZE // 2,
+        INPUT_SIZE // 2,
+    )
+    assert cell.output_multiplier == len(unused_indices)
+    assert cell.output_channels == expected_channels
+
+    alignment_index = unused_indices.index(unused_state)
+    assert isinstance(
+        cell.output_alignments[alignment_index],
+        FactorizedReduction,
+    )
+    _assert_finite(y)
+
+
 def test_normal_cell_after_reduction_preprocesses_both_inputs() -> None:
     """Model s0=32x32 and s1=16x16 entering a post-reduction Normal Cell."""
 
@@ -199,7 +344,7 @@ def test_cell_rejects_a_gene_without_exactly_five_pairs() -> None:
     rng = random.Random(SEED)
     arch = random_architecture(rng)
 
-    # Rebuild the same genotype type with one pair removed.  This works for
+    # Rebuild the same genotype type with one pair removed. This works for
     # the frozen dataclass-style CellGene without coupling the test to its
     # concrete class name or import path.
     invalid_gene = type(arch.normal)(pairs=arch.normal.pairs[:-1])

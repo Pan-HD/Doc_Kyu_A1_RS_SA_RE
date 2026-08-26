@@ -1,0 +1,44 @@
+experiment:
+  name: benchmark_20260826
+  output_dir: experiments/benchmark_20260826
+  architecture_seed: 20260826
+  architecture_count: 5
+
+dataset:
+  name: CIFAR10
+  data_root: data/cifar10
+  split_dir: data/splits/nasnet_v041
+  split_seed: 20260823
+  train_size: 45000
+  val_size: 5000
+  official_test_size: 10000
+  download: true
+  augment_train: true
+  num_workers: 4
+  pin_memory: true
+
+network:
+  N: 3
+  F: 24
+  num_classes: 10
+
+training:
+  epochs: 5
+  batch_size: 128
+  optimizer: SGD
+  learning_rate: 0.025
+  momentum: 0.9
+  weight_decay: 0.0005
+  scheduler: cosine
+  gradient_clip_norm: 5.0
+  amp: true
+  training_seed: 20260826
+  drop_path: false
+  auxiliary_head: false
+  torch_compile: false
+
+benchmark:
+  early_stop_after: 3
+  early_stop_t5_minutes: 15
+
+device: cuda

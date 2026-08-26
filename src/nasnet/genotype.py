@@ -201,30 +201,26 @@ def random_architecture(
 def get_unused_states(
     cell: CellGene
 ):
-
-    generated_states = set(
-        range(2, 7)
+    all_states = set(
+        range(7)
     )
 
     used_states = set()
 
     for pair in cell.pairs:
-
         used_states.add(
             pair.branch_1.input_state
         )
-
         used_states.add(
             pair.branch_2.input_state
         )
 
-    unused = sorted(
-        generated_states
-        -
-        used_states
+    return tuple(
+        sorted(
+            all_states
+            - used_states
+        )
     )
-
-    return tuple(unused)
 
 def test_cell_has_output_states():
 

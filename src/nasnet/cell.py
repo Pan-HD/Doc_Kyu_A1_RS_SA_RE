@@ -1,12 +1,13 @@
 """Generic PyTorch NASNet cell implementation.
 
-This module implements the tensor-level cell mechanics frozen in
-``Tasks_0825.md``:
+This module implements the tensor-level cell mechanics used by the NASNet
+baseline:
 
 * preprocessing for the two original cell inputs;
 * five pairwise combinations with elementwise addition;
 * reduction-cell stride handling for original inputs only; and
-* concatenation of unused generated states along the NCHW channel axis.
+* alignment and concatenation of every unused hidden state along the NCHW
+  channel axis.
 
 The eight searchable branch operations are intentionally implemented in
 ``operations.py`` and are constructed here through ``build_operation``.
@@ -24,11 +25,11 @@ from .operations import build_operation, make_bn
 class FactorizedReduction(nn.Module):
     """Reduce spatial resolution by two while projecting channel count.
 
-    Two offset paths sample complementary spatial grids.  Each path produces
+    Two offset paths sample complementary spatial grids. Each path produces
     part of ``out_channels``; their outputs are concatenated and normalized.
 
     Expected NASNet usage has even spatial dimensions (for example,
-    32 x 32 -> 16 x 16).  The small crop in ``forward`` also keeps both paths
+    32 x 32 -> 16 x 16). The small crop in ``forward`` also keeps both paths
     compatible if an odd spatial size is encountered.
     """
 
@@ -73,7 +74,7 @@ class FactorizedReduction(nn.Module):
         # samples every second pixel.
         path2 = self.path2_conv(x[:, :, 1::2, 1::2])
 
-        # NASNet's intended input sizes are even.  Cropping makes the module
+        # NASNet's intended input sizes are even. Cropping makes the module
         # well-defined for an accidental odd input without interpolation.
         if path1.shape[2:] != path2.shape[2:]:
             height = min(path1.shape[2], path2.shape[2])
@@ -172,7 +173,7 @@ class NASNetCell(nn.Module):
 
         # Each of the five pairs owns two independent branch operations.
         # In a reduction cell, stride=2 applies only to branches reading one
-        # of the two original inputs (state 0 or state 1).  Generated states
+        # of the two original inputs (state 0 or state 1). Generated states
         # have already been reduced and therefore always use stride=1.
         self.branch_ops = nn.ModuleList()
         for pair in gene.pairs:
@@ -187,15 +188,39 @@ class NASNetCell(nn.Module):
                     )
                 )
 
+        # NASNet concatenates every hidden state that is not consumed by a
+        # later pair. This includes original states 0 and 1 when they remain
+        # unused; it is not restricted to generated states 2..6.
         self.unused_indices = tuple(get_unused_states(gene))
         if not self.unused_indices:
             raise ValueError("a NASNet cell must have at least one unused state")
+
+        # State 6 (the output of the fifth pair) is always unused because no
+        # later pair can consume it. It therefore defines the target spatial
+        # resolution and channel count for cell-output concatenation.
+        #
+        # All states in this implementation already have ``cell_channels``.
+        # In a reduction cell, however, an unused original input (state 0 or
+        # state 1) is still at the pre-reduction resolution and must be reduced
+        # before concatenation. Register these trainable alignment modules in
+        # __init__ so their parameters are visible to state_dict/optimizers.
+        self.output_alignments = nn.ModuleList()
+        for state_index in self.unused_indices:
+            needs_spatial_reduction = reduction and state_index < 2
+            if needs_spatial_reduction:
+                alignment: nn.Module = FactorizedReduction(
+                    cell_channels,
+                    cell_channels,
+                )
+            else:
+                alignment = nn.Identity()
+            self.output_alignments.append(alignment)
 
         self.output_multiplier = len(self.unused_indices)
         self.output_channels = self.output_multiplier * cell_channels
 
     def forward(self, s0: torch.Tensor, s1: torch.Tensor) -> torch.Tensor:
-        """Execute preprocessing, five pair additions, and output concat."""
+        """Execute preprocessing, five pair additions, and aligned concat."""
 
         s0 = self.preprocess_prev(s0)
         s1 = self.preprocess_curr(s1)
@@ -249,17 +274,40 @@ class NASNetCell(nn.Module):
                     f"unused state index {index} is outside 0..{max_state_index}"
                 )
 
-        outputs = [states[index] for index in self.unused_indices]
-        output_shapes = {tuple(tensor.shape[2:]) for tensor in outputs}
-        if len(output_shapes) != 1:
-            raise RuntimeError(
-                "unused states cannot be concatenated because their spatial "
-                f"shapes differ: {sorted(output_shapes)}"
-            )
+        target = states[-1]
+        outputs = []
+        for state_index, alignment in zip(
+            self.unused_indices,
+            self.output_alignments,
+        ):
+            aligned = alignment(states[state_index])
+
+            if aligned.shape[0] != target.shape[0]:
+                raise RuntimeError(
+                    f"unused state {state_index} has batch size "
+                    f"{aligned.shape[0]}, expected {target.shape[0]}"
+                )
+            if aligned.shape[1] != target.shape[1]:
+                raise RuntimeError(
+                    f"unused state {state_index} has {aligned.shape[1]} "
+                    f"channels after alignment, expected {target.shape[1]}"
+                )
+            if aligned.shape[2:] != target.shape[2:]:
+                raise RuntimeError(
+                    f"unused state {state_index} has spatial shape "
+                    f"{tuple(aligned.shape[2:])} after alignment, expected "
+                    f"{tuple(target.shape[2:])}"
+                )
+
+            outputs.append(aligned)
 
         out = torch.cat(outputs, dim=1)
 
-        assert out.shape[1] == self.output_channels
+        if out.shape[1] != self.output_channels:
+            raise RuntimeError(
+                f"cell produced {out.shape[1]} output channels, expected "
+                f"{self.output_channels}"
+            )
         return out
 
 

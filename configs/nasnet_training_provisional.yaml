@@ -1,0 +1,44 @@
+dataset:
+  name: CIFAR10
+  data_root: data/cifar10
+  split_dir: data/splits/nasnet_v041
+  split_seed: 20260823
+  train_size: 45000
+  val_size: 5000
+  official_test_size: 10000
+  download: true
+  augment_train: true
+  num_workers: 4
+  pin_memory: true
+
+network:
+  N: 3
+  F: 24
+  num_classes: 10
+  stem_multiplier: 3
+
+training:
+  epochs: 5
+  batch_size: 128
+  optimizer: SGD
+  learning_rate: 0.025
+  momentum: 0.9
+  weight_decay: 0.0005
+  scheduler: cosine
+  gradient_clip_norm: 5.0
+  amp: true
+  training_seed: 20260826
+  drop_path: false
+  auxiliary_head: false
+  torch_compile: false
+
+fitness:
+  metric: final_val_accuracy
+  use_official_test: false
+
+fidelity_notes:
+  reference_validation_holdout: 5000
+  reference_search_epochs: 25
+  current_epochs: 5
+  current_protocol: reduced_budget_provisional
+  input_preprocessing: standard_cifar_normalization_basic_crop_flip
