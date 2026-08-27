@@ -1,4 +1,4 @@
-"""Run the Part F NASNet + official RE debug experiment."""
+"""Run a NASNet + official regularized-evolution experiment."""
 
 from __future__ import annotations
 
@@ -21,12 +21,18 @@ from src.search.nasnet_re import NASNetTrainingEvaluator, run_nasnet_re
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run NASNet regularized-evolution debug search."
+        description="Run NASNet regularized-evolution search."
     )
     parser.add_argument(
         "--config",
         type=Path,
         default=Path("configs/nasnet_re_debug.yaml"),
+    )
+    parser.add_argument(
+        "--search-seed",
+        type=int,
+        default=None,
+        help="Override experiment.search_seed from the YAML config.",
     )
     return parser.parse_args()
 
@@ -53,9 +59,32 @@ def _select_device(device_config: dict) -> torch.device:
 
 def main() -> None:
     args = parse_args()
-    config, config_text = load_config(args.config)
+    config, _original_config_text = load_config(args.config)
 
     experiment = config["experiment"]
+    search_seed = (
+        int(experiment["search_seed"])
+        if args.search_seed is None
+        else int(args.search_seed)
+    )
+    if search_seed < 0:
+        raise ValueError("search_seed must be non-negative")
+
+    output_dir_template = str(experiment["output_dir"])
+    output_dir = output_dir_template.replace(
+        "{search_seed}",
+        str(search_seed),
+    )
+
+    # Persist the effective CLI-resolved values, not the template defaults.
+    experiment["search_seed"] = search_seed
+    experiment["output_dir"] = output_dir
+    resolved_config_text = yaml.safe_dump(
+        config,
+        sort_keys=False,
+        allow_unicode=True,
+    )
+
     dataset = config["dataset"]
     network = config["network"]
     training = dict(config["training"])
@@ -101,10 +130,10 @@ def main() -> None:
 
     result = run_nasnet_re(
         evaluator=evaluator,
-        output_dir=experiment["output_dir"],
-        config_text=config_text,
+        output_dir=output_dir,
+        config_text=resolved_config_text,
         method=experiment["method"],
-        search_seed=int(experiment["search_seed"]),
+        search_seed=search_seed,
         population_size=int(evolution["population_size"]),
         tournament_size=int(evolution["tournament_size"]),
         budget=int(evolution["budget"]),

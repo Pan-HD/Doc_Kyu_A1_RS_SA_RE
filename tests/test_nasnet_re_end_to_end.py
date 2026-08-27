@@ -180,6 +180,9 @@ class NASNetREEndToEndTests(unittest.TestCase):
                 [int(row["evaluation_index"]) for row in csv_rows],
                 list(range(1, 9)),
             )
+            self.assertTrue(
+                all(int(row["budget"]) == 8 for row in csv_rows)
+            )
             self.assertEqual(
                 [row["phase"] for row in csv_rows],
                 ["initialization"] * 4 + ["evolution"] * 4,

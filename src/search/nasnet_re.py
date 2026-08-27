@@ -35,6 +35,7 @@ CSV_FIELDS = (
     "search_seed",
     "training_seed",
     "evaluation_index",
+    "budget",
     "phase",
     "architecture",
     "parent_architecture",
@@ -476,6 +477,7 @@ def run_nasnet_re(
             "search_seed": search_seed,
             "training_seed": int(individual.metadata["training_seed"]),
             "evaluation_index": evaluation_index,
+            "budget": budget,
             "phase": progress.phase,
             "architecture": _architecture_to_dict(
                 individual.architecture
