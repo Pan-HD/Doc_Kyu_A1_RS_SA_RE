@@ -1,0 +1,1704 @@
+===== scripts\run_re.py =====
+"""Run the Part F NASNet + official RE debug experiment."""
+
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+
+import torch
+import yaml
+
+from src.data.nasnet_cifar10 import build_cifar10_search_loaders
+from src.search.nasnet_re import NASNetTrainingEvaluator, run_nasnet_re
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Run NASNet regularized-evolution debug search."
+    )
+    parser.add_argument(
+        "--config",
+        type=Path,
+        default=Path("configs/nasnet_re_debug.yaml"),
+    )
+    return parser.parse_args()
+
+
+def load_config(path: Path) -> tuple[dict, str]:
+    config_text = path.read_text(encoding="utf-8")
+    config = yaml.safe_load(config_text)
+    if not isinstance(config, dict):
+        raise ValueError("RE configuration must be a YAML mapping")
+    return config, config_text
+
+
+def _select_device(device_config: dict) -> torch.device:
+    use_cuda = bool(device_config.get("use_cuda", True))
+    if use_cuda:
+        if not torch.cuda.is_available():
+            raise RuntimeError(
+                "device.use_cuda=true, but CUDA is unavailable"
+            )
+        cuda_index = int(device_config.get("cuda_index", 0))
+        return torch.device(f"cuda:{cuda_index}")
+    return torch.device("cpu")
+
+
+def main() -> None:
+    args = parse_args()
+    config, config_text = load_config(args.config)
+
+    experiment = config["experiment"]
+    dataset = config["dataset"]
+    network = config["network"]
+    training = dict(config["training"])
+    evolution = config["evolution"]
+    device = _select_device(config.get("device", {}))
+
+    if str(dataset.get("name", "")).upper() != "CIFAR10":
+        raise ValueError("Part F supports only dataset.name=CIFAR10")
+    if int(dataset["split_seed"]) != 20_260_823:
+        raise ValueError("Part F requires split_seed=20260823")
+    if int(dataset["train_size"]) != 45_000:
+        raise ValueError("Part F requires train_size=45000")
+    if int(dataset["val_size"]) != 5_000:
+        raise ValueError("Part F requires val_size=5000")
+
+    training_seed_base = int(training.pop("training_seed_base"))
+    training.pop("training_seed", None)
+    batch_size = int(training.get("batch_size", 128))
+
+    def loader_factory(training_seed: int):
+        loaders = build_cifar10_search_loaders(
+            data_root=dataset["data_root"],
+            split_dir=dataset["split_dir"],
+            batch_size=batch_size,
+            num_workers=int(dataset.get("num_workers", 0)),
+            pin_memory=bool(dataset.get("pin_memory", True)),
+            download=bool(dataset.get("download", False)),
+            augment_train=bool(dataset.get("augment_train", True)),
+            loader_seed=training_seed,
+        )
+        # official_test_loader is deliberately not returned or used by search.
+        return loaders.train_loader, loaders.val_loader
+
+    evaluator = NASNetTrainingEvaluator(
+        loader_factory=loader_factory,
+        training_config_values=training,
+        training_seed_base=training_seed_base,
+        device=device,
+        N=int(network["N"]),
+        F=int(network["F"]),
+        num_classes=int(network.get("num_classes", 10)),
+    )
+
+    result = run_nasnet_re(
+        evaluator=evaluator,
+        output_dir=experiment["output_dir"],
+        config_text=config_text,
+        method=experiment["method"],
+        search_seed=int(experiment["search_seed"]),
+        population_size=int(evolution["population_size"]),
+        tournament_size=int(evolution["tournament_size"]),
+        budget=int(evolution["budget"]),
+        overwrite=bool(experiment.get("overwrite", False)),
+    )
+
+    print(f"output directory: {result.output_dir}")
+    print(f"evaluations: {result.real_training_runs}")
+    print(f"best fitness: {result.best_fitness:.6f}")
+    print(f"evaluations CSV: {result.evaluations_csv_path}")
+    print(f"history JSON: {result.history_json_path}")
+
+
+if __name__ == "__main__":
+    main()
+
+===== configs\nasnet_re_debug.yaml =====
+experiment:
+  name: nasnet_re_20260826
+  method: RE
+  search_seed: 1001
+  output_dir: experiments/debug/nasnet_re_20260826
+  overwrite: false
+
+dataset:
+  name: CIFAR10
+  data_root: data/cifar10
+  split_dir: data/splits/nasnet_v041
+  split_seed: 20260823
+  train_size: 45000
+  val_size: 5000
+  official_test_size: 10000
+  download: true
+  augment_train: true
+  num_workers: 4
+  pin_memory: true
+
+network:
+  N: 3
+  F: 24
+  num_classes: 10
+
+training:
+  epochs: 1
+  batch_size: 128
+  optimizer: SGD
+  learning_rate: 0.025
+  momentum: 0.9
+  weight_decay: 0.0005
+  scheduler: cosine
+  gradient_clip_norm: 5.0
+  amp: true
+  training_seed_base: 20260826
+  drop_path: false
+  auxiliary_head: false
+  torch_compile: false
+
+evolution:
+  population_size: 4
+  tournament_size: 2
+  budget: 8
+
+device:
+  use_cuda: true
+  cuda_index: 0
+
+===== src\search\regularized_evolution.py =====
+"""Official regularized-evolution control flow from Real et al.
+
+The algorithm is domain-independent: architecture creation, mutation, and
+training/evaluation are injected as callables. This Part F version preserves
+all Part E behavior while adding optional evaluation metadata and progress
+callbacks for real NASNet experiment logging.
+
+Fidelity properties:
+
+* the live population is a FIFO :class:`collections.deque`;
+* tournament members are sampled uniformly *with replacement*;
+* exactly one mutation is performed per post-initialization evaluation;
+* duplicate architectures, including identity mutations, are evaluated again;
+* a child is appended on the right and the oldest member is removed on the
+  left; and
+* the budget counts initialization and child evaluations exactly once.
+"""
+
+from __future__ import annotations
+
+import math
+import random
+from collections import deque
+from dataclasses import dataclass, field
+from typing import Any, Callable, Generic, Mapping, Protocol, Sequence, TypeVar
+
+
+ArchitectureT = TypeVar("ArchitectureT")
+RANDOM_INITIALIZATION = "random_initialization"
+INITIALIZATION_PHASE = "initialization"
+EVOLUTION_PHASE = "evolution"
+
+
+class MutationResultLike(Protocol[ArchitectureT]):
+    """Structural interface satisfied by NASNet ``MutationResult``."""
+
+    architecture: ArchitectureT
+    mutation_type: str
+
+
+@dataclass(frozen=True)
+class EvaluationOutcome:
+    """Scalar search fitness plus JSON-compatible diagnostic metadata."""
+
+    fitness: float
+    metadata: Mapping[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        if not isinstance(self.metadata, Mapping):
+            raise TypeError("evaluation metadata must be a mapping")
+        object.__setattr__(self, "metadata", dict(self.metadata))
+
+
+@dataclass(frozen=True)
+class EvaluatedIndividual(Generic[ArchitectureT]):
+    """One independently evaluated architecture in search history."""
+
+    architecture: ArchitectureT
+    fitness: float
+    evaluation_id: int
+    mutation_type: str
+    parent_evaluation_id: int | None = None
+    metadata: Mapping[str, Any] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class EvolutionProgress(Generic[ArchitectureT]):
+    """Immutable state snapshot emitted after each successful evaluation."""
+
+    phase: str
+    individual: EvaluatedIndividual[ArchitectureT]
+    population: tuple[EvaluatedIndividual[ArchitectureT], ...]
+    history_length: int
+
+
+@dataclass(frozen=True)
+class EvolutionResult(Generic[ArchitectureT]):
+    """Final FIFO population and every evaluation event."""
+
+    population: deque[EvaluatedIndividual[ArchitectureT]]
+    history: tuple[EvaluatedIndividual[ArchitectureT], ...]
+
+    @property
+    def evaluation_count(self) -> int:
+        return len(self.history)
+
+    @property
+    def best_individual(self) -> EvaluatedIndividual[ArchitectureT]:
+        if not self.history:
+            raise RuntimeError("evolution result has an empty history")
+        return max(self.history, key=lambda individual: individual.fitness)
+
+
+def sample_tournament(
+    population: Sequence[EvaluatedIndividual[ArchitectureT]]
+    | deque[EvaluatedIndividual[ArchitectureT]],
+    sample_size: int,
+    rng: random.Random,
+) -> tuple[EvaluatedIndividual[ArchitectureT], ...]:
+    """Uniformly sample a tournament with replacement."""
+
+    if sample_size <= 0:
+        raise ValueError("sample_size must be positive")
+
+    members = list(population)
+    if not members:
+        raise ValueError("cannot sample from an empty population")
+
+    return tuple(
+        rng.choice(members)
+        for _ in range(sample_size)
+    )
+
+
+def tournament_select(
+    population: Sequence[EvaluatedIndividual[ArchitectureT]]
+    | deque[EvaluatedIndividual[ArchitectureT]],
+    sample_size: int,
+    rng: random.Random,
+) -> EvaluatedIndividual[ArchitectureT]:
+    """Return the highest-fitness sampled individual."""
+
+    sample = sample_tournament(
+        population=population,
+        sample_size=sample_size,
+        rng=rng,
+    )
+    return max(sample, key=lambda individual: individual.fitness)
+
+
+def _normalize_evaluation(
+    architecture: ArchitectureT,
+    evaluate_fn: Callable[
+        [ArchitectureT],
+        float | EvaluationOutcome,
+    ],
+) -> EvaluationOutcome:
+    # There is deliberately no cache or duplicate-genotype check here.
+    raw_outcome = evaluate_fn(architecture)
+    if isinstance(raw_outcome, EvaluationOutcome):
+        raw_fitness = raw_outcome.fitness
+        metadata = dict(raw_outcome.metadata)
+    else:
+        raw_fitness = raw_outcome
+        metadata = {}
+
+    try:
+        fitness = float(raw_fitness)
+    except (TypeError, ValueError) as error:
+        raise TypeError("evaluate_fn must return a scalar fitness") from error
+
+    if not math.isfinite(fitness):
+        raise ValueError("evaluate_fn returned a non-finite fitness")
+    return EvaluationOutcome(fitness=fitness, metadata=metadata)
+
+
+def _emit_progress(
+    *,
+    phase: str,
+    individual: EvaluatedIndividual[ArchitectureT],
+    population: deque[EvaluatedIndividual[ArchitectureT]],
+    history_length: int,
+    progress_fn: Callable[[EvolutionProgress[ArchitectureT]], None] | None,
+) -> None:
+    if progress_fn is None:
+        return
+    progress_fn(
+        EvolutionProgress(
+            phase=phase,
+            individual=individual,
+            population=tuple(population),
+            history_length=history_length,
+        )
+    )
+
+
+def regularized_evolution(
+    *,
+    random_architecture_fn: Callable[[random.Random], ArchitectureT],
+    mutate_fn: Callable[
+        [ArchitectureT, random.Random],
+        MutationResultLike[ArchitectureT],
+    ],
+    evaluate_fn: Callable[
+        [ArchitectureT],
+        float | EvaluationOutcome,
+    ],
+    population_size: int,
+    tournament_size: int,
+    budget: int,
+    rng: random.Random,
+    progress_fn: Callable[[EvolutionProgress[ArchitectureT]], None]
+    | None = None,
+) -> EvolutionResult[ArchitectureT]:
+    """Run aging evolution for an exact number of real evaluations.
+
+    ``progress_fn`` is called after every completed evaluation. During random
+    initialization the population grows from one member to ``population_size``.
+    During evolution every snapshot has exactly ``population_size`` members.
+    """
+
+    if population_size <= 0:
+        raise ValueError("population_size must be positive")
+    if tournament_size <= 0:
+        raise ValueError("tournament_size must be positive")
+    if budget < population_size:
+        raise ValueError("budget must be at least population_size")
+
+    population: deque[EvaluatedIndividual[ArchitectureT]] = deque()
+    history: list[EvaluatedIndividual[ArchitectureT]] = []
+
+    for _ in range(population_size):
+        architecture = random_architecture_fn(rng)
+        outcome = _normalize_evaluation(architecture, evaluate_fn)
+        individual = EvaluatedIndividual(
+            architecture=architecture,
+            fitness=outcome.fitness,
+            evaluation_id=len(history),
+            mutation_type=RANDOM_INITIALIZATION,
+            parent_evaluation_id=None,
+            metadata=outcome.metadata,
+        )
+        population.append(individual)
+        history.append(individual)
+
+        if len(population) != len(history):
+            raise RuntimeError("initialization queue/history mismatch")
+        _emit_progress(
+            phase=INITIALIZATION_PHASE,
+            individual=individual,
+            population=population,
+            history_length=len(history),
+            progress_fn=progress_fn,
+        )
+
+    while len(history) < budget:
+        parent = tournament_select(
+            population=population,
+            sample_size=tournament_size,
+            rng=rng,
+        )
+
+        # Exactly one mutation call. Identity mutation proceeds unchanged.
+        mutation_result = mutate_fn(parent.architecture, rng)
+        try:
+            child_architecture = mutation_result.architecture
+            mutation_type = mutation_result.mutation_type
+        except AttributeError as error:
+            raise TypeError(
+                "mutate_fn must return an object with architecture and "
+                "mutation_type attributes"
+            ) from error
+
+        if not isinstance(mutation_type, str) or not mutation_type:
+            raise ValueError("mutation_type must be a non-empty string")
+
+        outcome = _normalize_evaluation(child_architecture, evaluate_fn)
+        child = EvaluatedIndividual(
+            architecture=child_architecture,
+            fitness=outcome.fitness,
+            evaluation_id=len(history),
+            mutation_type=mutation_type,
+            parent_evaluation_id=parent.evaluation_id,
+            metadata=outcome.metadata,
+        )
+
+        # FIFO aging order from Algorithm 1.
+        population.append(child)
+        history.append(child)
+        population.popleft()
+
+        if len(population) != population_size:
+            raise RuntimeError("population size changed during evolution")
+        if len(history) > budget:
+            raise RuntimeError("evaluation budget was exceeded")
+        _emit_progress(
+            phase=EVOLUTION_PHASE,
+            individual=child,
+            population=population,
+            history_length=len(history),
+            progress_fn=progress_fn,
+        )
+
+    if len(population) != population_size:
+        raise RuntimeError("final population size is inconsistent")
+    if len(history) != budget:
+        raise RuntimeError("evaluation budget accounting is inconsistent")
+
+    return EvolutionResult(
+        population=deque(population),
+        history=tuple(history),
+    )
+
+
+__all__ = [
+    "EVOLUTION_PHASE",
+    "INITIALIZATION_PHASE",
+    "RANDOM_INITIALIZATION",
+    "EvaluatedIndividual",
+    "EvaluationOutcome",
+    "EvolutionProgress",
+    "EvolutionResult",
+    "MutationResultLike",
+    "regularized_evolution",
+    "sample_tournament",
+    "tournament_select",
+]
+
+===== src\search\nasnet_re.py =====
+"""End-to-end NASNet adapter for official regularized evolution.
+
+This module connects the generic Algorithm 1 loop to fresh NASNet model
+construction, fixed-split CIFAR-10 training, deterministic per-evaluation
+seeds, and crash-resilient experiment logs. Imports of PyTorch-facing project
+modules are lazy so the orchestration can be unit-tested with toy objects.
+"""
+
+from __future__ import annotations
+
+import csv
+import gc
+import io
+import json
+import math
+import os
+import random
+from dataclasses import dataclass, is_dataclass, asdict
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Callable, Mapping, Protocol
+
+from .regularized_evolution import (
+    EVOLUTION_PHASE,
+    INITIALIZATION_PHASE,
+    EvaluationOutcome,
+    EvolutionProgress,
+    EvolutionResult,
+    regularized_evolution,
+)
+
+
+CSV_FIELDS = (
+    "method",
+    "search_seed",
+    "training_seed",
+    "evaluation_index",
+    "phase",
+    "architecture",
+    "parent_architecture",
+    "mutation_type",
+    "fitness",
+    "final_val_accuracy",
+    "best_val_accuracy",
+    "parameter_count",
+    "training_time",
+    "population_age_order",
+)
+
+REQUIRED_TRAINING_METADATA = (
+    "training_seed",
+    "final_val_accuracy",
+    "best_val_accuracy",
+    "parameter_count",
+    "training_time_seconds",
+)
+
+
+class TrainingEvaluatorLike(Protocol):
+    real_training_runs: int
+
+    def __call__(self, architecture: Any) -> EvaluationOutcome:
+        ...
+
+
+@dataclass(frozen=True)
+class NASNetREResult:
+    evolution: EvolutionResult[Any]
+    real_training_runs: int
+    output_dir: Path
+    config_path: Path
+    evaluations_csv_path: Path
+    history_json_path: Path
+    run_log_path: Path
+
+    @property
+    def best_fitness(self) -> float:
+        return self.evolution.best_individual.fitness
+
+
+def seed_training_event(seed: int) -> None:
+    """Seed model initialization before the trainer receives the model."""
+
+    random.seed(seed)
+
+    import numpy as np
+    import torch
+
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
+
+def _default_model_builder(
+    architecture: Any,
+    N: int,
+    F: int,
+    num_classes: int,
+):
+    from src.nasnet.network import build_nasnet
+
+    return build_nasnet(
+        architecture,
+        N=N,
+        F=F,
+        num_classes=num_classes,
+    )
+
+
+def _default_training_config_factory(**values):
+    from src.training.nasnet_trainer import TrainingConfig
+
+    return TrainingConfig(**values)
+
+
+def _default_trainer(
+    model,
+    train_loader,
+    val_loader,
+    training_config,
+    device,
+):
+    from src.training.nasnet_trainer import train_nasnet
+
+    return train_nasnet(
+        model=model,
+        train_loader=train_loader,
+        val_loader=val_loader,
+        config=training_config,
+        device=device,
+    )
+
+
+def _default_cleanup(_model: Any, device: Any) -> None:
+    """Release references and cached CUDA blocks between architectures."""
+
+    gc.collect()
+    try:
+        import torch
+
+        if torch.device(device).type == "cuda":
+            torch.cuda.empty_cache()
+    except (ImportError, RuntimeError):
+        # Cleanup must never hide a successfully completed evaluation.
+        pass
+
+
+class NASNetTrainingEvaluator:
+    """Build and train a fresh NASNet for every RE evaluation event."""
+
+    def __init__(
+        self,
+        *,
+        loader_factory: Callable[[int], tuple[Any, Any]],
+        training_config_values: Mapping[str, Any],
+        training_seed_base: int,
+        device: Any,
+        N: int = 3,
+        F: int = 24,
+        num_classes: int = 10,
+        model_builder: Callable[[Any, int, int, int], Any]
+        | None = None,
+        training_config_factory: Callable[..., Any] | None = None,
+        trainer_fn: Callable[[Any, Any, Any, Any, Any], Any]
+        | None = None,
+        seed_fn: Callable[[int], None] = seed_training_event,
+        cleanup_fn: Callable[[Any, Any], None] = _default_cleanup,
+    ) -> None:
+        if N <= 0 or F <= 0 or num_classes <= 0:
+            raise ValueError("N, F, and num_classes must be positive")
+        if not isinstance(training_seed_base, int):
+            raise TypeError("training_seed_base must be an integer")
+
+        self.loader_factory = loader_factory
+        self.training_config_values = dict(training_config_values)
+        self.training_seed_base = training_seed_base
+        self.device = device
+        self.N = N
+        self.F = F
+        self.num_classes = num_classes
+        self.model_builder = model_builder or _default_model_builder
+        self.training_config_factory = (
+            training_config_factory
+            or _default_training_config_factory
+        )
+        self.trainer_fn = trainer_fn or _default_trainer
+        self.seed_fn = seed_fn
+        self.cleanup_fn = cleanup_fn
+        self.real_training_runs = 0
+        self.completed_training_seeds: list[int] = []
+
+    def __call__(self, architecture: Any) -> EvaluationOutcome:
+        evaluation_offset = self.real_training_runs
+        training_seed = self.training_seed_base + evaluation_offset
+
+        # Seeding happens before build_nasnet, so weight initialization is
+        # controlled. train_nasnet seeds again before the epoch loop.
+        self.seed_fn(training_seed)
+        model = self.model_builder(
+            architecture,
+            self.N,
+            self.F,
+            self.num_classes,
+        )
+        train_loader, val_loader = self.loader_factory(training_seed)
+
+        config_values = dict(self.training_config_values)
+        config_values["training_seed"] = training_seed
+        training_config = self.training_config_factory(**config_values)
+
+        try:
+            training_result = self.trainer_fn(
+                model,
+                train_loader,
+                val_loader,
+                training_config,
+                self.device,
+            )
+        finally:
+            self.cleanup_fn(model, self.device)
+
+        metadata = {
+            "training_seed": training_seed,
+            "final_val_accuracy": float(
+                training_result.final_val_accuracy
+            ),
+            "best_val_accuracy": float(
+                training_result.best_val_accuracy
+            ),
+            "parameter_count": int(training_result.parameter_count),
+            "training_time_seconds": float(
+                training_result.training_time_seconds
+            ),
+        }
+
+        for key in ("final_val_accuracy", "best_val_accuracy"):
+            value = metadata[key]
+            if not math.isfinite(value) or not 0.0 <= value <= 1.0:
+                raise ValueError(f"{key} must be a finite value in [0, 1]")
+        if metadata["parameter_count"] <= 0:
+            raise ValueError("parameter_count must be positive")
+        if (
+            not math.isfinite(metadata["training_time_seconds"])
+            or metadata["training_time_seconds"] < 0.0
+        ):
+            raise ValueError("training_time_seconds must be finite and non-negative")
+
+        self.real_training_runs += 1
+        self.completed_training_seeds.append(training_seed)
+
+        # Fixed-horizon fitness is final validation accuracy, never best.
+        return EvaluationOutcome(
+            fitness=metadata["final_val_accuracy"],
+            metadata=metadata,
+        )
+
+
+def _architecture_to_dict(architecture: Any) -> dict[str, Any]:
+    if hasattr(architecture, "to_dict"):
+        value = architecture.to_dict()
+    elif is_dataclass(architecture):
+        value = asdict(architecture)
+    elif isinstance(architecture, Mapping):
+        value = dict(architecture)
+    else:
+        raise TypeError(
+            "architecture must provide to_dict(), be a dataclass, or be a mapping"
+        )
+    if not isinstance(value, Mapping):
+        raise TypeError("architecture serialization must produce a mapping")
+    return dict(value)
+
+
+def _json_dumps(value: Any) -> str:
+    return json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+
+
+def _atomic_write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path = path.with_suffix(path.suffix + ".tmp")
+    temporary_path.write_text(text, encoding="utf-8")
+    os.replace(temporary_path, path)
+
+
+def _write_evaluations_csv(
+    records: list[dict[str, Any]],
+    path: Path,
+) -> None:
+    stream = io.StringIO(newline="")
+    writer = csv.DictWriter(stream, fieldnames=CSV_FIELDS)
+    writer.writeheader()
+    for record in records:
+        csv_record = dict(record)
+        for key in (
+            "architecture",
+            "parent_architecture",
+            "population_age_order",
+        ):
+            value = csv_record[key]
+            csv_record[key] = "" if value is None else _json_dumps(value)
+        writer.writerow(csv_record)
+    _atomic_write_text(path, stream.getvalue())
+
+
+def _write_history_json(
+    *,
+    records: list[dict[str, Any]],
+    path: Path,
+    method: str,
+    search_seed: int,
+    population_size: int,
+    tournament_size: int,
+    budget: int,
+    final_population_order: list[int] | None,
+    completed: bool,
+) -> None:
+    payload = {
+        "method": method,
+        "search_seed": search_seed,
+        "population_size": population_size,
+        "tournament_size": tournament_size,
+        "budget": budget,
+        "real_training_runs": len(records),
+        "completed": completed,
+        "final_population_order": final_population_order,
+        "evaluations": records,
+    }
+    _atomic_write_text(
+        path,
+        json.dumps(payload, indent=2, sort_keys=True) + "\n",
+    )
+
+
+def _timestamp() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def _append_run_log(path: Path, message: str) -> None:
+    with path.open("a", encoding="utf-8", newline="\n") as stream:
+        stream.write(f"{_timestamp()} {message}\n")
+
+
+def _prepare_output_files(
+    output_dir: Path,
+    overwrite: bool,
+) -> tuple[Path, Path, Path, Path]:
+    output_dir.mkdir(parents=True, exist_ok=True)
+    paths = (
+        output_dir / "config.yaml",
+        output_dir / "evaluations.csv",
+        output_dir / "history.json",
+        output_dir / "run.log",
+    )
+    existing = [path for path in paths if path.exists()]
+    if existing and not overwrite:
+        names = ", ".join(path.name for path in existing)
+        raise FileExistsError(
+            f"experiment output already exists ({names}); choose a new "
+            "output_dir or set experiment.overwrite=true"
+        )
+    return paths
+
+
+def run_nasnet_re(
+    *,
+    evaluator: TrainingEvaluatorLike,
+    output_dir: str | Path,
+    config_text: str,
+    method: str,
+    search_seed: int,
+    population_size: int,
+    tournament_size: int,
+    budget: int,
+    overwrite: bool = False,
+    random_architecture_fn: Callable[[random.Random], Any] | None = None,
+    mutate_fn: Callable[[Any, random.Random], Any] | None = None,
+    print_fn: Callable[[str], None] = print,
+) -> NASNetREResult:
+    """Run real NASNet RE and incrementally persist all required logs."""
+
+    if method.upper() != "RE":
+        raise ValueError("Part F runner requires experiment.method=RE")
+    method = "RE"
+    if not isinstance(search_seed, int):
+        raise TypeError("search_seed must be an integer")
+
+    if random_architecture_fn is None:
+        from src.nasnet.genotype import random_architecture
+
+        random_architecture_fn = random_architecture
+    if mutate_fn is None:
+        from src.nasnet.mutation import mutate_architecture
+
+        mutate_fn = mutate_architecture
+
+    output_dir = Path(output_dir)
+    (
+        config_path,
+        evaluations_csv_path,
+        history_json_path,
+        run_log_path,
+    ) = _prepare_output_files(output_dir, overwrite)
+
+    _atomic_write_text(
+        config_path,
+        config_text.rstrip() + "\n",
+    )
+    _atomic_write_text(run_log_path, "")
+    records: list[dict[str, Any]] = []
+    individuals_by_id: dict[int, Any] = {}
+
+    start_message = (
+        f"START method={method} search_seed={search_seed} "
+        f"population_size={population_size} "
+        f"tournament_size={tournament_size} budget={budget}"
+    )
+    _append_run_log(run_log_path, start_message)
+    print_fn(start_message)
+
+    def on_progress(progress: EvolutionProgress[Any]) -> None:
+        if progress.history_length != evaluator.real_training_runs:
+            raise RuntimeError(
+                "history length does not match real training runs"
+            )
+        if evaluator.real_training_runs > budget:
+            raise RuntimeError("real training runs exceeded budget")
+        if (
+            progress.phase == EVOLUTION_PHASE
+            and len(progress.population) != population_size
+        ):
+            raise RuntimeError("evolution population size changed")
+        if (
+            progress.phase == INITIALIZATION_PHASE
+            and progress.history_length == population_size
+            and len(progress.population) != population_size
+        ):
+            raise RuntimeError("initial population size is inconsistent")
+
+        individual = progress.individual
+        missing_metadata = [
+            key
+            for key in REQUIRED_TRAINING_METADATA
+            if key not in individual.metadata
+        ]
+        if missing_metadata:
+            raise RuntimeError(
+                "training evaluator omitted metadata: "
+                + ", ".join(missing_metadata)
+            )
+
+        parent = (
+            individuals_by_id.get(individual.parent_evaluation_id)
+            if individual.parent_evaluation_id is not None
+            else None
+        )
+        if individual.parent_evaluation_id is not None and parent is None:
+            raise RuntimeError("parent evaluation is missing from history")
+
+        evaluation_index = individual.evaluation_id + 1
+        population_order = [
+            member.evaluation_id + 1
+            for member in progress.population
+        ]
+        population_ages = [
+            individual.evaluation_id - member.evaluation_id
+            for member in progress.population
+        ]
+
+        record = {
+            "method": method,
+            "search_seed": search_seed,
+            "training_seed": int(individual.metadata["training_seed"]),
+            "evaluation_index": evaluation_index,
+            "phase": progress.phase,
+            "architecture": _architecture_to_dict(
+                individual.architecture
+            ),
+            "parent_architecture": (
+                _architecture_to_dict(parent.architecture)
+                if parent is not None
+                else None
+            ),
+            "mutation_type": individual.mutation_type,
+            "fitness": float(individual.fitness),
+            "final_val_accuracy": float(
+                individual.metadata["final_val_accuracy"]
+            ),
+            "best_val_accuracy": float(
+                individual.metadata["best_val_accuracy"]
+            ),
+            "parameter_count": int(
+                individual.metadata["parameter_count"]
+            ),
+            "training_time": float(
+                individual.metadata["training_time_seconds"]
+            ),
+            "population_age_order": {
+                "oldest_to_youngest_evaluation_indices": population_order,
+                "ages_in_evaluations": population_ages,
+            },
+        }
+        if record["fitness"] != record["final_val_accuracy"]:
+            raise RuntimeError("RE fitness must equal final_val_accuracy")
+
+        records.append(record)
+        individuals_by_id[individual.evaluation_id] = individual
+        _write_evaluations_csv(records, evaluations_csv_path)
+        _write_history_json(
+            records=records,
+            path=history_json_path,
+            method=method,
+            search_seed=search_seed,
+            population_size=population_size,
+            tournament_size=tournament_size,
+            budget=budget,
+            final_population_order=population_order,
+            completed=False,
+        )
+
+        progress_message = (
+            f"[{evaluation_index}/{budget}] {progress.phase} "
+            f"mutation={individual.mutation_type} "
+            f"fitness={individual.fitness:.6f} "
+            f"population={population_order}"
+        )
+        _append_run_log(run_log_path, progress_message)
+        print_fn(progress_message)
+
+    rng = random.Random(search_seed)
+    try:
+        evolution = regularized_evolution(
+            random_architecture_fn=random_architecture_fn,
+            mutate_fn=mutate_fn,
+            evaluate_fn=evaluator,
+            population_size=population_size,
+            tournament_size=tournament_size,
+            budget=budget,
+            rng=rng,
+            progress_fn=on_progress,
+        )
+    except Exception as error:
+        _append_run_log(
+            run_log_path,
+            f"FAILED {type(error).__name__}: {error}",
+        )
+        raise
+
+    if len(evolution.population) != population_size:
+        raise RuntimeError("final population size does not match config")
+    if len(evolution.history) != evaluator.real_training_runs:
+        raise RuntimeError("final history/training-run count mismatch")
+    if evaluator.real_training_runs != budget:
+        raise RuntimeError("real training runs did not consume exact budget")
+    if len(records) != budget:
+        raise RuntimeError("evaluation log did not consume exact budget")
+
+    final_population_order = [
+        member.evaluation_id + 1
+        for member in evolution.population
+    ]
+    _write_history_json(
+        records=records,
+        path=history_json_path,
+        method=method,
+        search_seed=search_seed,
+        population_size=population_size,
+        tournament_size=tournament_size,
+        budget=budget,
+        final_population_order=final_population_order,
+        completed=True,
+    )
+
+    completed_message = (
+        f"RE completed real_training_runs={evaluator.real_training_runs} "
+        f"best_fitness={evolution.best_individual.fitness:.6f}"
+    )
+    _append_run_log(run_log_path, completed_message)
+    print_fn(completed_message)
+
+    return NASNetREResult(
+        evolution=evolution,
+        real_training_runs=evaluator.real_training_runs,
+        output_dir=output_dir,
+        config_path=config_path,
+        evaluations_csv_path=evaluations_csv_path,
+        history_json_path=history_json_path,
+        run_log_path=run_log_path,
+    )
+
+
+__all__ = [
+    "CSV_FIELDS",
+    "NASNetREResult",
+    "NASNetTrainingEvaluator",
+    "REQUIRED_TRAINING_METADATA",
+    "run_nasnet_re",
+    "seed_training_event",
+]
+
+===== tests\test_nasnet_re_end_to_end.py =====
+"""Mocked Part F end-to-end test; no CNN or CIFAR-10 is loaded."""
+
+from __future__ import annotations
+
+import csv
+import json
+import tempfile
+import unittest
+from dataclasses import dataclass
+from pathlib import Path
+from types import SimpleNamespace
+
+from src.search.nasnet_re import (
+    CSV_FIELDS,
+    NASNetTrainingEvaluator,
+    run_nasnet_re,
+)
+
+
+@dataclass(frozen=True)
+class ToyArchitecture:
+    name: str
+
+    def to_dict(self):
+        return {"name": self.name}
+
+
+@dataclass(frozen=True)
+class ToyMutationResult:
+    architecture: ToyArchitecture
+    mutation_type: str
+
+
+class NASNetREEndToEndTests(unittest.TestCase):
+    def test_p4_s2_b8_trains_exactly_eight_times_and_writes_logs(self):
+        architecture_calls = []
+        mutation_calls = []
+        loader_calls = []
+        model_calls = []
+        trainer_calls = []
+        seed_calls = []
+        cleanup_calls = []
+        console = []
+
+        def random_architecture(_rng):
+            index = len(architecture_calls) + 1
+            architecture = ToyArchitecture(f"initial-{index}")
+            architecture_calls.append(architecture)
+            return architecture
+
+        mutation_types = iter(
+            ["hidden_state", "identity", "operation", "hidden_state"]
+        )
+
+        def mutate(parent, _rng):
+            mutation_type = next(mutation_types)
+            mutation_calls.append((parent, mutation_type))
+            if mutation_type == "identity":
+                child = parent
+            else:
+                child = ToyArchitecture(
+                    f"{parent.name}-{mutation_type}-{len(mutation_calls)}"
+                )
+            return ToyMutationResult(child, mutation_type)
+
+        def loader_factory(training_seed):
+            loader_calls.append(training_seed)
+            return (
+                f"search-train-{training_seed}",
+                f"search-val-{training_seed}",
+            )
+
+        def model_builder(architecture, N, F, num_classes):
+            model = (architecture, N, F, num_classes)
+            model_calls.append(model)
+            return model
+
+        def training_config_factory(**values):
+            return SimpleNamespace(**values)
+
+        def trainer_fn(model, train_loader, val_loader, config, device):
+            run_index = len(trainer_calls)
+            trainer_calls.append(
+                {
+                    "model": model,
+                    "train_loader": train_loader,
+                    "val_loader": val_loader,
+                    "config": config,
+                    "device": device,
+                }
+            )
+            final_accuracy = 0.50 + run_index * 0.01
+            return SimpleNamespace(
+                final_val_accuracy=final_accuracy,
+                best_val_accuracy=final_accuracy + 0.10,
+                parameter_count=1_000 + run_index,
+                training_time_seconds=10.0 + run_index,
+            )
+
+        evaluator = NASNetTrainingEvaluator(
+            loader_factory=loader_factory,
+            training_config_values={
+                "epochs": 1,
+                "batch_size": 128,
+                "learning_rate": 0.025,
+            },
+            training_seed_base=20_260_826,
+            device="cuda:0",
+            N=3,
+            F=24,
+            num_classes=10,
+            model_builder=model_builder,
+            training_config_factory=training_config_factory,
+            trainer_fn=trainer_fn,
+            seed_fn=seed_calls.append,
+            cleanup_fn=lambda model, device: cleanup_calls.append(
+                (model, device)
+            ),
+        )
+
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            output_dir = Path(temporary_directory) / "nasnet_re_20260826"
+            result = run_nasnet_re(
+                evaluator=evaluator,
+                output_dir=output_dir,
+                config_text="experiment:\n  method: RE\n",
+                method="RE",
+                search_seed=1001,
+                population_size=4,
+                tournament_size=2,
+                budget=8,
+                random_architecture_fn=random_architecture,
+                mutate_fn=mutate,
+                print_fn=console.append,
+            )
+
+            self.assertEqual(len(architecture_calls), 4)
+            self.assertEqual(len(mutation_calls), 4)
+            self.assertEqual(len(trainer_calls), 8)
+            self.assertEqual(evaluator.real_training_runs, 8)
+            self.assertEqual(result.real_training_runs, 8)
+            self.assertEqual(len(result.evolution.history), 8)
+            self.assertEqual(len(result.evolution.population), 4)
+            self.assertEqual(
+                [member.evaluation_id for member in result.evolution.population],
+                [4, 5, 6, 7],
+            )
+
+            expected_seeds = list(range(20_260_826, 20_260_834))
+            self.assertEqual(seed_calls, expected_seeds)
+            self.assertEqual(loader_calls, expected_seeds)
+            self.assertEqual(
+                [call["config"].training_seed for call in trainer_calls],
+                expected_seeds,
+            )
+            self.assertEqual(len(model_calls), 8)
+            self.assertEqual(len(cleanup_calls), 8)
+
+            expected_files = {
+                "config.yaml",
+                "evaluations.csv",
+                "history.json",
+                "run.log",
+            }
+            self.assertEqual(
+                {path.name for path in output_dir.iterdir()},
+                expected_files,
+            )
+
+            with result.evaluations_csv_path.open(
+                "r",
+                encoding="utf-8",
+                newline="",
+            ) as stream:
+                csv_rows = list(csv.DictReader(stream))
+
+            self.assertEqual(len(csv_rows), 8)
+            self.assertEqual(tuple(csv_rows[0].keys()), CSV_FIELDS)
+            self.assertEqual(
+                [int(row["evaluation_index"]) for row in csv_rows],
+                list(range(1, 9)),
+            )
+            self.assertEqual(
+                [row["phase"] for row in csv_rows],
+                ["initialization"] * 4 + ["evolution"] * 4,
+            )
+            self.assertTrue(
+                all(
+                    float(row["fitness"])
+                    == float(row["final_val_accuracy"])
+                    for row in csv_rows
+                )
+            )
+            self.assertTrue(
+                all(row["parent_architecture"] == "" for row in csv_rows[:4])
+            )
+            self.assertTrue(
+                all(row["parent_architecture"] != "" for row in csv_rows[4:])
+            )
+            self.assertEqual(
+                [row["mutation_type"] for row in csv_rows[4:]],
+                ["hidden_state", "identity", "operation", "hidden_state"],
+            )
+
+            identity_row = csv_rows[5]
+            self.assertEqual(
+                json.loads(identity_row["architecture"]),
+                json.loads(identity_row["parent_architecture"]),
+            )
+            self.assertEqual(len(trainer_calls), 8)
+
+            history = json.loads(
+                result.history_json_path.read_text(encoding="utf-8")
+            )
+            self.assertTrue(history["completed"])
+            self.assertEqual(history["real_training_runs"], 8)
+            self.assertEqual(history["budget"], 8)
+            self.assertEqual(history["final_population_order"], [5, 6, 7, 8])
+            self.assertEqual(len(history["evaluations"]), 8)
+
+            self.assertEqual(
+                result.config_path.read_text(encoding="utf-8"),
+                "experiment:\n  method: RE\n",
+            )
+            run_log = result.run_log_path.read_text(encoding="utf-8")
+            self.assertIn("[1/8] initialization", run_log)
+            self.assertIn("[8/8] evolution", run_log)
+            self.assertIn("RE completed real_training_runs=8", run_log)
+            self.assertTrue(any("[8/8] evolution" in line for line in console))
+            self.assertTrue(console[-1].startswith("RE completed"))
+
+    def test_existing_output_is_not_overwritten_without_permission(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            output_dir = Path(temporary_directory)
+            existing_config = output_dir / "config.yaml"
+            existing_config.write_text("keep: true\n", encoding="utf-8")
+
+            evaluator = SimpleNamespace(real_training_runs=0)
+            with self.assertRaisesRegex(FileExistsError, "output already exists"):
+                run_nasnet_re(
+                    evaluator=evaluator,
+                    output_dir=output_dir,
+                    config_text="new: value\n",
+                    method="RE",
+                    search_seed=1001,
+                    population_size=4,
+                    tournament_size=2,
+                    budget=8,
+                    random_architecture_fn=lambda _rng: ToyArchitecture("x"),
+                    mutate_fn=lambda parent, _rng: ToyMutationResult(
+                        parent,
+                        "identity",
+                    ),
+                    print_fn=lambda _message: None,
+                )
+
+            self.assertEqual(
+                existing_config.read_text(encoding="utf-8"),
+                "keep: true\n",
+            )
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+===== tests\test_re_conformance.py =====
+"""Fast toy tests for Real et al. Algorithm 1 conformance.
+
+No CNN, dataset, PyTorch model, or GPU is used in this test module.
+"""
+
+from __future__ import annotations
+
+import random
+import unittest
+from collections import deque
+from dataclasses import dataclass
+
+from src.search.regularized_evolution import (
+    RANDOM_INITIALIZATION,
+    EvaluatedIndividual,
+    regularized_evolution,
+    sample_tournament,
+    tournament_select,
+)
+
+
+@dataclass(frozen=True)
+class ToyMutationResult:
+    architecture: str
+    mutation_type: str
+
+
+class RepeatingChoiceRng:
+    """Choice spy that always returns the first member."""
+
+    def __init__(self):
+        self.choice_calls = 0
+        self.seen_sequences = []
+
+    def choice(self, sequence):
+        self.choice_calls += 1
+        self.seen_sequences.append(tuple(sequence))
+        return sequence[0]
+
+
+class ScriptedChoiceRng:
+    """Return population members in a requested evaluation-ID order."""
+
+    def __init__(self, evaluation_ids):
+        self.evaluation_ids = iter(evaluation_ids)
+
+    def choice(self, sequence):
+        requested_id = next(self.evaluation_ids)
+        return next(
+            individual
+            for individual in sequence
+            if individual.evaluation_id == requested_id
+        )
+
+
+def make_individual(
+    evaluation_id: int,
+    fitness: float,
+) -> EvaluatedIndividual[str]:
+    return EvaluatedIndividual(
+        architecture=f"architecture-{evaluation_id}",
+        fitness=fitness,
+        evaluation_id=evaluation_id,
+        mutation_type=RANDOM_INITIALIZATION,
+    )
+
+
+class TournamentConformanceTests(unittest.TestCase):
+    def test_tournament_sampling_is_with_replacement(self):
+        population = deque(
+            [
+                make_individual(0, 0.1),
+                make_individual(1, 0.2),
+            ]
+        )
+        rng = RepeatingChoiceRng()
+
+        sample = sample_tournament(
+            population=population,
+            sample_size=5,
+            rng=rng,
+        )
+
+        self.assertEqual(len(sample), 5)
+        self.assertEqual(rng.choice_calls, 5)
+        self.assertTrue(all(member is population[0] for member in sample))
+        self.assertTrue(
+            all(
+                seen == tuple(population)
+                for seen in rng.seen_sequences
+            )
+        )
+
+    def test_best_sampled_parent_is_selected(self):
+        population = deque(
+            [
+                make_individual(0, 0.80),
+                make_individual(1, 0.95),
+                make_individual(2, 0.70),
+            ]
+        )
+        rng = ScriptedChoiceRng([2, 0, 2, 1])
+
+        parent = tournament_select(
+            population=population,
+            sample_size=4,
+            rng=rng,
+        )
+
+        self.assertEqual(parent.evaluation_id, 1)
+        self.assertEqual(parent.fitness, 0.95)
+
+
+class EvolutionConformanceTests(unittest.TestCase):
+    def test_random_initialization_fills_deque_population(self):
+        counters = {
+            "random": 0,
+            "mutation": 0,
+            "evaluation": 0,
+        }
+
+        def random_architecture(_rng):
+            architecture = f"initial-{counters['random']}"
+            counters["random"] += 1
+            return architecture
+
+        def mutate(_parent, _rng):
+            counters["mutation"] += 1
+            return ToyMutationResult("unused", "operation")
+
+        def evaluate(_architecture):
+            counters["evaluation"] += 1
+            return counters["evaluation"] / 10.0
+
+        result = regularized_evolution(
+            random_architecture_fn=random_architecture,
+            mutate_fn=mutate,
+            evaluate_fn=evaluate,
+            population_size=4,
+            tournament_size=7,
+            budget=4,
+            rng=random.Random(20260826),
+        )
+
+        self.assertIsInstance(result.population, deque)
+        self.assertEqual(len(result.population), 4)
+        self.assertEqual(len(result.history), 4)
+        self.assertEqual(result.evaluation_count, 4)
+        self.assertEqual(counters["random"], 4)
+        self.assertEqual(counters["evaluation"], 4)
+        self.assertEqual(counters["mutation"], 0)
+        self.assertTrue(
+            all(
+                individual.mutation_type == RANDOM_INITIALIZATION
+                for individual in result.history
+            )
+        )
+
+    def test_each_cycle_mutates_and_evaluates_exactly_once(self):
+        counters = {
+            "random": 0,
+            "mutation": 0,
+            "evaluation": 0,
+        }
+
+        def random_architecture(_rng):
+            architecture = f"initial-{counters['random']}"
+            counters["random"] += 1
+            return architecture
+
+        def mutate(parent, _rng):
+            counters["mutation"] += 1
+            return ToyMutationResult(
+                architecture=f"{parent}-child-{counters['mutation']}",
+                mutation_type="hidden_state",
+            )
+
+        def evaluate(architecture):
+            counters["evaluation"] += 1
+            return float(len(architecture))
+
+        result = regularized_evolution(
+            random_architecture_fn=random_architecture,
+            mutate_fn=mutate,
+            evaluate_fn=evaluate,
+            population_size=3,
+            tournament_size=5,
+            budget=8,
+            rng=random.Random(20260826),
+        )
+
+        self.assertEqual(counters["random"], 3)
+        self.assertEqual(counters["mutation"], 5)
+        self.assertEqual(counters["evaluation"], 8)
+        self.assertEqual(result.evaluation_count, 8)
+        self.assertEqual(len(result.history), 8)
+        self.assertEqual(len(result.population), 3)
+        self.assertEqual(
+            [member.evaluation_id for member in result.population],
+            [5, 6, 7],
+        )
+        self.assertTrue(
+            all(
+                child.parent_evaluation_id is not None
+                for child in result.history[3:]
+            )
+        )
+
+    def test_child_is_appended_and_oldest_is_removed(self):
+        next_initial = 0
+
+        def random_architecture(_rng):
+            nonlocal next_initial
+            architecture = f"initial-{next_initial}"
+            next_initial += 1
+            return architecture
+
+        def mutate(parent, _rng):
+            return ToyMutationResult(
+                architecture=f"child-of-{parent}",
+                mutation_type="operation",
+            )
+
+        result = regularized_evolution(
+            random_architecture_fn=random_architecture,
+            mutate_fn=mutate,
+            evaluate_fn=lambda _architecture: 1.0,
+            population_size=3,
+            tournament_size=1,
+            budget=4,
+            rng=random.Random(7),
+        )
+
+        self.assertEqual(
+            [member.evaluation_id for member in result.population],
+            [1, 2, 3],
+        )
+        self.assertNotIn(result.history[0], result.population)
+        self.assertIs(result.population[-1], result.history[-1])
+        self.assertEqual(len(result.population), 3)
+        self.assertEqual(len(result.history), 4)
+
+    def test_identity_duplicate_is_evaluated_and_consumes_budget(self):
+        counters = {
+            "mutation": 0,
+            "evaluation": 0,
+        }
+
+        def identity_mutation(parent, _rng):
+            counters["mutation"] += 1
+            return ToyMutationResult(
+                architecture=parent,
+                mutation_type="identity",
+            )
+
+        def evaluate(_architecture):
+            counters["evaluation"] += 1
+            # A different score proves that every duplicate reaches evaluator.
+            return counters["evaluation"] / 100.0
+
+        result = regularized_evolution(
+            random_architecture_fn=lambda _rng: "duplicate-genotype",
+            mutate_fn=identity_mutation,
+            evaluate_fn=evaluate,
+            population_size=2,
+            tournament_size=4,
+            budget=6,
+            rng=random.Random(20260826),
+        )
+
+        self.assertEqual(counters["evaluation"], 6)
+        self.assertEqual(counters["mutation"], 4)
+        self.assertEqual(result.evaluation_count, 6)
+        self.assertEqual(len(result.history), 6)
+        self.assertEqual(len(result.population), 2)
+        self.assertTrue(
+            all(
+                individual.architecture == "duplicate-genotype"
+                for individual in result.history
+            )
+        )
+        self.assertEqual(
+            [individual.mutation_type for individual in result.history[2:]],
+            ["identity"] * 4,
+        )
+        self.assertEqual(
+            [individual.fitness for individual in result.history],
+            [0.01, 0.02, 0.03, 0.04, 0.05, 0.06],
+        )
+        self.assertEqual(
+            [member.evaluation_id for member in result.population],
+            [4, 5],
+        )
+
+    def test_budget_is_exact_when_multiple_cycles_run(self):
+        evaluation_calls = []
+        mutation_calls = []
+
+        def evaluate(architecture):
+            evaluation_calls.append(architecture)
+            return 0.5
+
+        def mutate(parent, _rng):
+            mutation_calls.append(parent)
+            return ToyMutationResult(parent, "identity")
+
+        result = regularized_evolution(
+            random_architecture_fn=lambda _rng: "same",
+            mutate_fn=mutate,
+            evaluate_fn=evaluate,
+            population_size=5,
+            tournament_size=10,
+            budget=17,
+            rng=random.Random(1),
+        )
+
+        self.assertEqual(len(evaluation_calls), 17)
+        self.assertEqual(len(mutation_calls), 12)
+        self.assertEqual(result.evaluation_count, 17)
+        self.assertEqual(len(result.population), 5)
+
+    def test_invalid_budget_is_rejected_before_any_evaluation(self):
+        evaluation_calls = []
+
+        with self.assertRaisesRegex(
+            ValueError,
+            "budget must be at least population_size",
+        ):
+            regularized_evolution(
+                random_architecture_fn=lambda _rng: "architecture",
+                mutate_fn=lambda parent, _rng: ToyMutationResult(
+                    parent,
+                    "identity",
+                ),
+                evaluate_fn=lambda architecture: evaluation_calls.append(
+                    architecture
+                ),
+                population_size=5,
+                tournament_size=2,
+                budget=4,
+                rng=random.Random(0),
+            )
+
+        self.assertEqual(evaluation_calls, [])
+
+
+if __name__ == "__main__":
+    unittest.main()
+
