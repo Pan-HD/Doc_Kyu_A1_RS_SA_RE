@@ -137,8 +137,33 @@ def main() -> None:
         overwrite=bool(experiment.get("overwrite", False)),
     )
 
+    population_size = int(evolution["population_size"])
+    budget = int(evolution["budget"])
+    candidate_count = int(evolution["candidate_count"])
+    expected_selected_rows = budget - population_size
+    expected_candidate_rows = expected_selected_rows * candidate_count
+    actual_candidate_rows = sum(
+        len(batch.candidates) for batch in result.evolution.candidate_batches
+    )
+    actual_selected_rows = sum(
+        candidate.selected
+        for batch in result.evolution.candidate_batches
+        for candidate in batch.candidates
+    )
+    if result.real_training_runs != budget:
+        raise RuntimeError("completed SA-RE run has an incorrect real budget")
+    if len(result.evolution.population) != population_size:
+        raise RuntimeError("completed SA-RE run has an incorrect population size")
+    if actual_candidate_rows != expected_candidate_rows:
+        raise RuntimeError("completed SA-RE run has an incorrect candidate count")
+    if actual_selected_rows != expected_selected_rows:
+        raise RuntimeError("completed SA-RE run has an incorrect selected count")
+
     print(f"output directory: {result.output_dir}")
     print(f"real evaluations: {result.real_training_runs}")
+    print(f"final population: {len(result.evolution.population)}")
+    print(f"candidate rows: {actual_candidate_rows}")
+    print(f"selected rows: {actual_selected_rows}")
     print(f"best fitness: {result.best_fitness:.6f}")
     print(f"evaluations CSV: {result.evaluations_csv_path}")
     print(

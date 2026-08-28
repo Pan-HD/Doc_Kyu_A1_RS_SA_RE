@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 import json
+import math
 import tempfile
 import unittest
 from dataclasses import dataclass
@@ -260,6 +261,30 @@ class NASNetSAREndToEndTests(unittest.TestCase):
                 [int(row["evaluation_index"]) for row in selected_rows],
                 [5, 6],
             )
+            for evaluation_index in (5, 6):
+                batch_rows = [
+                    row
+                    for row in candidate_rows
+                    if int(row["evaluation_index"]) == evaluation_index
+                ]
+                self.assertEqual(len(batch_rows), 5)
+                self.assertEqual(
+                    sum(row["selected"] == "True" for row in batch_rows),
+                    1,
+                )
+                self.assertTrue(
+                    all(
+                        math.isfinite(float(row["predicted_mu"]))
+                        for row in batch_rows
+                    )
+                )
+                self.assertTrue(
+                    all(
+                        int(row["surrogate_training_size"])
+                        == evaluation_index - 1
+                        for row in batch_rows
+                    )
+                )
 
             history = json.loads(
                 result.history_json_path.read_text(encoding="utf-8")

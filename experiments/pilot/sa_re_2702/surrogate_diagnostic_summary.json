@@ -1,0 +1,72 @@
+{
+  "budget_sanity": {
+    "budget": 30,
+    "candidate_count_per_step": 5,
+    "candidate_rows": 50,
+    "initial_real_evaluations": 20,
+    "offspring_real_evaluations": 10,
+    "real_evaluations": 30,
+    "selected_candidate_rows": 10
+  },
+  "method": "SA-RE",
+  "prediction_all_candidates": {
+    "all_finite": true,
+    "all_in_unit_interval": true,
+    "count": 50,
+    "maximum": 0.837950587272644,
+    "mean": 0.8146273005008697,
+    "minimum": 0.7903929352760315,
+    "population_std": 0.010583427938460278,
+    "sample_std": 0.010690876662120609
+  },
+  "schema_version": 1,
+  "search_seed": 2702,
+  "selected_online_diagnostic": {
+    "count": 10,
+    "interpretation": "Small, selection-biased online diagnostic: only surrogate-selected candidates receive real evaluations; this is not an unbiased surrogate generalization estimate.",
+    "mae": 0.011913547735214237,
+    "mean_error_predicted_minus_observed": 0.010128480863571154,
+    "pearson_correlation": -0.49301627341996296,
+    "rmse": 0.015925341140287052,
+    "spearman_rank_correlation": -0.40606060606060607
+  },
+  "source_files": {
+    "candidate_predictions": "candidate_predictions.csv",
+    "evaluations": "evaluations.csv"
+  },
+  "surrogate_training_size": {
+    "expected_prediction_time_sizes": [
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+    ],
+    "final_dataset_size_after_last_real_evaluation": 30,
+    "prediction_time_sizes": [
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29
+    ]
+  },
+  "target_accuracy": {
+    "all_finite": true,
+    "all_in_unit_interval": true,
+    "count": 30,
+    "maximum": 0.8232,
+    "minimum": 0.6414,
+    "unit": "fraction_0_to_1"
+  }
+}

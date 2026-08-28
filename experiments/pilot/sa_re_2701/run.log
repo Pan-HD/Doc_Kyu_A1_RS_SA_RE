@@ -1,0 +1,32 @@
+2026-08-28T03:09:02+00:00 START method=SA-RE search_seed=2701 surrogate_seed=902701 population_size=20 tournament_size=5 budget=30 candidate_count=5
+2026-08-28T03:12:13+00:00 [1/30] initialization mutation=random_initialization fitness=0.711400
+2026-08-28T03:15:07+00:00 [2/30] initialization mutation=random_initialization fitness=0.757200
+2026-08-28T03:17:47+00:00 [3/30] initialization mutation=random_initialization fitness=0.699800
+2026-08-28T03:20:08+00:00 [4/30] initialization mutation=random_initialization fitness=0.705600
+2026-08-28T03:22:25+00:00 [5/30] initialization mutation=random_initialization fitness=0.814600
+2026-08-28T03:25:25+00:00 [6/30] initialization mutation=random_initialization fitness=0.768000
+2026-08-28T03:27:31+00:00 [7/30] initialization mutation=random_initialization fitness=0.828400
+2026-08-28T03:30:27+00:00 [8/30] initialization mutation=random_initialization fitness=0.711000
+2026-08-28T03:33:23+00:00 [9/30] initialization mutation=random_initialization fitness=0.722600
+2026-08-28T03:35:24+00:00 [10/30] initialization mutation=random_initialization fitness=0.809000
+2026-08-28T03:37:44+00:00 [11/30] initialization mutation=random_initialization fitness=0.778800
+2026-08-28T03:40:26+00:00 [12/30] initialization mutation=random_initialization fitness=0.722400
+2026-08-28T03:43:02+00:00 [13/30] initialization mutation=random_initialization fitness=0.744200
+2026-08-28T03:44:56+00:00 [14/30] initialization mutation=random_initialization fitness=0.818400
+2026-08-28T03:47:27+00:00 [15/30] initialization mutation=random_initialization fitness=0.693200
+2026-08-28T03:49:33+00:00 [16/30] initialization mutation=random_initialization fitness=0.748600
+2026-08-28T03:51:53+00:00 [17/30] initialization mutation=random_initialization fitness=0.822000
+2026-08-28T03:54:23+00:00 [18/30] initialization mutation=random_initialization fitness=0.757000
+2026-08-28T03:56:23+00:00 [19/30] initialization mutation=random_initialization fitness=0.758600
+2026-08-28T03:58:24+00:00 [20/30] initialization mutation=random_initialization fitness=0.812000
+2026-08-28T04:00:21+00:00 [21/30] evolution mutation=operation fitness=0.759800 selected_candidate=3 predicted_mu=0.781843
+2026-08-28T04:02:17+00:00 [22/30] evolution mutation=hidden_state fitness=0.783600 selected_candidate=0 predicted_mu=0.764177
+2026-08-28T04:04:38+00:00 [23/30] evolution mutation=hidden_state fitness=0.823400 selected_candidate=2 predicted_mu=0.838109
+2026-08-28T04:06:58+00:00 [24/30] evolution mutation=operation fitness=0.814000 selected_candidate=3 predicted_mu=0.842338
+2026-08-28T04:08:51+00:00 [25/30] evolution mutation=operation fitness=0.795800 selected_candidate=1 predicted_mu=0.838261
+2026-08-28T04:11:13+00:00 [26/30] evolution mutation=hidden_state fitness=0.820200 selected_candidate=0 predicted_mu=0.839715
+2026-08-28T04:13:12+00:00 [27/30] evolution mutation=hidden_state fitness=0.819200 selected_candidate=4 predicted_mu=0.825866
+2026-08-28T04:15:04+00:00 [28/30] evolution mutation=operation fitness=0.822000 selected_candidate=4 predicted_mu=0.833539
+2026-08-28T04:17:25+00:00 [29/30] evolution mutation=hidden_state fitness=0.820200 selected_candidate=4 predicted_mu=0.824399
+2026-08-28T04:19:13+00:00 [30/30] evolution mutation=hidden_state fitness=0.819600 selected_candidate=2 predicted_mu=0.813010
+2026-08-28T04:19:13+00:00 SA-RE completed real_training_runs=30 candidate_predictions=50 best_fitness=0.828400

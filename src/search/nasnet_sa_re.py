@@ -363,6 +363,37 @@ def run_nasnet_sa_re(
         )
         final_accuracy = float(individual.metadata["final_val_accuracy"])
 
+        if progress.phase == INITIALIZATION_PHASE:
+            if any(
+                value is not None
+                for value in (
+                    predicted_mu,
+                    surrogate_training_size,
+                    selected_candidate_index,
+                    surrogate_training_mse,
+                )
+            ):
+                raise RuntimeError(
+                    "initialization evaluation contains surrogate metadata"
+                )
+        else:
+            if any(
+                value is None
+                for value in (
+                    predicted_mu,
+                    surrogate_training_size,
+                    selected_candidate_index,
+                    surrogate_training_mse,
+                )
+            ):
+                raise RuntimeError("evolution evaluation omitted surrogate metadata")
+            if not math.isfinite(float(predicted_mu)):
+                raise RuntimeError("predicted_mu_before_training is non-finite")
+            if int(surrogate_training_size) != evaluation_index - 1:
+                raise RuntimeError(
+                    "surrogate_training_size must equal prior real evaluations"
+                )
+
         evaluation_record = {
             "method": "SA-RE",
             "search_seed": search_seed,
@@ -406,6 +437,12 @@ def run_nasnet_sa_re(
                 raise RuntimeError("candidate batch/evaluation index mismatch")
             if len(batch.candidates) != candidate_count:
                 raise RuntimeError("candidate batch has incorrect size")
+            if batch.surrogate_training_size != evaluation_index - 1:
+                raise RuntimeError(
+                    "candidate batch has incorrect surrogate training size"
+                )
+            if sum(candidate.selected for candidate in batch.candidates) != 1:
+                raise RuntimeError("candidate batch must select exactly one row")
             for candidate in batch.candidates:
                 candidate_records.append(
                     {
@@ -508,6 +545,10 @@ def run_nasnet_sa_re(
     expected_candidate_rows = (budget - population_size) * candidate_count
     if len(evolution.population) != population_size:
         raise RuntimeError("final population size does not match config")
+    if len(surrogate_dataset) != budget:
+        raise RuntimeError(
+            "final surrogate dataset size does not match budget"
+        )
     if evaluator.real_training_runs != budget:
         raise RuntimeError("real training runs did not consume exact budget")
     if len(evaluation_records) != budget:

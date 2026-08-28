@@ -61,6 +61,17 @@ class CandidatePrediction(Generic[ArchitectureT]):
     predicted_mu: float
     selected: bool
 
+    def __post_init__(self) -> None:
+        if self.candidate_index < 0:
+            raise ValueError("candidate_index must be non-negative")
+        if not isinstance(self.mutation_type, str) or not self.mutation_type:
+            raise ValueError("mutation_type must be a non-empty string")
+        predicted_mu = float(self.predicted_mu)
+        if not math.isfinite(predicted_mu):
+            raise ValueError("predicted_mu must be finite")
+        object.__setattr__(self, "predicted_mu", predicted_mu)
+        object.__setattr__(self, "selected", bool(self.selected))
+
 
 @dataclass(frozen=True)
 class CandidateBatch(Generic[ArchitectureT]):
@@ -69,6 +80,28 @@ class CandidateBatch(Generic[ArchitectureT]):
     surrogate_training_size: int
     surrogate_training_mse: float
     candidates: tuple[CandidatePrediction[ArchitectureT], ...]
+
+    def __post_init__(self) -> None:
+        if self.evaluation_index <= 0:
+            raise ValueError("evaluation_index must be positive")
+        if self.parent_evaluation_id < 0:
+            raise ValueError("parent_evaluation_id must be non-negative")
+        if self.surrogate_training_size <= 0:
+            raise ValueError("surrogate_training_size must be positive")
+        if (
+            not math.isfinite(float(self.surrogate_training_mse))
+            or self.surrogate_training_mse < 0.0
+        ):
+            raise ValueError(
+                "surrogate_training_mse must be finite and non-negative"
+            )
+        if not self.candidates:
+            raise ValueError("candidate batch must not be empty")
+        indices = tuple(candidate.candidate_index for candidate in self.candidates)
+        if indices != tuple(range(len(self.candidates))):
+            raise ValueError("candidate indices must be contiguous from zero")
+        if sum(candidate.selected for candidate in self.candidates) != 1:
+            raise ValueError("candidate batch must contain one selected candidate")
 
     @property
     def selected_candidate_index(self) -> int:
@@ -233,10 +266,16 @@ def surrogate_assisted_evolution(
             candidate_encodings.append(encode_fn(candidate_architecture))
 
         surrogate_training_size = len(surrogate_dataset)
+        # Surrogate fitting/inference is isolated from the search RNG. The
+        # scorer does not receive ``rng``; this state check also catches an
+        # accidental closure over the same random.Random instance.
+        search_rng_state_before_scoring = rng.getstate()
         score_result = surrogate_score_fn(
             surrogate_dataset,
             tuple(candidate_encodings),
         )
+        if rng.getstate() != search_rng_state_before_scoring:
+            raise RuntimeError("surrogate scoring consumed the search RNG")
         if len(score_result.scores) != candidate_count:
             raise ValueError("surrogate returned the wrong number of scores")
 

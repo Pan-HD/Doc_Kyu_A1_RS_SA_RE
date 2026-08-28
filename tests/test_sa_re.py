@@ -10,6 +10,7 @@ from src.search.surrogate_assisted_evolution import (
     SurrogateScoreResult,
     surrogate_assisted_evolution,
 )
+from src.search.regularized_evolution import regularized_evolution
 from src.surrogate import SurrogateDataset
 
 
@@ -19,10 +20,11 @@ class ToyMutationResult:
     mutation_type: str
 
 
-class AlternatingChoiceRng:
+class AlternatingChoiceRng(random.Random):
     """Choice spy: every tournament contains repeated population members."""
 
     def __init__(self):
+        super().__init__(0)
         self.choice_calls = 0
 
     def choice(self, sequence):
@@ -32,6 +34,76 @@ class AlternatingChoiceRng:
 
 
 class SurrogateAssistedEvolutionTests(unittest.TestCase):
+    def test_initial_architectures_match_re_before_surrogate_is_used(self):
+        def random_architecture(rng):
+            return f"architecture-{rng.randrange(1_000_000_000)}"
+
+        def mutate(parent, _rng):
+            return ToyMutationResult(f"{parent}-child", "operation")
+
+        re_result = regularized_evolution(
+            random_architecture_fn=random_architecture,
+            mutate_fn=mutate,
+            evaluate_fn=lambda _architecture: 0.5,
+            population_size=4,
+            tournament_size=2,
+            budget=4,
+            rng=random.Random(2701),
+        )
+        score_calls = []
+        sa_re_result = surrogate_assisted_evolution(
+            random_architecture_fn=random_architecture,
+            mutate_fn=mutate,
+            evaluate_fn=lambda _architecture: 0.5,
+            encode_fn=lambda _architecture: [1.0],
+            surrogate_score_fn=lambda _dataset, _encodings: (
+                score_calls.append(True)
+                or SurrogateScoreResult(scores=(0.5,), training_mse=0.0)
+            ),
+            surrogate_dataset=SurrogateDataset(input_dim=1),
+            population_size=4,
+            tournament_size=2,
+            budget=4,
+            candidate_count=1,
+            rng=random.Random(2701),
+        )
+
+        self.assertEqual(score_calls, [])
+        self.assertEqual(
+            [item.architecture for item in re_result.history],
+            [item.architecture for item in sa_re_result.history],
+        )
+
+    def test_surrogate_cannot_consume_search_rng(self):
+        search_rng = random.Random(2701)
+
+        def score_with_rng_leak(_dataset, encodings):
+            search_rng.random()
+            return SurrogateScoreResult(
+                scores=tuple(0.5 for _ in encodings),
+                training_mse=0.0,
+            )
+
+        with self.assertRaisesRegex(RuntimeError, "consumed the search RNG"):
+            surrogate_assisted_evolution(
+                random_architecture_fn=lambda rng: (
+                    f"architecture-{rng.randrange(1_000_000)}"
+                ),
+                mutate_fn=lambda parent, _rng: ToyMutationResult(
+                    parent,
+                    "identity",
+                ),
+                evaluate_fn=lambda _architecture: 0.5,
+                encode_fn=lambda _architecture: [1.0],
+                surrogate_score_fn=score_with_rng_leak,
+                surrogate_dataset=SurrogateDataset(input_dim=1),
+                population_size=2,
+                tournament_size=2,
+                budget=3,
+                candidate_count=2,
+                rng=search_rng,
+            )
+
     def test_k5_selects_highest_prediction_and_evaluates_only_once(self):
         random_calls = []
         mutation_calls = []
