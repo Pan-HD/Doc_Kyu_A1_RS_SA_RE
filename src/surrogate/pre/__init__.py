@@ -2,12 +2,6 @@
 
 from .dataset import SurrogateDataset, SurrogateObservation
 from .model import AccuracySurrogate
-from .multitask_dataset import (
-    MultiTaskSurrogateDataset,
-    MultiTaskSurrogateObservation,
-    StabilityRecord,
-)
-from .multitask_model import MultiTaskPrediction, MultiTaskSurrogate
 from .trainer import (
     SurrogateTrainingConfig,
     SurrogateTrainingResult,
@@ -17,11 +11,6 @@ from .trainer import (
 
 __all__ = [
     "AccuracySurrogate",
-    "MultiTaskPrediction",
-    "MultiTaskSurrogate",
-    "MultiTaskSurrogateDataset",
-    "MultiTaskSurrogateObservation",
-    "StabilityRecord",
     "SurrogateDataset",
     "SurrogateObservation",
     "SurrogateTrainingConfig",
