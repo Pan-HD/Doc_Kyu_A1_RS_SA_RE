@@ -13,12 +13,6 @@ from .multitask_loss import (
     masked_multitask_mse_loss,
 )
 from .multitask_model import MultiTaskPrediction, MultiTaskSurrogate
-from .multitask_trainer import (
-    MultiTaskTrainingConfig,
-    MultiTaskTrainingResult,
-    predict_multitask,
-    train_multitask_surrogate,
-)
 from .trainer import (
     SurrogateTrainingConfig,
     SurrogateTrainingResult,
@@ -34,8 +28,6 @@ __all__ = [
     "MultiTaskSurrogate",
     "MultiTaskSurrogateDataset",
     "MultiTaskSurrogateObservation",
-    "MultiTaskTrainingConfig",
-    "MultiTaskTrainingResult",
     "StabilityRecord",
     "SurrogateDataset",
     "SurrogateObservation",
@@ -43,7 +35,5 @@ __all__ = [
     "SurrogateTrainingResult",
     "masked_multitask_mse_loss",
     "predict_accuracy",
-    "predict_multitask",
     "train_accuracy_surrogate",
-    "train_multitask_surrogate",
 ]

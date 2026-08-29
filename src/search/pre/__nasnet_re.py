@@ -192,27 +192,8 @@ class NASNetTrainingEvaluator:
         self.completed_training_seeds: list[int] = []
 
     def __call__(self, architecture: Any) -> EvaluationOutcome:
-        """Preserve the official RE/SA-RE sequential first-seed schedule."""
-
-        training_seed = self.training_seed_base + self.real_training_runs
-        return self.evaluate_with_seed(architecture, training_seed)
-
-    def evaluate_with_seed(
-        self,
-        architecture: Any,
-        training_seed: int,
-    ) -> EvaluationOutcome:
-        """Run one real evaluation with a caller-derived deterministic seed.
-
-        RS-SA-RE uses this narrow extension for replicate-aware first/repeat
-        seeds. ``__call__`` still derives exactly the original sequential
-        schedule, so RE and SA-RE behavior is unchanged.
-        """
-
-        if isinstance(training_seed, bool) or not isinstance(training_seed, int):
-            raise TypeError("training_seed must be an integer")
-        if training_seed < 0:
-            raise ValueError("training_seed must be non-negative")
+        evaluation_offset = self.real_training_runs
+        training_seed = self.training_seed_base + evaluation_offset
 
         # Seeding happens before build_nasnet, so weight initialization is
         # controlled. train_nasnet seeds again before the epoch loop.

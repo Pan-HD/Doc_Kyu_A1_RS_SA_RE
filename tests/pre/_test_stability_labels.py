@@ -1,10 +1,9 @@
-"""Tests for legacy-compatible and evaluation-level RS-SA-RE labels."""
+"""Tests for RS-SA-RE label construction without policy or lambda tuning."""
 
 from __future__ import annotations
 
 import math
 import unittest
-from dataclasses import dataclass
 
 import torch
 
@@ -14,10 +13,6 @@ from src.surrogate import (
     MultiTaskSurrogate,
     MultiTaskSurrogateDataset,
     StabilityRecord,
-)
-from src.surrogate.multitask_dataset import (
-    PairedEvaluationRecord,
-    PairedEvaluationStore,
 )
 
 
@@ -31,16 +26,14 @@ class DummyMultiTaskSurrogate(MultiTaskSurrogate):
         )
 
 
-@dataclass(frozen=True)
-class DummyArchitecture:
-    genotype: str
-
-
-class LegacyStabilityLabelTests(unittest.TestCase):
-    """Preserve every assertion from the August 28 scaffold tests."""
-
+class StabilityLabelTests(unittest.TestCase):
     def test_paired_accuracy_constructs_mean_and_instability(self) -> None:
-        record = StabilityRecord("architecture-a", 0.70, 0.76)
+        record = StabilityRecord(
+            architecture="architecture-a",
+            accuracy_seed_1=0.70,
+            accuracy_seed_2=0.76,
+        )
+
         self.assertTrue(record.has_pair)
         self.assertTrue(record.mean_target_available)
         self.assertTrue(record.instability_target_available)
@@ -48,7 +41,12 @@ class LegacyStabilityLabelTests(unittest.TestCase):
         self.assertAlmostEqual(record.instability_target, 0.06)
 
     def test_single_accuracy_has_mean_but_no_instability_label(self) -> None:
-        record = StabilityRecord("architecture-b", 0.70, None)
+        record = StabilityRecord(
+            architecture="architecture-b",
+            accuracy_seed_1=0.70,
+            accuracy_seed_2=None,
+        )
+
         self.assertFalse(record.has_pair)
         self.assertTrue(record.mean_target_available)
         self.assertFalse(record.instability_target_available)
@@ -67,14 +65,24 @@ class LegacyStabilityLabelTests(unittest.TestCase):
 
     def test_dataset_builds_masked_multi_task_tensors(self) -> None:
         dataset = MultiTaskSurrogateDataset(input_dim=280)
-        dataset.add(record=StabilityRecord("single", 0.70), encoding=torch.zeros(280))
-        dataset.add(record=StabilityRecord("paired", 0.70, 0.76), encoding=torch.ones(280))
+        dataset.add(
+            record=StabilityRecord("single", 0.70),
+            encoding=torch.zeros(280),
+        )
+        dataset.add(
+            record=StabilityRecord("paired", 0.70, 0.76),
+            encoding=torch.ones(280),
+        )
+
         features, means, instabilities, mask = dataset.tensors()
+
         self.assertEqual(tuple(features.shape), (2, 280))
         torch.testing.assert_close(means, torch.tensor([0.70, 0.73]))
         torch.testing.assert_close(instabilities, torch.tensor([0.00, 0.06]))
         self.assertEqual(mask.dtype, torch.bool)
         self.assertEqual(mask.tolist(), [False, True])
+        self.assertEqual(instabilities[0].item(), 0.0)
+        self.assertFalse(mask[0].item())
 
     def test_dataset_rejects_bad_encoding(self) -> None:
         dataset = MultiTaskSurrogateDataset(input_dim=280)
@@ -91,6 +99,7 @@ class LegacyStabilityLabelTests(unittest.TestCase):
         prediction = surrogate(torch.zeros(3, 280))
         self.assertEqual(tuple(prediction.predicted_mean.shape), (3,))
         self.assertEqual(tuple(prediction.predicted_instability.shape), (3,))
+
         scaffold = RSSAREScaffold(
             surrogate=surrogate,
             stability_dataset=MultiTaskSurrogateDataset(input_dim=280),
@@ -100,61 +109,6 @@ class LegacyStabilityLabelTests(unittest.TestCase):
             scaffold.require_repeat_policy()
         with self.assertRaisesRegex(RSSARENotConfiguredError, "not implemented"):
             scaffold.run()
-
-
-class PairedEvaluationRecordTests(unittest.TestCase):
-    def test_single_seed_record_targets(self) -> None:
-        record = PairedEvaluationRecord(10, DummyArchitecture("X"), 101, 0.70)
-        self.assertFalse(record.has_pair)
-        self.assertAlmostEqual(record.mean_target, 0.70)
-        self.assertIsNone(record.instability_target)
-
-    def test_paired_record_targets(self) -> None:
-        record = PairedEvaluationRecord(10, DummyArchitecture("X"), 101, 0.70)
-        record.add_repeat(seed_2=202, accuracy_2=0.76)
-        self.assertTrue(record.has_pair)
-        self.assertAlmostEqual(record.mean_target, 0.73)
-        self.assertAlmostEqual(record.instability_target, 0.06)
-
-    def test_duplicate_architectures_remain_distinct_records(self) -> None:
-        architecture = DummyArchitecture("same-architecture")
-        record_a = PairedEvaluationRecord(10, architecture, 110, 0.70)
-        record_b = PairedEvaluationRecord(25, architecture, 125, 0.72)
-        store = PairedEvaluationStore()
-        store.add(record_a)
-        store.add(record_b)
-        self.assertEqual(record_a.architecture, record_b.architecture)
-        self.assertNotEqual(record_a, record_b)
-        self.assertEqual(len(store), 2)
-        self.assertIs(store.get(10), record_a)
-        self.assertIs(store.get(25), record_b)
-
-    def test_repeat_seed_must_differ_from_first_seed(self) -> None:
-        record = PairedEvaluationRecord(10, "X", 101, 0.70)
-        with self.assertRaisesRegex(ValueError, "differ"):
-            record.add_repeat(seed_2=101, accuracy_2=0.76)
-
-    def test_record_cannot_receive_two_scheduled_repeats(self) -> None:
-        record = PairedEvaluationRecord(10, "X", 101, 0.70)
-        record.add_repeat(seed_2=202, accuracy_2=0.76)
-        with self.assertRaisesRegex(ValueError, "already"):
-            record.add_repeat(seed_2=303, accuracy_2=0.74)
-
-    def test_store_rejects_duplicate_base_evaluation_index(self) -> None:
-        store = PairedEvaluationStore()
-        store.add(PairedEvaluationRecord(10, "X", 101, 0.70))
-        with self.assertRaisesRegex(ValueError, "duplicate base_evaluation_index"):
-            store.add(PairedEvaluationRecord(10, "Y", 202, 0.72))
-
-    def test_paired_record_can_feed_legacy_dataset(self) -> None:
-        record = PairedEvaluationRecord(10, "X", 101, 0.70)
-        record.add_repeat(seed_2=202, accuracy_2=0.76)
-        dataset = MultiTaskSurrogateDataset(input_dim=280)
-        dataset.add_paired_evaluation(record=record, encoding=torch.zeros(280))
-        _, means, instabilities, mask = dataset.tensors()
-        torch.testing.assert_close(means, torch.tensor([0.73]))
-        torch.testing.assert_close(instabilities, torch.tensor([0.06]))
-        self.assertEqual(mask.tolist(), [True])
 
 
 if __name__ == "__main__":
