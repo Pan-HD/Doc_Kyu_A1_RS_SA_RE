@@ -1,0 +1,68 @@
+schema_version: 1
+status: frozen
+freeze_date: '2026-08-31'
+matched_seed_policy: same_search_seed_across_RE_SA_RE_RS_SA_RE
+methods:
+- RE
+- SA-RE
+- RS-SA-RE
+search_seeds:
+- 1001
+- 1002
+- 1003
+- 1004
+- 1005
+- 1006
+- 1007
+- 1008
+- 1009
+- 1010
+expected_runs_per_method: 10
+expected_total_runs: 30
+rng_namespaces:
+  search:
+    derivation: search_seed
+    shared_across_methods: true
+  training:
+    base: 20260827
+    derivation: existing_evaluator_replica_schedule
+    replica_one_preserves_first_training_schedule: true
+  surrogate:
+    offset: 900000
+    derivation: surrogate_seed_offset + search_seed
+    advances_search_rng: false
+  repeat:
+    offset: 1800000
+    derivation: repeat_seed_offset + search_seed
+    advances_search_rng: false
+runs:
+- search_seed: 1001
+  surrogate_seed: 901001
+  repeat_seed: 1801001
+- search_seed: 1002
+  surrogate_seed: 901002
+  repeat_seed: 1801002
+- search_seed: 1003
+  surrogate_seed: 901003
+  repeat_seed: 1801003
+- search_seed: 1004
+  surrogate_seed: 901004
+  repeat_seed: 1801004
+- search_seed: 1005
+  surrogate_seed: 901005
+  repeat_seed: 1801005
+- search_seed: 1006
+  surrogate_seed: 901006
+  repeat_seed: 1801006
+- search_seed: 1007
+  surrogate_seed: 901007
+  repeat_seed: 1801007
+- search_seed: 1008
+  surrogate_seed: 901008
+  repeat_seed: 1801008
+- search_seed: 1009
+  surrogate_seed: 901009
+  repeat_seed: 1801009
+- search_seed: 1010
+  surrogate_seed: 901010
+  repeat_seed: 1801010

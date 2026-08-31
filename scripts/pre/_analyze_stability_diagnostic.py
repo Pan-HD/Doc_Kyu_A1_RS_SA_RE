@@ -1,7 +1,7 @@
 """Analyze the completed 12 x 3 NASNet stability diagnostic.
 
 The script reads only completed rows from the frozen diagnostic contract.  It
-requires all 36 architecture/seed combinations before writing final outputs,
+requires all 36 architecture/seed combinations before writing either output,
 so a partial overnight run can never be mistaken for the final diagnostic.
 All standard deviations are sample SDs (ddof=1).
 """
@@ -76,13 +76,6 @@ def _atomic_write_text(path: Path, text: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     temporary = path.with_suffix(path.suffix + ".tmp")
     temporary.write_text(text, encoding="utf-8")
-    os.replace(temporary, path)
-
-
-def _atomic_write_bytes(path: Path, data: bytes) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_bytes(data)
     os.replace(temporary, path)
 
 
@@ -319,128 +312,16 @@ def write_summary(path: Path, summaries: Sequence[ArchitectureSummary]) -> None:
     import io
 
     stream = io.StringIO(newline="")
-    writer = csv.DictWriter(
-        stream,
-        fieldnames=SUMMARY_FIELDS,
-        lineterminator="\n",
-    )
+    writer = csv.DictWriter(stream, fieldnames=SUMMARY_FIELDS)
     writer.writeheader()
     writer.writerows(summary.to_row() for summary in summaries)
     _atomic_write_text(path, stream.getvalue())
-
-
-def render_stability_plot_png(
-    summaries: Sequence[ArchitectureSummary],
-    rho: float,
-    p_value: float,
-) -> bytes:
-    """Render the SD@5 versus SD@25 diagnostic as a publication-ready PNG."""
-
-    import io
-
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    x_values = [summary.sd_acc_5 * 100.0 for summary in summaries]
-    y_values = [summary.sd_acc_25 * 100.0 for summary in summaries]
-    label_offsets = {
-        "A01": (6, 6),
-        "A02": (6, -12),
-        "A03": (6, 6),
-        "A04": (6, 6),
-        "A05": (6, 6),
-        "A06": (6, 8),
-        "A07": (6, 6),
-        "A08": (6, 6),
-        "A09": (6, 6),
-        "A10": (6, -12),
-        "A11": (6, 6),
-        "A12": (6, -12),
-    }
-
-    figure, axes = plt.subplots(figsize=(7.2, 5.4))
-    try:
-        axes.scatter(
-            x_values,
-            y_values,
-            s=68,
-            color="#2563EB",
-            edgecolors="white",
-            linewidths=0.9,
-            zorder=3,
-        )
-        for summary, x_value, y_value in zip(
-            summaries,
-            x_values,
-            y_values,
-        ):
-            axes.annotate(
-                summary.architecture_id,
-                (x_value, y_value),
-                xytext=label_offsets[summary.architecture_id],
-                textcoords="offset points",
-                fontsize=8.5,
-                color="#1F2937",
-            )
-
-        axes.set_title(
-            "Short- vs Long-Budget Retraining Instability",
-            fontsize=13,
-            pad=12,
-        )
-        axes.set_xlabel(
-            "Sample SD at epoch 5 (percentage points)",
-            fontsize=10.5,
-        )
-        axes.set_ylabel(
-            "Sample SD at epoch 25 (percentage points)",
-            fontsize=10.5,
-        )
-        axes.set_xlim(left=0.0, right=max(x_values) * 1.16)
-        axes.set_ylim(bottom=0.0, top=max(y_values) * 1.20)
-        axes.grid(
-            True,
-            linestyle="--",
-            linewidth=0.7,
-            alpha=0.35,
-            zorder=0,
-        )
-        axes.text(
-            0.03,
-            0.96,
-            f"Spearman ρ = {rho:.3f}\np = {p_value:.3f}, n = {len(summaries)}",
-            transform=axes.transAxes,
-            ha="left",
-            va="top",
-            fontsize=9.5,
-            bbox={
-                "boxstyle": "round,pad=0.35",
-                "facecolor": "white",
-                "edgecolor": "#CBD5E1",
-                "alpha": 0.92,
-            },
-        )
-        figure.tight_layout()
-        output = io.BytesIO()
-        figure.savefig(
-            output,
-            format="png",
-            dpi=300,
-            bbox_inches="tight",
-            facecolor="white",
-        )
-        return output.getvalue()
-    finally:
-        plt.close(figure)
 
 
 def analyze(
     input_path: Path,
     summary_path: Path,
     correlation_path: Path,
-    plot_path: Path | None = None,
 ) -> dict[str, object]:
     observations = read_completed_observations(input_path)
     summaries = summarize_architectures(observations)
@@ -465,23 +346,13 @@ def analyze(
         "interpretation": "review_on_2026-08-31_without_fixed_go_threshold",
         "go_threshold": None,
     }
-    if plot_path is not None:
-        payload["plot"] = str(plot_path)
 
-    plot_png = (
-        render_stability_plot_png(summaries, rho, p_value)
-        if plot_path is not None
-        else None
-    )
-
-    # Write only after every calculation and optional plot render succeeds.
+    # Write only after every calculation succeeds.
     write_summary(summary_path, summaries)
     _atomic_write_text(
         correlation_path,
         json.dumps(payload, indent=2, sort_keys=True) + "\n",
     )
-    if plot_path is not None and plot_png is not None:
-        _atomic_write_bytes(plot_path, plot_png)
     return payload
 
 
@@ -504,24 +375,12 @@ def parse_args() -> argparse.Namespace:
             "experiments/stability_diagnostic/stability_correlation.json"
         ),
     )
-    parser.add_argument(
-        "--plot-output",
-        type=Path,
-        default=Path(
-            "experiments/stability_diagnostic/stability_sd_5_vs_25.png"
-        ),
-    )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
-    payload = analyze(
-        args.input,
-        args.summary_output,
-        args.correlation_output,
-        args.plot_output,
-    )
+    payload = analyze(args.input, args.summary_output, args.correlation_output)
     print(
         "stability diagnostic analysis: PASS "
         f"n={payload['n']} rho={payload['rho']:.6f} "
@@ -529,7 +388,6 @@ def main() -> int:
     )
     print(f"summary: {args.summary_output}")
     print(f"correlation: {args.correlation_output}")
-    print(f"plot: {args.plot_output}")
     return 0
 
 

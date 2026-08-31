@@ -18,93 +18,22 @@ import yaml
 
 
 @dataclass(frozen=True)
-class ExpectedBudgetFlow:
-    """Frozen split of a real-CNN budget for RS-SA-RE."""
-
-    initial_first_evaluations: int
-    warmup_repeats: int
-    evolutionary_children: int
-    periodic_repeats: int
-
-
-def expected_budget_flow(
-    *,
-    population_size: int,
-    warmup_pairs: int,
-    repeat_interval: int,
-    budget: int,
-) -> ExpectedBudgetFlow:
-    """Return the exact deterministic first/repeat allocation.
-
-    A periodic repeat is scheduled only when budget remains after the
-    triggering child.  This preserves the hard upper bound and explains the
-    final unpaired child in both B=30 and B=60 designs.
-    """
-
-    values = (population_size, warmup_pairs, repeat_interval, budget)
-    if any(not isinstance(value, int) for value in values):
-        raise TypeError("budget-flow values must be integers")
-    if population_size <= 0:
-        raise ValueError("population_size must be positive")
-    if warmup_pairs < 0:
-        raise ValueError("warmup_pairs must be non-negative")
-    if repeat_interval <= 0:
-        raise ValueError("repeat_interval must be positive")
-    if budget < population_size + warmup_pairs:
-        raise ValueError("budget cannot cover initialization and warm-up repeats")
-
-    spent = population_size + warmup_pairs
-    evolutionary_children = 0
-    periodic_repeats = 0
-    children_since_repeat = 0
-    while spent < budget:
-        evolutionary_children += 1
-        children_since_repeat += 1
-        spent += 1
-        if children_since_repeat == repeat_interval and spent < budget:
-            periodic_repeats += 1
-            children_since_repeat = 0
-            spent += 1
-    return ExpectedBudgetFlow(
-        initial_first_evaluations=population_size,
-        warmup_repeats=warmup_pairs,
-        evolutionary_children=evolutionary_children,
-        periodic_repeats=periodic_repeats,
-    )
-
-
-@dataclass(frozen=True)
-class SmokeAuditSummary:
-    """Backward-compatible debug/pilot summary with formal extensions."""
-
+class RSSAReAudit:
+    mode: str
     real_training_runs: int
     first_evaluations: int
+    repeat_evaluations: int
     warmup_repeats: int
     periodic_repeats: int
-    final_population_size: int
     candidate_rows: int
-    selected_candidate_rows: int
-    mode: str = "unknown"
-
-    @property
-    def repeat_evaluations(self) -> int:
-        return self.warmup_repeats + self.periodic_repeats
-
-    @property
-    def selected_rows(self) -> int:
-        """Part L–N name retained without breaking the pilot API."""
-
-        return self.selected_candidate_rows
-
-
-# Part L–N used this name internally.  Keep it as an alias so both APIs work.
-RSSAReAudit = SmokeAuditSummary
+    selected_rows: int
+    final_population_size: int
 
 
 _EXPECTED = {
-    "debug": SmokeAuditSummary(30, 25, 4, 1, 20, 25, 5, "debug"),
-    "pilot": SmokeAuditSummary(30, 25, 4, 1, 20, 25, 5, "pilot"),
-    "formal": SmokeAuditSummary(60, 49, 4, 7, 20, 145, 29, "formal"),
+    "debug": RSSAReAudit("debug", 30, 25, 5, 4, 1, 25, 5, 20),
+    "pilot": RSSAReAudit("pilot", 30, 25, 5, 4, 1, 25, 5, 20),
+    "formal": RSSAReAudit("formal", 60, 49, 11, 4, 7, 145, 29, 20),
 }
 
 
@@ -190,13 +119,7 @@ def _population_size(value: Any) -> int | None:
             candidate = value.get(key)
             if isinstance(candidate, int):
                 return candidate
-        for key in (
-            "final_population",
-            "final_population_birth_indices",
-            "final_population_architectures",
-            "population",
-            "population_birth_indices",
-        ):
+        for key in ("final_population", "population"):
             candidate = value.get(key)
             if isinstance(candidate, list):
                 return len(candidate)
@@ -245,7 +168,7 @@ def audit_rs_sa_re_output(
     output_dir: str | Path,
     *,
     expected_mode: str | None = None,
-) -> SmokeAuditSummary:
+) -> RSSAReAudit:
     output = Path(output_dir)
     config = _load_yaml(output / "config.yaml")
     mode = str(config["experiment"]["mode"]).lower()
@@ -270,15 +193,16 @@ def audit_rs_sa_re_output(
     selected_rows = _count_selected(candidate_rows)
     final_population_size = _read_history_population(output / "history.json")
 
-    observed = SmokeAuditSummary(
+    observed = RSSAReAudit(
+        mode=mode,
         real_training_runs=len(first_rows) + len(repeat_rows),
         first_evaluations=len(first_rows),
+        repeat_evaluations=len(repeat_rows),
         warmup_repeats=warmup_repeats,
         periodic_repeats=periodic_repeats,
-        final_population_size=final_population_size,
         candidate_rows=len(candidate_rows),
-        selected_candidate_rows=selected_rows,
-        mode=mode,
+        selected_rows=selected_rows,
+        final_population_size=final_population_size,
     )
     expected = _EXPECTED[mode]
     for field in (
@@ -312,15 +236,15 @@ def audit_rs_sa_re_output(
     return observed
 
 
-def audit_rs_sa_re_smoke(output_dir: str | Path) -> SmokeAuditSummary:
+def audit_rs_sa_re_smoke(output_dir: str | Path) -> RSSAReAudit:
     return audit_rs_sa_re_output(output_dir, expected_mode="debug")
 
 
-def audit_rs_sa_re_pilot(output_dir: str | Path) -> SmokeAuditSummary:
+def audit_rs_sa_re_pilot(output_dir: str | Path) -> RSSAReAudit:
     return audit_rs_sa_re_output(output_dir, expected_mode="pilot")
 
 
-def audit_rs_sa_re_formal(output_dir: str | Path) -> SmokeAuditSummary:
+def audit_rs_sa_re_formal(output_dir: str | Path) -> RSSAReAudit:
     return audit_rs_sa_re_output(output_dir, expected_mode="formal")
 
 

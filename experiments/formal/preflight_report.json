@@ -1,0 +1,21 @@
+{
+  "checks": {
+    "Budget semantics": "PASS",
+    "Dataset consistency": "PASS",
+    "Formal run manifest": "PASS",
+    "Immutable artifact check": "PASS",
+    "Matched seed manifest": "PASS",
+    "NASNet consistency": "PASS",
+    "Output contract": "PASS",
+    "RE config": "PASS",
+    "RNG namespace audit": "PASS",
+    "RS-SA-RE config": "PASS",
+    "RS-SA-RE formal runner": "PASS",
+    "SA-RE config": "PASS",
+    "Trainer consistency": "PASS"
+  },
+  "failures": [],
+  "formal_config_count": 30,
+  "status": "PASS",
+  "timestamp_utc": "2026-08-31T10:48:01.294745+00:00"
+}

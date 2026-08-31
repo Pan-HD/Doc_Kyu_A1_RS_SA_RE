@@ -1,0 +1,79 @@
+experiment:
+  name: nasnet_sa_re_formal_1008
+  method: SA-RE
+  mode: formal
+  status: frozen
+  do_not_run: false
+  freeze_date: '2026-08-31'
+  search_seed: 1008
+  seed_manifest: configs/formal/matched_seed_manifest.yaml
+  output_dir: experiments/formal/sa_re_1008
+  overwrite: false
+dataset:
+  name: CIFAR10
+  data_root: data/cifar10
+  split_dir: data/splits/nasnet_v041
+  split_seed: 20260823
+  train_size: 45000
+  val_size: 5000
+  official_test_size: 10000
+  download: true
+  augment_train: true
+  num_workers: 4
+  pin_memory: true
+network:
+  N: 3
+  F: 24
+  num_classes: 10
+training:
+  epochs: 5
+  batch_size: 128
+  optimizer: SGD
+  learning_rate: 0.025
+  momentum: 0.9
+  weight_decay: 0.0005
+  scheduler: cosine
+  gradient_clip_norm: 5.0
+  amp: true
+  training_seed_base: 20260827
+  drop_path: false
+  auxiliary_head: false
+  torch_compile: false
+evolution:
+  population_size: 20
+  tournament_size: 5
+  budget: 60
+  candidate_count: 5
+surrogate:
+  input_dim: 280
+  hidden_dims:
+  - 32
+  - 16
+  optimizer: Adam
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  loss: MSE
+  steps: 200
+  seed_offset: 900000
+selection:
+  candidate_count: 5
+  child_selection: argmax_predicted_mean
+  score: predicted_mean_accuracy
+implementation:
+  architecture_space: src.nasnet.genotype.NASNetArchitecture
+  trainer: src.training.nasnet_trainer.train_nasnet
+  evaluator: src.search.nasnet_re.NASNetTrainingEvaluator
+  tournament: with_replacement
+  aging: FIFO
+  mutation: src.nasnet.mutation.mutate_architecture
+audit_expectations:
+  real_training_runs: 60
+  first_evaluations: 60
+  repeat_evaluations: 0
+  evolution_children: 40
+  candidate_rows: 200
+  selected_rows: 40
+  final_population: 20
+device:
+  use_cuda: true
+  cuda_index: 0

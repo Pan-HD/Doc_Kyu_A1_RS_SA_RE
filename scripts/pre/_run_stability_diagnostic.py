@@ -210,11 +210,7 @@ def _ensure_frozen_config(path: Path, config: Mapping[str, Any], text: str) -> N
 
 def _empty_results_text() -> str:
     stream = io.StringIO(newline="")
-    csv.DictWriter(
-        stream,
-        fieldnames=RAW_RESULT_FIELDS,
-        lineterminator="\n",
-    ).writeheader()
+    csv.DictWriter(stream, fieldnames=RAW_RESULT_FIELDS).writeheader()
     return stream.getvalue()
 
 
@@ -256,11 +252,7 @@ def upsert_result_row(path: Path, row: Mapping[str, Any]) -> None:
         return int(item["architecture_id"][1:]), int(item["training_seed"])
 
     stream = io.StringIO(newline="")
-    writer = csv.DictWriter(
-        stream,
-        fieldnames=RAW_RESULT_FIELDS,
-        lineterminator="\n",
-    )
+    writer = csv.DictWriter(stream, fieldnames=RAW_RESULT_FIELDS)
     writer.writeheader()
     writer.writerows(sorted(by_key.values(), key=sort_key))
     _atomic_write_text(path, stream.getvalue())

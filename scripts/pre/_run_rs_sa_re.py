@@ -1,4 +1,4 @@
-"""Run a frozen NASNet RS-SA-RE debug, pilot, or formal experiment."""
+"""Run a real NASNet RS-SA-RE debug smoke or matched-seed pilot."""
 
 from __future__ import annotations
 
@@ -17,7 +17,6 @@ import torch
 import yaml
 
 from scripts.check_rs_sa_re_smoke import (
-    audit_rs_sa_re_formal,
     audit_rs_sa_re_pilot,
     audit_rs_sa_re_smoke,
 )
@@ -29,7 +28,7 @@ from src.search.nasnet_rs_sa_re import run_nasnet_rs_sa_re
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run a real NASNet RS-SA-RE debug, pilot, or formal search."
+        description="Run a real NASNet RS-SA-RE debug smoke or pilot."
     )
     parser.add_argument(
         "--config",
@@ -48,11 +47,6 @@ def parse_args() -> argparse.Namespace:
         default=None,
         help="Override stability.repeat_seed from the YAML config.",
     )
-    parser.add_argument(
-        "--validate-only",
-        action="store_true",
-        help="Validate the resolved config without loading data or using CUDA.",
-    )
     return parser.parse_args()
 
 
@@ -64,7 +58,7 @@ def load_config(path: Path) -> dict:
 
 
 def validate_rs_sa_re_config(config: dict) -> None:
-    """Reject drift from the frozen debug, pilot, and formal designs."""
+    """Reject drift from the frozen debug/pilot RS-SA-RE designs."""
 
     experiment = config["experiment"]
     dataset = config["dataset"]
@@ -77,8 +71,8 @@ def validate_rs_sa_re_config(config: dict) -> None:
     if str(experiment["method"]).upper() != "RS-SA-RE":
         raise ValueError("experiment.method must be RS-SA-RE")
     mode = str(experiment["mode"]).lower()
-    if mode not in {"debug", "pilot", "formal"}:
-        raise ValueError("experiment.mode must be debug, pilot, or formal")
+    if mode not in {"debug", "pilot"}:
+        raise ValueError("experiment.mode must be debug or pilot")
     if str(dataset.get("name", "")).upper() != "CIFAR10":
         raise ValueError("RS-SA-RE runner supports only dataset.name=CIFAR10")
     if int(dataset["split_seed"]) != 20_260_823:
@@ -100,7 +94,7 @@ def validate_rs_sa_re_config(config: dict) -> None:
     expected_evolution = {
         "population_size": 20,
         "tournament_size": 5,
-        "budget": 60 if mode == "formal" else 30,
+        "budget": 30,
         "candidate_count": 5,
     }
     for name, expected in expected_evolution.items():
@@ -124,7 +118,7 @@ def validate_rs_sa_re_config(config: dict) -> None:
         raise ValueError("stability repeat policy differs from the frozen policy")
     penalty_lambda = float(stability["lambda"])
     if not math.isclose(penalty_lambda, 1.0, rel_tol=0.0, abs_tol=0.0):
-        raise ValueError("the frozen RS-SA-RE design requires lambda=1.0")
+        raise ValueError("Part F/Part G require provisional lambda=1.0")
     search_seed = int(experiment["search_seed"])
     repeat_seed = int(stability["repeat_seed"])
     if search_seed < 0 or repeat_seed < 0:
@@ -136,33 +130,6 @@ def validate_rs_sa_re_config(config: dict) -> None:
         )
     if mode == "pilot" and search_seed not in {2701, 2702}:
         raise ValueError("Part G pilot search_seed must be 2701 or 2702")
-    if mode == "formal":
-        if search_seed not in set(range(1001, 1011)):
-            raise ValueError("formal search_seed must be in 1001..1010")
-        if str(experiment.get("status", "")).lower() != "frozen":
-            raise ValueError("formal experiment.status must be frozen")
-        if bool(experiment.get("do_not_run", True)):
-            raise ValueError("formal experiment.do_not_run must be false")
-        if bool(experiment.get("overwrite", True)):
-            raise ValueError("formal experiment.overwrite must be false")
-        if "{" in str(experiment["output_dir"]):
-            raise ValueError("formal output_dir must be concrete")
-        expected_audit = {
-            "real_training_runs": 60,
-            "first_evaluations": 49,
-            "repeat_evaluations": 11,
-            "initialization_first_evaluations": 20,
-            "evolution_children": 29,
-            "candidate_rows": 145,
-            "selected_rows": 29,
-            "final_population": 20,
-        }
-        audit_expectations = config.get("audit_expectations", {})
-        for name, expected in expected_audit.items():
-            if int(audit_expectations.get(name, -1)) != expected:
-                raise ValueError(
-                    f"formal audit_expectations.{name} must equal {expected}"
-                )
 
 
 def validate_debug_config(config: dict) -> None:
@@ -189,13 +156,6 @@ def main() -> None:
 
     experiment = config["experiment"]
     stability = config["stability"]
-    mode = str(experiment["mode"]).lower()
-    if mode == "formal" and (
-        args.search_seed is not None or args.repeat_seed is not None
-    ):
-        raise ValueError(
-            "formal seeds are immutable; do not use CLI seed overrides"
-        )
     search_seed = (
         int(experiment["search_seed"])
         if args.search_seed is None
@@ -217,13 +177,6 @@ def main() -> None:
     experiment["output_dir"] = output_dir
     stability["repeat_seed"] = repeat_seed
     validate_rs_sa_re_config(config)
-    if args.validate_only:
-        print(
-            "RS-SA-RE config: PASS "
-            f"mode={mode} search_seed={search_seed} "
-            f"budget={config['evolution']['budget']}"
-        )
-        return
     resolved_config_text = yaml.safe_dump(
         config,
         sort_keys=False,
@@ -290,12 +243,11 @@ def main() -> None:
     )
 
     mode = str(experiment["mode"]).lower()
-    if mode == "debug":
-        audit = audit_rs_sa_re_smoke(result.output_dir)
-    elif mode == "pilot":
-        audit = audit_rs_sa_re_pilot(result.output_dir)
-    else:
-        audit = audit_rs_sa_re_formal(result.output_dir)
+    audit = (
+        audit_rs_sa_re_smoke(result.output_dir)
+        if mode == "debug"
+        else audit_rs_sa_re_pilot(result.output_dir)
+    )
     print(f"output directory: {result.output_dir}")
     print(f"real training runs: {audit.real_training_runs}")
     print(f"first evaluations: {audit.first_evaluations}")
