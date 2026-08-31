@@ -1,0 +1,11 @@
+FORMAL START method=SA-RE search_seed=1001 time=2026-08-31T13:47:42Z
+Traceback (most recent call last):
+  File "D:\Pro_Doc_Kyu\A1_RS_SA_RE\scripts\run_sa_re.py", line 177, in <module>
+    main()
+  File "D:\Pro_Doc_Kyu\A1_RS_SA_RE\scripts\run_sa_re.py", line 126, in main
+    result = run_nasnet_sa_re(
+             ^^^^^^^^^^^^^^^^^
+  File "D:\Pro_Doc_Kyu\A1_RS_SA_RE\src\search\nasnet_sa_re.py", line 251, in run_nasnet_sa_re
+    raise ValueError(f"unknown surrogate configuration fields: {unknown}")
+ValueError: unknown surrogate configuration fields: loss
+FORMAL END method=SA-RE search_seed=1001 exit_code=1 time=2026-08-31T13:47:47Z

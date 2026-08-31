@@ -83,7 +83,15 @@ def main() -> None:
     network = config["network"]
     training = dict(config["training"])
     evolution = config["evolution"]
-    surrogate = config["surrogate"]
+
+    # surrogate = config["surrogate"]
+    surrogate = dict(config["surrogate"])
+    surrogate_loss = str(
+        surrogate.pop("loss", "MSE")
+    ).strip().upper()
+    if surrogate_loss != "MSE":
+        raise ValueError("SA-RE requires surrogate.loss=MSE")
+
     device = _select_device(config.get("device", {}))
 
     if str(dataset.get("name", "")).upper() != "CIFAR10":

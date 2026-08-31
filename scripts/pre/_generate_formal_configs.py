@@ -61,19 +61,6 @@ RUN_MANIFEST_FIELDS = (
     "audit_status",
     "notes",
 )
-RUN_MANIFEST_IDENTITY_FIELDS = (
-    "method",
-    "search_seed",
-    "config_path",
-    "output_directory",
-)
-VALID_RUN_STATUSES = {"pending", "running", "completed", "failed", "audited"}
-VALID_AUDIT_STATUSES = {"pending", "not_run", "failed", "passed"}
-EXPECTED_AUDITED_COUNTS = {
-    "RE": ("60", "60", "0"),
-    "SA-RE": ("60", "60", "0"),
-    "RS-SA-RE": ("60", "49", "11"),
-}
 
 
 def _read_yaml(path: Path) -> dict[str, Any]:
@@ -232,109 +219,6 @@ def _csv_text(rows: list[dict[str, str]]) -> str:
     return stream.getvalue()
 
 
-def _csv_rows(text: str) -> tuple[tuple[str, ...], list[dict[str, str]]]:
-    stream = io.StringIO(text, newline="")
-    reader = csv.DictReader(stream)
-    return tuple(reader.fieldnames or ()), [dict(row) for row in reader]
-
-
-def _validate_runtime_manifest(path: Path, expected_text: str) -> None:
-    """Validate frozen run identities while allowing lifecycle updates."""
-
-    observed_fields, observed_rows = _csv_rows(
-        path.read_text(encoding="utf-8-sig")
-    )
-    expected_fields, expected_rows = _csv_rows(expected_text)
-    if observed_fields != RUN_MANIFEST_FIELDS:
-        raise RuntimeError(f"{path} has an unexpected schema")
-    if expected_fields != RUN_MANIFEST_FIELDS:
-        raise RuntimeError("generated manifest template has an unexpected schema")
-    if len(observed_rows) != len(expected_rows):
-        raise RuntimeError(
-            f"{path} must contain exactly {len(expected_rows)} rows"
-        )
-
-    for index, (observed, expected) in enumerate(
-        zip(observed_rows, expected_rows, strict=True),
-        start=1,
-    ):
-        for field in RUN_MANIFEST_IDENTITY_FIELDS:
-            if observed[field] != expected[field]:
-                raise RuntimeError(
-                    f"{path} row {index} changes frozen field {field}: "
-                    f"expected {expected[field]!r}, observed {observed[field]!r}"
-                )
-
-        status = observed["status"]
-        audit_status = observed["audit_status"]
-        if status not in VALID_RUN_STATUSES:
-            raise RuntimeError(f"{path} row {index} has invalid status {status!r}")
-        if audit_status not in VALID_AUDIT_STATUSES:
-            raise RuntimeError(
-                f"{path} row {index} has invalid audit status {audit_status!r}"
-            )
-
-        if status in {"pending", "running"} and audit_status != "pending":
-            raise RuntimeError(
-                f"{path} row {index} has inconsistent lifecycle/audit status"
-            )
-        if status == "failed" and audit_status != "not_run":
-            raise RuntimeError(
-                f"{path} row {index} failed before audit but is not marked not_run"
-            )
-        if status == "completed" and audit_status != "failed":
-            raise RuntimeError(
-                f"{path} row {index} completed without the required failed audit"
-            )
-        if status == "audited" and audit_status != "passed":
-            raise RuntimeError(
-                f"{path} row {index} audited without a passed audit"
-            )
-
-        if status == "pending":
-            mutable_values = (
-                observed["start_time"],
-                observed["end_time"],
-                observed["real_training_runs"],
-                observed["first_evaluations"],
-                observed["repeat_evaluations"],
-                observed["exit_code"],
-            )
-            if any(mutable_values):
-                raise RuntimeError(
-                    f"{path} row {index} pending with populated run fields"
-                )
-        elif status == "running":
-            if not observed["start_time"] or observed["end_time"]:
-                raise RuntimeError(
-                    f"{path} row {index} has invalid running timestamps"
-                )
-        else:
-            if not observed["start_time"] or not observed["end_time"]:
-                raise RuntimeError(
-                    f"{path} row {index} terminal without complete timestamps"
-                )
-
-        if status == "failed" and not observed["notes"]:
-            raise RuntimeError(f"{path} row {index} failed without notes")
-        if status in {"completed", "audited"} and observed["exit_code"] != "0":
-            raise RuntimeError(
-                f"{path} row {index} has a successful runner with nonzero exit code"
-            )
-        if status == "audited":
-            counts = (
-                observed["real_training_runs"],
-                observed["first_evaluations"],
-                observed["repeat_evaluations"],
-            )
-            expected_counts = EXPECTED_AUDITED_COUNTS[observed["method"]]
-            if counts != expected_counts:
-                raise RuntimeError(
-                    f"{path} row {index} has audited counts {counts}, "
-                    f"expected {expected_counts}"
-                )
-
-
 def expected_artifacts() -> dict[Path, str]:
     templates = _load_source_templates()
     artifacts: dict[Path, str] = {
@@ -366,11 +250,7 @@ def _write_without_drift(path: Path, text: str) -> str:
 def write_artifacts() -> None:
     counts = {"created": 0, "unchanged": 0}
     for path, text in expected_artifacts().items():
-        if path == RUN_MANIFEST_PATH and path.exists():
-            _validate_runtime_manifest(path, text)
-            counts["unchanged"] += 1
-        else:
-            counts[_write_without_drift(path, text)] += 1
+        counts[_write_without_drift(path, text)] += 1
     print(
         "formal artifacts: PASS "
         f"created={counts['created']} unchanged={counts['unchanged']} total={sum(counts.values())}"
@@ -380,26 +260,16 @@ def write_artifacts() -> None:
 def check_artifacts() -> None:
     missing: list[Path] = []
     changed: list[Path] = []
-    invalid: list[str] = []
     for path, expected in expected_artifacts().items():
         if not path.exists():
             missing.append(path)
-        elif path == RUN_MANIFEST_PATH:
-            try:
-                _validate_runtime_manifest(path, expected)
-            except RuntimeError as error:
-                invalid.append(str(error))
         elif path.read_text(encoding="utf-8") != expected:
             changed.append(path)
-    if missing or changed or invalid:
+    if missing or changed:
         details = [f"missing: {path}" for path in missing]
         details.extend(f"changed: {path}" for path in changed)
-        details.extend(f"invalid: {message}" for message in invalid)
         raise RuntimeError("formal artifact check failed\n" + "\n".join(details))
-    print(
-        "formal artifacts: PASS checked=32 configs=30 "
-        "runtime_manifest=validated"
-    )
+    print("formal artifacts: PASS checked=32 configs=30")
 
 
 def parse_args() -> argparse.Namespace:

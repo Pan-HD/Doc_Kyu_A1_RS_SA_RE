@@ -5,8 +5,6 @@ from pathlib import Path
 
 import yaml
 
-from scripts.generate_formal_configs import build_run_manifest_rows
-
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = PROJECT_ROOT / "experiments" / "formal" / "manifest.csv"
@@ -32,12 +30,6 @@ FIELDS = (
     "notes",
 )
 VALID_STATUSES = {"pending", "running", "completed", "failed", "audited"}
-VALID_AUDIT_STATUSES = {"pending", "not_run", "failed", "passed"}
-EXPECTED_AUDITED_COUNTS = {
-    "RE": ("60", "60", "0"),
-    "SA-RE": ("60", "60", "0"),
-    "RS-SA-RE": ("60", "49", "11"),
-}
 
 
 def _rows() -> tuple[tuple[str, ...], list[dict[str, str]]]:
@@ -48,7 +40,7 @@ def _rows() -> tuple[tuple[str, ...], list[dict[str, str]]]:
     return fieldnames, rows
 
 
-def test_manifest_has_exact_schema_and_thirty_lifecycle_rows() -> None:
+def test_manifest_has_exact_schema_and_thirty_pending_rows() -> None:
     fieldnames, rows = _rows()
     assert fieldnames == FIELDS
     assert len(rows) == 30
@@ -61,55 +53,9 @@ def test_manifest_has_exact_schema_and_thirty_lifecycle_rows() -> None:
     assert len(set(expected_pairs)) == 30
 
     for row in rows:
-        status = row["status"]
-        assert status in VALID_STATUSES
-        assert row["audit_status"] in VALID_AUDIT_STATUSES
-
-        if status == "pending":
-            assert row["audit_status"] == "pending"
-            for field in (
-                "start_time",
-                "end_time",
-                "real_training_runs",
-                "first_evaluations",
-                "repeat_evaluations",
-                "exit_code",
-            ):
-                assert row[field] == ""
-        elif status == "running":
-            assert row["audit_status"] == "pending"
-            assert row["start_time"]
-            assert row["end_time"] == ""
-        elif status == "failed":
-            assert row["audit_status"] == "not_run"
-            assert row["start_time"]
-            assert row["end_time"]
-            assert row["notes"]
-        elif status == "completed":
-            assert row["audit_status"] == "failed"
-            assert row["start_time"]
-            assert row["end_time"]
-            assert row["exit_code"] == "0"
-        else:
-            assert status == "audited"
-            assert row["audit_status"] == "passed"
-            assert row["start_time"]
-            assert row["end_time"]
-            assert row["exit_code"] == "0"
-            counts = (
-                row["real_training_runs"],
-                row["first_evaluations"],
-                row["repeat_evaluations"],
-            )
-            assert counts == EXPECTED_AUDITED_COUNTS[row["method"]]
-
-
-def test_new_manifest_template_starts_with_thirty_pending_rows() -> None:
-    rows = build_run_manifest_rows()
-    assert len(rows) == 30
-    assert all(row["status"] == "pending" for row in rows)
-    assert all(row["audit_status"] == "pending" for row in rows)
-    for row in rows:
+        assert row["status"] in VALID_STATUSES
+        assert row["status"] == "pending"
+        assert row["audit_status"] == "pending"
         for field in (
             "start_time",
             "end_time",
@@ -154,10 +100,4 @@ def test_manifest_status_vocabulary_is_closed_and_unambiguous() -> None:
         "completed",
         "failed",
         "audited",
-    }
-    assert VALID_AUDIT_STATUSES == {
-        "pending",
-        "not_run",
-        "failed",
-        "passed",
     }

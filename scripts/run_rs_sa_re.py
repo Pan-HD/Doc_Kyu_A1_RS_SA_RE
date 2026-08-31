@@ -113,6 +113,9 @@ def validate_rs_sa_re_config(config: dict) -> None:
         raise ValueError("surrogate.hidden_dims must equal [32, 16]")
     if str(surrogate["optimizer"]).lower() != "adam":
         raise ValueError("surrogate.optimizer must be Adam")
+    
+    if str(surrogate.get("loss", "MSE")).strip().upper() != "MSE":
+        raise ValueError("RS-SA-RE requires surrogate.loss=MSE")
 
     policy = RepeatPolicyConfig(
         initial_population_size=int(evolution["population_size"]),
@@ -234,7 +237,11 @@ def main() -> None:
     network = config["network"]
     training = dict(config["training"])
     evolution = config["evolution"]
-    surrogate = config["surrogate"]
+
+    # surrogate = config["surrogate"]
+    surrogate = dict(config["surrogate"])
+    surrogate.pop("loss", None)
+
     device = _select_device(config.get("device", {}))
 
     training_seed_base = int(training.pop("training_seed_base"))
