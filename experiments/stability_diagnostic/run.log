@@ -1,0 +1,79 @@
+PACKAGE_TEMPLATE awaiting --prepare-only; no CNN training has been started.
+2026-08-30T09:02:06+00:00 PREPARED frozen_architectures=12 architecture_seed=8300 training_seeds=83001,83002,83003 epochs=25 milestones=5,25
+2026-08-30T09:02:31+00:00 PREPARED frozen_architectures=12 architecture_seed=8300 training_seeds=83001,83002,83003 epochs=25 milestones=5,25
+2026-08-30T09:02:32+00:00 START architecture_id=A01 training_seed=83001 epochs=25
+2026-08-30T09:12:35+00:00 DONE architecture_id=A01 training_seed=83001 acc5=0.811000 acc25=0.910000 seconds=599.947
+2026-08-30T09:12:35+00:00 SESSION completed=1 skipped=0 targets=1
+2026-08-30T09:13:59+00:00 PREPARED frozen_architectures=12 architecture_seed=8300 training_seeds=83001,83002,83003 epochs=25 milestones=5,25
+2026-08-30T09:13:59+00:00 SKIP architecture_id=A01 training_seed=83001 status=completed
+2026-08-30T09:13:59+00:00 START architecture_id=A01 training_seed=83002 epochs=25
+2026-08-30T09:24:12+00:00 DONE architecture_id=A01 training_seed=83002 acc5=0.799800 acc25=0.910200 seconds=608.662
+2026-08-30T09:24:12+00:00 START architecture_id=A01 training_seed=83003 epochs=25
+2026-08-30T09:34:08+00:00 DONE architecture_id=A01 training_seed=83003 acc5=0.798800 acc25=0.911200 seconds=593.710
+2026-08-30T09:34:08+00:00 START architecture_id=A02 training_seed=83001 epochs=25
+2026-08-30T09:44:46+00:00 DONE architecture_id=A02 training_seed=83001 acc5=0.742400 acc25=0.894400 seconds=634.933
+2026-08-30T09:44:46+00:00 START architecture_id=A02 training_seed=83002 epochs=25
+2026-08-30T09:55:10+00:00 DONE architecture_id=A02 training_seed=83002 acc5=0.739000 acc25=0.889400 seconds=621.371
+2026-08-30T09:55:10+00:00 START architecture_id=A02 training_seed=83003 epochs=25
+2026-08-30T10:05:30+00:00 DONE architecture_id=A02 training_seed=83003 acc5=0.714800 acc25=0.891800 seconds=616.797
+2026-08-30T10:05:30+00:00 START architecture_id=A03 training_seed=83001 epochs=25
+2026-08-30T10:15:38+00:00 DONE architecture_id=A03 training_seed=83001 acc5=0.760800 acc25=0.895400 seconds=605.308
+2026-08-30T10:15:38+00:00 START architecture_id=A03 training_seed=83002 epochs=25
+2026-08-30T10:25:51+00:00 DONE architecture_id=A03 training_seed=83002 acc5=0.755600 acc25=0.892600 seconds=610.081
+2026-08-30T10:25:51+00:00 START architecture_id=A03 training_seed=83003 epochs=25
+2026-08-30T10:37:02+00:00 DONE architecture_id=A03 training_seed=83003 acc5=0.752000 acc25=0.887800 seconds=667.995
+2026-08-30T10:37:02+00:00 START architecture_id=A04 training_seed=83001 epochs=25
+2026-08-30T10:51:17+00:00 DONE architecture_id=A04 training_seed=83001 acc5=0.766200 acc25=0.893800 seconds=852.609
+2026-08-30T10:51:17+00:00 START architecture_id=A04 training_seed=83002 epochs=25
+2026-08-30T11:05:31+00:00 DONE architecture_id=A04 training_seed=83002 acc5=0.745400 acc25=0.898800 seconds=851.155
+2026-08-30T11:05:31+00:00 START architecture_id=A04 training_seed=83003 epochs=25
+2026-08-30T11:19:42+00:00 DONE architecture_id=A04 training_seed=83003 acc5=0.726400 acc25=0.900000 seconds=847.989
+2026-08-30T11:19:42+00:00 START architecture_id=A05 training_seed=83001 epochs=25
+2026-08-30T11:31:12+00:00 DONE architecture_id=A05 training_seed=83001 acc5=0.689600 acc25=0.872800 seconds=686.865
+2026-08-30T11:31:12+00:00 START architecture_id=A05 training_seed=83002 epochs=25
+2026-08-30T11:42:46+00:00 DONE architecture_id=A05 training_seed=83002 acc5=0.638800 acc25=0.872400 seconds=691.140
+2026-08-30T11:42:46+00:00 START architecture_id=A05 training_seed=83003 epochs=25
+2026-08-30T11:54:22+00:00 DONE architecture_id=A05 training_seed=83003 acc5=0.591800 acc25=0.874800 seconds=693.992
+2026-08-30T11:54:22+00:00 START architecture_id=A06 training_seed=83001 epochs=25
+2026-08-30T12:02:37+00:00 DONE architecture_id=A06 training_seed=83001 acc5=0.755400 acc25=0.904200 seconds=491.811
+2026-08-30T12:02:37+00:00 START architecture_id=A06 training_seed=83002 epochs=25
+2026-08-30T12:10:01+00:00 DONE architecture_id=A06 training_seed=83002 acc5=0.765800 acc25=0.904000 seconds=441.633
+2026-08-30T12:10:01+00:00 START architecture_id=A06 training_seed=83003 epochs=25
+2026-08-30T12:17:24+00:00 DONE architecture_id=A06 training_seed=83003 acc5=0.761600 acc25=0.903600 seconds=439.988
+2026-08-30T12:17:24+00:00 START architecture_id=A07 training_seed=83001 epochs=25
+2026-08-30T12:31:47+00:00 DONE architecture_id=A07 training_seed=83001 acc5=0.659600 acc25=0.874200 seconds=860.208
+2026-08-30T12:31:47+00:00 START architecture_id=A07 training_seed=83002 epochs=25
+2026-08-30T12:46:32+00:00 DONE architecture_id=A07 training_seed=83002 acc5=0.630200 acc25=0.881600 seconds=882.408
+2026-08-30T12:46:32+00:00 START architecture_id=A07 training_seed=83003 epochs=25
+2026-08-30T13:01:39+00:00 DONE architecture_id=A07 training_seed=83003 acc5=0.656800 acc25=0.873400 seconds=903.561
+2026-08-30T13:01:39+00:00 START architecture_id=A08 training_seed=83001 epochs=25
+2026-08-30T13:11:56+00:00 DONE architecture_id=A08 training_seed=83001 acc5=0.632800 acc25=0.876200 seconds=614.558
+2026-08-30T13:11:56+00:00 START architecture_id=A08 training_seed=83002 epochs=25
+2026-08-30T13:22:36+00:00 DONE architecture_id=A08 training_seed=83002 acc5=0.598400 acc25=0.874600 seconds=637.110
+2026-08-30T13:22:36+00:00 START architecture_id=A08 training_seed=83003 epochs=25
+2026-08-30T13:33:03+00:00 DONE architecture_id=A08 training_seed=83003 acc5=0.658200 acc25=0.885800 seconds=624.599
+2026-08-30T13:33:03+00:00 START architecture_id=A09 training_seed=83001 epochs=25
+2026-08-30T13:42:01+00:00 DONE architecture_id=A09 training_seed=83001 acc5=0.727000 acc25=0.882400 seconds=534.360
+2026-08-30T13:42:01+00:00 START architecture_id=A09 training_seed=83002 epochs=25
+2026-08-30T13:50:34+00:00 DONE architecture_id=A09 training_seed=83002 acc5=0.647000 acc25=0.890000 seconds=510.319
+2026-08-30T13:50:34+00:00 START architecture_id=A09 training_seed=83003 epochs=25
+2026-08-30T13:59:11+00:00 DONE architecture_id=A09 training_seed=83003 acc5=0.718800 acc25=0.886000 seconds=514.492
+2026-08-30T13:59:11+00:00 START architecture_id=A10 training_seed=83001 epochs=25
+2026-08-30T14:09:41+00:00 DONE architecture_id=A10 training_seed=83001 acc5=0.746800 acc25=0.891000 seconds=627.649
+2026-08-30T14:09:41+00:00 START architecture_id=A10 training_seed=83002 epochs=25
+2026-08-30T14:20:19+00:00 DONE architecture_id=A10 training_seed=83002 acc5=0.739200 acc25=0.890800 seconds=634.900
+2026-08-30T14:20:19+00:00 START architecture_id=A10 training_seed=83003 epochs=25
+2026-08-30T14:30:50+00:00 DONE architecture_id=A10 training_seed=83003 acc5=0.711800 acc25=0.888800 seconds=627.831
+2026-08-30T14:30:50+00:00 START architecture_id=A11 training_seed=83001 epochs=25
+2026-08-30T14:43:03+00:00 DONE architecture_id=A11 training_seed=83001 acc5=0.681000 acc25=0.872000 seconds=730.322
+2026-08-30T14:43:03+00:00 START architecture_id=A11 training_seed=83002 epochs=25
+2026-08-30T14:55:50+00:00 DONE architecture_id=A11 training_seed=83002 acc5=0.627200 acc25=0.876200 seconds=764.413
+2026-08-30T14:55:50+00:00 START architecture_id=A11 training_seed=83003 epochs=25
+2026-08-30T15:08:19+00:00 DONE architecture_id=A11 training_seed=83003 acc5=0.693800 acc25=0.885600 seconds=746.258
+2026-08-30T15:08:19+00:00 START architecture_id=A12 training_seed=83001 epochs=25
+2026-08-30T15:20:07+00:00 DONE architecture_id=A12 training_seed=83001 acc5=0.765600 acc25=0.895200 seconds=705.724
+2026-08-30T15:20:07+00:00 START architecture_id=A12 training_seed=83002 epochs=25
+2026-08-30T15:31:51+00:00 DONE architecture_id=A12 training_seed=83002 acc5=0.770400 acc25=0.885800 seconds=700.586
+2026-08-30T15:31:51+00:00 START architecture_id=A12 training_seed=83003 epochs=25
+2026-08-30T15:43:34+00:00 DONE architecture_id=A12 training_seed=83003 acc5=0.724400 acc25=0.894400 seconds=700.613
+2026-08-30T15:43:34+00:00 SESSION completed=35 skipped=1 targets=36

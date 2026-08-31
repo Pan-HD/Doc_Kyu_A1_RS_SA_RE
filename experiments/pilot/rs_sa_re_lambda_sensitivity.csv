@@ -1,0 +1,11 @@
+search_seed,budget,candidate_count,argmax_mu,argmax_lambda_0,argmax_lambda_0_5,argmax_lambda_1,argmax_lambda_2,changed_lambda_0_5,changed_lambda_1,changed_lambda_2,pilot_selected_candidate
+2701,25,5,3,3,3,3,0,False,False,True,3
+2701,26,5,0,0,0,0,0,False,False,False,0
+2701,27,5,1,1,1,1,1,False,False,False,1
+2701,28,5,0,0,0,0,0,False,False,False,0
+2701,30,5,1,1,1,1,1,False,False,False,1
+2702,25,5,1,1,4,4,4,True,True,True,4
+2702,26,5,1,1,1,1,1,False,False,False,1
+2702,27,5,3,3,3,3,3,False,False,False,3
+2702,28,5,1,1,1,1,1,False,False,False,1
+2702,30,5,1,1,1,1,4,False,False,True,1

@@ -1,0 +1,18 @@
+status: pre-freeze
+do_not_run: true
+freeze_date: '2026-08-31'
+matched_seed_policy: same_search_seed_across_RE_SA_RE_RS_SA_RE
+methods: [RE, SA-RE, RS-SA-RE]
+search_seeds:
+  - 1001
+  - 1002
+  - 1003
+  - 1004
+  - 1005
+  - 1006
+  - 1007
+  - 1008
+  - 1009
+  - 1010
+expected_runs_per_method: 10
+expected_total_runs: 30

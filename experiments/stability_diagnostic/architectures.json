@@ -1,0 +1,1365 @@
+{
+  "architecture_count": 12,
+  "architecture_seed": 8300,
+  "architectures": [
+    {
+      "architecture": {
+        "normal": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "sep_conv_7x7"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "identity"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "avg_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "sep_conv_5x5"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "conv_1x7_7x1"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "identity"
+              },
+              "branch_2": {
+                "input_state": 5,
+                "op": "sep_conv_3x3"
+              }
+            }
+          ]
+        },
+        "reduction": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "avg_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "sep_conv_5x5"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "dil_sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "identity"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "identity"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "max_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 4,
+                "op": "sep_conv_7x7"
+              }
+            }
+          ]
+        }
+      },
+      "architecture_id": "A01"
+    },
+    {
+      "architecture": {
+        "normal": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "max_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "sep_conv_7x7"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "dil_sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 4,
+                "op": "avg_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 4,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 3,
+                "op": "sep_conv_7x7"
+              }
+            }
+          ]
+        },
+        "reduction": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "identity"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "avg_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "identity"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "avg_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "sep_conv_7x7"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "identity"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "max_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "sep_conv_3x3"
+              }
+            }
+          ]
+        }
+      },
+      "architecture_id": "A02"
+    },
+    {
+      "architecture": {
+        "normal": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "dil_sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "sep_conv_5x5"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "conv_1x7_7x1"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 3,
+                "op": "sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "identity"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 4,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "max_pool_3x3"
+              }
+            }
+          ]
+        },
+        "reduction": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "dil_sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "identity"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "identity"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "dil_sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "conv_1x7_7x1"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "sep_conv_5x5"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 5,
+                "op": "sep_conv_7x7"
+              }
+            }
+          ]
+        }
+      },
+      "architecture_id": "A03"
+    },
+    {
+      "architecture": {
+        "normal": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "identity"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "avg_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "sep_conv_7x7"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "conv_1x7_7x1"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_7x7"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "sep_conv_5x5"
+              },
+              "branch_2": {
+                "input_state": 5,
+                "op": "sep_conv_7x7"
+              }
+            }
+          ]
+        },
+        "reduction": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "conv_1x7_7x1"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "dil_sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "identity"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "sep_conv_7x7"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "avg_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "sep_conv_5x5"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "conv_1x7_7x1"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 5,
+                "op": "dil_sep_conv_3x3"
+              }
+            }
+          ]
+        }
+      },
+      "architecture_id": "A04"
+    },
+    {
+      "architecture": {
+        "normal": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "max_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "dil_sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "sep_conv_7x7"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "dil_sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "dil_sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 3,
+                "op": "dil_sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 5,
+                "op": "identity"
+              },
+              "branch_2": {
+                "input_state": 3,
+                "op": "dil_sep_conv_3x3"
+              }
+            }
+          ]
+        },
+        "reduction": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "max_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "dil_sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "max_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 3,
+                "op": "avg_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "sep_conv_5x5"
+              },
+              "branch_2": {
+                "input_state": 3,
+                "op": "sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 4,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 4,
+                "op": "sep_conv_5x5"
+              }
+            }
+          ]
+        }
+      },
+      "architecture_id": "A05"
+    },
+    {
+      "architecture": {
+        "normal": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "identity"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_7x7"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "max_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 4,
+                "op": "identity"
+              },
+              "branch_2": {
+                "input_state": 3,
+                "op": "sep_conv_3x3"
+              }
+            }
+          ]
+        },
+        "reduction": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "avg_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_7x7"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 4,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 4,
+                "op": "dil_sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 5,
+                "op": "sep_conv_5x5"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "sep_conv_3x3"
+              }
+            }
+          ]
+        }
+      },
+      "architecture_id": "A06"
+    },
+    {
+      "architecture": {
+        "normal": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "dil_sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "conv_1x7_7x1"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 4,
+                "op": "sep_conv_7x7"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 4,
+                "op": "sep_conv_7x7"
+              }
+            }
+          ]
+        },
+        "reduction": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_7x7"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "dil_sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "sep_conv_7x7"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "max_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 4,
+                "op": "sep_conv_7x7"
+              },
+              "branch_2": {
+                "input_state": 4,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "identity"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "identity"
+              }
+            }
+          ]
+        }
+      },
+      "architecture_id": "A07"
+    },
+    {
+      "architecture": {
+        "normal": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "max_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "identity"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 4,
+                "op": "avg_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "sep_conv_7x7"
+              }
+            }
+          ]
+        },
+        "reduction": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "sep_conv_5x5"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "conv_1x7_7x1"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "identity"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "sep_conv_7x7"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 4,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 5,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "identity"
+              }
+            }
+          ]
+        }
+      },
+      "architecture_id": "A08"
+    },
+    {
+      "architecture": {
+        "normal": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "avg_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_7x7"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "identity"
+              },
+              "branch_2": {
+                "input_state": 4,
+                "op": "identity"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 4,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 5,
+                "op": "dil_sep_conv_3x3"
+              }
+            }
+          ]
+        },
+        "reduction": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "identity"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "identity"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_7x7"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "conv_1x7_7x1"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 3,
+                "op": "avg_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 4,
+                "op": "max_pool_3x3"
+              }
+            }
+          ]
+        }
+      },
+      "architecture_id": "A09"
+    },
+    {
+      "architecture": {
+        "normal": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "identity"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "dil_sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "dil_sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "sep_conv_7x7"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 4,
+                "op": "sep_conv_5x5"
+              },
+              "branch_2": {
+                "input_state": 4,
+                "op": "identity"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 4,
+                "op": "dil_sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_5x5"
+              }
+            }
+          ]
+        },
+        "reduction": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "avg_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "max_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "sep_conv_7x7"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 3,
+                "op": "sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "sep_conv_7x7"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "sep_conv_7x7"
+              }
+            }
+          ]
+        }
+      },
+      "architecture_id": "A10"
+    },
+    {
+      "architecture": {
+        "normal": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "dil_sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "max_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "sep_conv_5x5"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "sep_conv_7x7"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "sep_conv_7x7"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "identity"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "sep_conv_7x7"
+              },
+              "branch_2": {
+                "input_state": 5,
+                "op": "sep_conv_3x3"
+              }
+            }
+          ]
+        },
+        "reduction": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "dil_sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "sep_conv_5x5"
+              },
+              "branch_2": {
+                "input_state": 3,
+                "op": "sep_conv_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 4,
+                "op": "max_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "identity"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 5,
+                "op": "sep_conv_7x7"
+              },
+              "branch_2": {
+                "input_state": 4,
+                "op": "sep_conv_7x7"
+              }
+            }
+          ]
+        }
+      },
+      "architecture_id": "A11"
+    },
+    {
+      "architecture": {
+        "normal": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "sep_conv_7x7"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "sep_conv_5x5"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "max_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "sep_conv_5x5"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "identity"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 5,
+                "op": "sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "avg_pool_3x3"
+              }
+            }
+          ]
+        },
+        "reduction": {
+          "pairs": [
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "avg_pool_3x3"
+              },
+              "branch_2": {
+                "input_state": 1,
+                "op": "sep_conv_5x5"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 2,
+                "op": "sep_conv_5x5"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "conv_1x7_7x1"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 0,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 0,
+                "op": "conv_1x7_7x1"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 1,
+                "op": "dil_sep_conv_3x3"
+              },
+              "branch_2": {
+                "input_state": 2,
+                "op": "max_pool_3x3"
+              }
+            },
+            {
+              "branch_1": {
+                "input_state": 3,
+                "op": "conv_1x7_7x1"
+              },
+              "branch_2": {
+                "input_state": 3,
+                "op": "sep_conv_7x7"
+              }
+            }
+          ]
+        }
+      },
+      "architecture_id": "A12"
+    }
+  ],
+  "frozen": true,
+  "sampling_attempts": 12,
+  "schema_version": 1
+}

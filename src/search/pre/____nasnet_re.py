@@ -18,7 +18,7 @@ import random
 from dataclasses import dataclass, is_dataclass, asdict
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Callable, Mapping, Protocol, Sequence
+from typing import Any, Callable, Mapping, Protocol
 
 from .regularized_evolution import (
     EVOLUTION_PHASE,
@@ -165,7 +165,6 @@ class NASNetTrainingEvaluator:
         training_config_factory: Callable[..., Any] | None = None,
         trainer_fn: Callable[[Any, Any, Any, Any, Any], Any]
         | None = None,
-        milestone_epochs: Sequence[int] | None = None,
         seed_fn: Callable[[int], None] = seed_training_event,
         cleanup_fn: Callable[[Any, Any], None] = _default_cleanup,
     ) -> None:
@@ -187,26 +186,6 @@ class NASNetTrainingEvaluator:
             or _default_training_config_factory
         )
         self.trainer_fn = trainer_fn or _default_trainer
-        requested_milestones = tuple(milestone_epochs or ())
-        if any(
-            isinstance(epoch, bool)
-            or not isinstance(epoch, int)
-            or epoch <= 0
-            for epoch in requested_milestones
-        ):
-            raise ValueError("milestone_epochs must contain positive integers")
-        if len(set(requested_milestones)) != len(requested_milestones):
-            raise ValueError("milestone_epochs must not contain duplicates")
-        configured_epochs = self.training_config_values.get("epochs")
-        if (
-            requested_milestones
-            and configured_epochs is not None
-            and max(requested_milestones) > int(configured_epochs)
-        ):
-            raise ValueError(
-                "milestone_epochs cannot exceed training.epochs"
-            )
-        self.milestone_epochs = requested_milestones
         self.seed_fn = seed_fn
         self.cleanup_fn = cleanup_fn
         self.real_training_runs = 0
@@ -274,54 +253,6 @@ class NASNetTrainingEvaluator:
                 training_result.training_time_seconds
             ),
         }
-
-        if self.milestone_epochs:
-            epoch_metrics = getattr(training_result, "epoch_metrics", None)
-            if not isinstance(epoch_metrics, Sequence):
-                raise RuntimeError(
-                    "trainer result must expose an epoch_metrics sequence "
-                    "when milestone_epochs are requested"
-                )
-            if len(epoch_metrics) < max(self.milestone_epochs):
-                raise RuntimeError(
-                    "trainer result does not contain every requested milestone"
-                )
-            validation_accuracy_by_epoch: dict[str, float] = {}
-            for epoch in self.milestone_epochs:
-                metric = epoch_metrics[epoch - 1]
-                if isinstance(metric, Mapping):
-                    accuracy = metric.get("val_accuracy")
-                else:
-                    accuracy = getattr(metric, "val_accuracy", None)
-                if accuracy is None:
-                    raise RuntimeError(
-                        "epoch_metrics entries must expose val_accuracy"
-                    )
-                accuracy = float(accuracy)
-                if not math.isfinite(accuracy) or not 0.0 <= accuracy <= 1.0:
-                    raise ValueError(
-                        f"epoch {epoch} validation accuracy must be finite "
-                        "and in [0, 1]"
-                    )
-                validation_accuracy_by_epoch[str(epoch)] = accuracy
-                metadata[f"accuracy_epoch_{epoch}"] = accuracy
-            metadata["validation_accuracy_by_epoch"] = (
-                validation_accuracy_by_epoch
-            )
-
-            final_epoch = int(self.training_config_values.get("epochs", 0))
-            if final_epoch in self.milestone_epochs:
-                milestone_final = validation_accuracy_by_epoch[str(final_epoch)]
-                if not math.isclose(
-                    milestone_final,
-                    metadata["final_val_accuracy"],
-                    rel_tol=0.0,
-                    abs_tol=1e-12,
-                ):
-                    raise RuntimeError(
-                        "final milestone accuracy differs from "
-                        "final_val_accuracy"
-                    )
 
         for key in ("final_val_accuracy", "best_val_accuracy"):
             value = metadata[key]

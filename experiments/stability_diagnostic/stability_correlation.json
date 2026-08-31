@@ -1,0 +1,16 @@
+{
+  "direction": "positive",
+  "generated_at_utc": "2026-08-30T23:52:10+00:00",
+  "go_threshold": null,
+  "interpretation": "review_on_2026-08-31_without_fixed_go_threshold",
+  "metric": "spearman",
+  "n": 12,
+  "p_value": 0.19083587400449997,
+  "rho": 0.40559440559440557,
+  "schema_version": 1,
+  "sd_definition": "sample standard deviation (ddof=1)",
+  "source": "experiments\\stability_diagnostic\\raw_results.csv",
+  "status": "completed",
+  "x": "sd_acc_5",
+  "y": "sd_acc_25"
+}

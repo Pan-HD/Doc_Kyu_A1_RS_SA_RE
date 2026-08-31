@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "audit": "rs_sa_re_repeat_policy",
+  "policy": {
+    "population_size": 20,
+    "candidate_count": 5,
+    "warmup_pairs": 4,
+    "repeat_interval": 4
+  },
+  "pilot_B30": {
+    "2701": {
+      "source_files": {
+        "evaluations": "experiments/pilot/rs_sa_re_2701/evaluations.csv",
+        "candidate_predictions": "experiments/pilot/rs_sa_re_2701/candidate_predictions.csv"
+      },
+      "real_training_runs": 30,
+      "first_evaluations": 25,
+      "repeat_evaluations": 5,
+      "initial_evaluations": 20,
+      "evolution_children": 5,
+      "warmup_repeats": 4,
+      "periodic_repeats": 1,
+      "candidate_rows": 25,
+      "selected_rows": 5,
+      "selected_rows_source": "selected_column",
+      "final_population": 20,
+      "explicitly_inserted_repeats": 0,
+      "unknown_repeat_insertion_flags": 0,
+      "mismatches": {},
+      "pass": true
+    },
+    "2702": {
+      "source_files": {
+        "evaluations": "experiments/pilot/rs_sa_re_2702/evaluations.csv",
+        "candidate_predictions": "experiments/pilot/rs_sa_re_2702/candidate_predictions.csv"
+      },
+      "real_training_runs": 30,
+      "first_evaluations": 25,
+      "repeat_evaluations": 5,
+      "initial_evaluations": 20,
+      "evolution_children": 5,
+      "warmup_repeats": 4,
+      "periodic_repeats": 1,
+      "candidate_rows": 25,
+      "selected_rows": 5,
+      "selected_rows_source": "selected_column",
+      "final_population": 20,
+      "explicitly_inserted_repeats": 0,
+      "unknown_repeat_insertion_flags": 0,
+      "mismatches": {},
+      "pass": true
+    }
+  },
+  "formal_B60_expected": {
+    "real_training_runs": 60,
+    "first_evaluations": 49,
+    "repeat_evaluations": 11,
+    "initial_evaluations": 20,
+    "evolution_children": 29,
+    "warmup_repeats": 4,
+    "periodic_repeats": 7,
+    "candidate_rows": 145,
+    "selected_rows": 29,
+    "final_population": 20,
+    "mismatches": {},
+    "pass": true
+  },
+  "event_semantics": {
+    "repeat_consumes_real_budget": true,
+    "repeat_inserts_population": false,
+    "repeat_generates_candidates": false,
+    "repeat_updates_search_best": false,
+    "aging": "FIFO on inserted first evaluations only"
+  },
+  "overall_pass": true,
+  "provenance": "Generated from frozen B=30 logs plus an offline formal-budget toy simulation."
+}
