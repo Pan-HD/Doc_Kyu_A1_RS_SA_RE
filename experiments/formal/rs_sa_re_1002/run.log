@@ -1,0 +1,1129 @@
+2026-09-01T07:46:41+00:00 START method=RS-SA-RE search_seed=1002 repeat_seed=1801002 surrogate_seed=901002 population_size=20 tournament_size=5 budget=60 candidate_count=5 lambda=1.0
+2026-09-01T07:49:49+00:00 [1/60] initialization event=first_evaluation base_eval=1 accuracy=0.704600 inserted=True
+2026-09-01T07:52:53+00:00 [2/60] initialization event=first_evaluation base_eval=2 accuracy=0.734800 inserted=True
+2026-09-01T07:54:35+00:00 [3/60] initialization event=first_evaluation base_eval=3 accuracy=0.785400 inserted=True
+2026-09-01T07:56:53+00:00 [4/60] initialization event=first_evaluation base_eval=4 accuracy=0.807400 inserted=True
+2026-09-01T07:59:27+00:00 [5/60] initialization event=first_evaluation base_eval=5 accuracy=0.714000 inserted=True
+2026-09-01T08:02:09+00:00 [6/60] initialization event=first_evaluation base_eval=6 accuracy=0.672000 inserted=True
+2026-09-01T08:04:34+00:00 [7/60] initialization event=first_evaluation base_eval=7 accuracy=0.780400 inserted=True
+2026-09-01T08:06:58+00:00 [8/60] initialization event=first_evaluation base_eval=8 accuracy=0.793200 inserted=True
+2026-09-01T08:09:28+00:00 [9/60] initialization event=first_evaluation base_eval=9 accuracy=0.668000 inserted=True
+2026-09-01T08:12:11+00:00 [10/60] initialization event=first_evaluation base_eval=10 accuracy=0.685400 inserted=True
+2026-09-01T08:14:02+00:00 [11/60] initialization event=first_evaluation base_eval=11 accuracy=0.738600 inserted=True
+2026-09-01T08:16:05+00:00 [12/60] initialization event=first_evaluation base_eval=12 accuracy=0.783200 inserted=True
+2026-09-01T08:18:09+00:00 [13/60] initialization event=first_evaluation base_eval=13 accuracy=0.637000 inserted=True
+2026-09-01T08:20:47+00:00 [14/60] initialization event=first_evaluation base_eval=14 accuracy=0.758400 inserted=True
+2026-09-01T08:23:33+00:00 [15/60] initialization event=first_evaluation base_eval=15 accuracy=0.611200 inserted=True
+2026-09-01T08:25:26+00:00 [16/60] initialization event=first_evaluation base_eval=16 accuracy=0.812200 inserted=True
+2026-09-01T08:27:49+00:00 [17/60] initialization event=first_evaluation base_eval=17 accuracy=0.803200 inserted=True
+2026-09-01T08:29:39+00:00 [18/60] initialization event=first_evaluation base_eval=18 accuracy=0.789000 inserted=True
+2026-09-01T08:31:47+00:00 [19/60] initialization event=first_evaluation base_eval=19 accuracy=0.712200 inserted=True
+2026-09-01T08:34:32+00:00 [20/60] initialization event=first_evaluation base_eval=20 accuracy=0.795200 inserted=True
+2026-09-01T08:36:35+00:00 [Repeat]
+2026-09-01T08:36:35+00:00 base_eval=13 seed1=20260839 acc1=0.637000
+2026-09-01T08:36:35+00:00 seed2=21260839 acc2=0.621000
+2026-09-01T08:36:35+00:00 mean_target=0.629000 instability=0.016000
+2026-09-01T08:36:35+00:00 budget=21/60 population unchanged
+2026-09-01T08:36:35+00:00 [21/60] warmup_repeat event=repeat_evaluation base_eval=13 accuracy=0.621000 inserted=False
+2026-09-01T08:38:58+00:00 [Repeat]
+2026-09-01T08:38:58+00:00 base_eval=17 seed1=20260843 acc1=0.803200
+2026-09-01T08:38:58+00:00 seed2=21260843 acc2=0.801800
+2026-09-01T08:38:58+00:00 mean_target=0.802500 instability=0.001400
+2026-09-01T08:38:58+00:00 budget=22/60 population unchanged
+2026-09-01T08:38:58+00:00 [22/60] warmup_repeat event=repeat_evaluation base_eval=17 accuracy=0.801800 inserted=False
+2026-09-01T08:40:48+00:00 [Repeat]
+2026-09-01T08:40:48+00:00 base_eval=11 seed1=20260837 acc1=0.738600
+2026-09-01T08:40:48+00:00 seed2=21260837 acc2=0.751000
+2026-09-01T08:40:48+00:00 mean_target=0.744800 instability=0.012400
+2026-09-01T08:40:48+00:00 budget=23/60 population unchanged
+2026-09-01T08:40:48+00:00 [23/60] warmup_repeat event=repeat_evaluation base_eval=11 accuracy=0.751000 inserted=False
+2026-09-01T08:43:29+00:00 [Repeat]
+2026-09-01T08:43:29+00:00 base_eval=10 seed1=20260836 acc1=0.685400
+2026-09-01T08:43:29+00:00 seed2=21260836 acc2=0.680600
+2026-09-01T08:43:29+00:00 mean_target=0.683000 instability=0.004800
+2026-09-01T08:43:29+00:00 budget=24/60 population unchanged
+2026-09-01T08:43:29+00:00 [24/60] warmup_repeat event=repeat_evaluation base_eval=10 accuracy=0.680600 inserted=False
+2026-09-01T08:43:29+00:00 [Surrogate training]
+2026-09-01T08:43:29+00:00 training_size=20 paired_label_count=4
+2026-09-01T08:43:29+00:00 mu_target: min=0.611200 max=0.812200 mean=0.739025 std=0.060224
+2026-09-01T08:43:29+00:00 d_target: min=0.001400 max=0.016000 mean=0.008650 std=0.005820
+2026-09-01T08:43:29+00:00 training_loss=0.00050068 mean_mse=0.00000028 instability_mse=0.00050040
+2026-09-01T08:43:29+00:00 [Surrogate prediction]
+2026-09-01T08:43:29+00:00 predicted_mu: min=0.718200 max=0.740898 mean=0.731141 std=0.008654
+2026-09-01T08:43:29+00:00 predicted_d: min=0.100038 max=0.109536 mean=0.105684 std=0.003128
+2026-09-01T08:46:23+00:00 [RS-SA-RE budget 25 / first eval 21]
+2026-09-01T08:46:23+00:00 Candidate 0: mu_hat=0.725684 d_hat=0.106800 lambda=1.000000 score=0.618883
+2026-09-01T08:46:23+00:00 Candidate 1: mu_hat=0.718200 d_hat=0.106627 lambda=1.000000 score=0.611574
+2026-09-01T08:46:23+00:00 Candidate 2: mu_hat=0.740898 d_hat=0.100038 lambda=1.000000 score=0.640860
+2026-09-01T08:46:23+00:00 Candidate 3: mu_hat=0.730735 d_hat=0.109536 lambda=1.000000 score=0.621199
+2026-09-01T08:46:23+00:00 Candidate 4: mu_hat=0.740187 d_hat=0.105420 lambda=1.000000 score=0.634767
+2026-09-01T08:46:23+00:00 Selected: candidate 2
+2026-09-01T08:46:23+00:00 [25/60] evolution event=first_evaluation base_eval=21 accuracy=0.739200 inserted=True
+2026-09-01T08:46:23+00:00 [Surrogate training]
+2026-09-01T08:46:23+00:00 training_size=21 paired_label_count=4
+2026-09-01T08:46:23+00:00 mu_target: min=0.611200 max=0.812200 mean=0.739033 std=0.058773
+2026-09-01T08:46:23+00:00 d_target: min=0.001400 max=0.016000 mean=0.008650 std=0.005820
+2026-09-01T08:46:23+00:00 training_loss=0.00048165 mean_mse=0.00000035 instability_mse=0.00048131
+2026-09-01T08:46:23+00:00 [Surrogate prediction]
+2026-09-01T08:46:23+00:00 predicted_mu: min=0.782518 max=0.820905 mean=0.797607 std=0.014381
+2026-09-01T08:46:23+00:00 predicted_d: min=0.027431 max=0.031772 mean=0.029421 std=0.001475
+2026-09-01T08:48:49+00:00 [RS-SA-RE budget 26 / first eval 22]
+2026-09-01T08:48:49+00:00 Candidate 0: mu_hat=0.820905 d_hat=0.029047 lambda=1.000000 score=0.791857
+2026-09-01T08:48:49+00:00 Candidate 1: mu_hat=0.791420 d_hat=0.030220 lambda=1.000000 score=0.761200
+2026-09-01T08:48:49+00:00 Candidate 2: mu_hat=0.782518 d_hat=0.028636 lambda=1.000000 score=0.753882
+2026-09-01T08:48:49+00:00 Candidate 3: mu_hat=0.786032 d_hat=0.031772 lambda=1.000000 score=0.754261
+2026-09-01T08:48:49+00:00 Candidate 4: mu_hat=0.807161 d_hat=0.027431 lambda=1.000000 score=0.779730
+2026-09-01T08:48:49+00:00 Selected: candidate 0
+2026-09-01T08:48:49+00:00 [26/60] evolution event=first_evaluation base_eval=22 accuracy=0.809800 inserted=True
+2026-09-01T08:48:49+00:00 [Surrogate training]
+2026-09-01T08:48:49+00:00 training_size=22 paired_label_count=4
+2026-09-01T08:48:49+00:00 mu_target: min=0.611200 max=0.812200 mean=0.742250 std=0.059283
+2026-09-01T08:48:49+00:00 d_target: min=0.001400 max=0.016000 mean=0.008650 std=0.005820
+2026-09-01T08:48:49+00:00 training_loss=0.00046196 mean_mse=0.00000032 instability_mse=0.00046164
+2026-09-01T08:48:49+00:00 [Surrogate prediction]
+2026-09-01T08:48:49+00:00 predicted_mu: min=0.798281 max=0.822959 mean=0.808966 std=0.008612
+2026-09-01T08:48:49+00:00 predicted_d: min=0.091842 max=0.097822 mean=0.094944 std=0.002313
+2026-09-01T08:50:48+00:00 [RS-SA-RE budget 27 / first eval 23]
+2026-09-01T08:50:48+00:00 Candidate 0: mu_hat=0.805597 d_hat=0.091842 lambda=1.000000 score=0.713755
+2026-09-01T08:50:48+00:00 Candidate 1: mu_hat=0.822959 d_hat=0.094203 lambda=1.000000 score=0.728756
+2026-09-01T08:50:48+00:00 Candidate 2: mu_hat=0.813972 d_hat=0.097822 lambda=1.000000 score=0.716150
+2026-09-01T08:50:48+00:00 Candidate 3: mu_hat=0.798281 d_hat=0.097403 lambda=1.000000 score=0.700878
+2026-09-01T08:50:48+00:00 Candidate 4: mu_hat=0.804018 d_hat=0.093448 lambda=1.000000 score=0.710570
+2026-09-01T08:50:48+00:00 Selected: candidate 1
+2026-09-01T08:50:48+00:00 [27/60] evolution event=first_evaluation base_eval=23 accuracy=0.813600 inserted=True
+2026-09-01T08:50:48+00:00 [Surrogate training]
+2026-09-01T08:50:48+00:00 training_size=23 paired_label_count=4
+2026-09-01T08:50:48+00:00 mu_target: min=0.611200 max=0.813600 mean=0.745352 std=0.059778
+2026-09-01T08:50:48+00:00 d_target: min=0.001400 max=0.016000 mean=0.008650 std=0.005820
+2026-09-01T08:50:48+00:00 training_loss=0.00049095 mean_mse=0.00000176 instability_mse=0.00048919
+2026-09-01T08:50:48+00:00 [Surrogate prediction]
+2026-09-01T08:50:48+00:00 predicted_mu: min=0.790763 max=0.825548 mean=0.809067 std=0.013355
+2026-09-01T08:50:48+00:00 predicted_d: min=0.086752 max=0.095021 mean=0.090906 std=0.002998
+2026-09-01T08:53:08+00:00 [RS-SA-RE budget 28 / first eval 24]
+2026-09-01T08:53:08+00:00 Candidate 0: mu_hat=0.825548 d_hat=0.089299 lambda=1.000000 score=0.736249
+2026-09-01T08:53:08+00:00 Candidate 1: mu_hat=0.795921 d_hat=0.086752 lambda=1.000000 score=0.709169
+2026-09-01T08:53:08+00:00 Candidate 2: mu_hat=0.816886 d_hat=0.093576 lambda=1.000000 score=0.723310
+2026-09-01T08:53:08+00:00 Candidate 3: mu_hat=0.816216 d_hat=0.089886 lambda=1.000000 score=0.726330
+2026-09-01T08:53:08+00:00 Candidate 4: mu_hat=0.790763 d_hat=0.095021 lambda=1.000000 score=0.695742
+2026-09-01T08:53:08+00:00 Selected: candidate 0
+2026-09-01T08:53:08+00:00 [28/60] evolution event=first_evaluation base_eval=24 accuracy=0.809600 inserted=True
+2026-09-01T08:56:27+00:00 [Repeat]
+2026-09-01T08:56:27+00:00 base_eval=1 seed1=20260827 acc1=0.704600
+2026-09-01T08:56:27+00:00 seed2=21260827 acc2=0.680800
+2026-09-01T08:56:27+00:00 mean_target=0.692700 instability=0.023800
+2026-09-01T08:56:27+00:00 budget=29/60 population unchanged
+2026-09-01T08:56:27+00:00 [29/60] periodic_repeat event=repeat_evaluation base_eval=1 accuracy=0.680800 inserted=False
+2026-09-01T08:56:27+00:00 [Surrogate training]
+2026-09-01T08:56:27+00:00 training_size=24 paired_label_count=5
+2026-09-01T08:56:27+00:00 mu_target: min=0.611200 max=0.813600 mean=0.747533 std=0.060316
+2026-09-01T08:56:27+00:00 d_target: min=0.001400 max=0.023800 mean=0.011680 std=0.007989
+2026-09-01T08:56:27+00:00 training_loss=0.00025563 mean_mse=0.00000335 instability_mse=0.00025229
+2026-09-01T08:56:27+00:00 [Surrogate prediction]
+2026-09-01T08:56:27+00:00 predicted_mu: min=0.763149 max=0.780003 mean=0.771782 std=0.005517
+2026-09-01T08:56:27+00:00 predicted_d: min=0.086124 max=0.092360 mean=0.089256 std=0.002243
+2026-09-01T08:58:49+00:00 [RS-SA-RE budget 30 / first eval 25]
+2026-09-01T08:58:49+00:00 Candidate 0: mu_hat=0.773842 d_hat=0.088418 lambda=1.000000 score=0.685425
+2026-09-01T08:58:49+00:00 Candidate 1: mu_hat=0.772455 d_hat=0.092360 lambda=1.000000 score=0.680095
+2026-09-01T08:58:49+00:00 Candidate 2: mu_hat=0.763149 d_hat=0.086124 lambda=1.000000 score=0.677025
+2026-09-01T08:58:49+00:00 Candidate 3: mu_hat=0.769462 d_hat=0.088165 lambda=1.000000 score=0.681297
+2026-09-01T08:58:49+00:00 Candidate 4: mu_hat=0.780003 d_hat=0.091212 lambda=1.000000 score=0.688791
+2026-09-01T08:58:49+00:00 Selected: candidate 4
+2026-09-01T08:58:49+00:00 [30/60] evolution event=first_evaluation base_eval=25 accuracy=0.781600 inserted=True
+2026-09-01T08:58:49+00:00 [Surrogate training]
+2026-09-01T08:58:49+00:00 training_size=25 paired_label_count=5
+2026-09-01T08:58:49+00:00 mu_target: min=0.611200 max=0.813600 mean=0.748896 std=0.059474
+2026-09-01T08:58:49+00:00 d_target: min=0.001400 max=0.023800 mean=0.011680 std=0.007989
+2026-09-01T08:58:49+00:00 training_loss=0.00030361 mean_mse=0.00000403 instability_mse=0.00029959
+2026-09-01T08:58:49+00:00 [Surrogate prediction]
+2026-09-01T08:58:49+00:00 predicted_mu: min=0.775877 max=0.794925 mean=0.786797 std=0.007040
+2026-09-01T08:58:49+00:00 predicted_d: min=0.060830 max=0.071985 mean=0.066015 std=0.003622
+2026-09-01T09:01:40+00:00 [RS-SA-RE budget 31 / first eval 26]
+2026-09-01T09:01:40+00:00 Candidate 0: mu_hat=0.794925 d_hat=0.064948 lambda=1.000000 score=0.729977
+2026-09-01T09:01:40+00:00 Candidate 1: mu_hat=0.789815 d_hat=0.071985 lambda=1.000000 score=0.717830
+2026-09-01T09:01:40+00:00 Candidate 2: mu_hat=0.775877 d_hat=0.067126 lambda=1.000000 score=0.708751
+2026-09-01T09:01:40+00:00 Candidate 3: mu_hat=0.791849 d_hat=0.060830 lambda=1.000000 score=0.731019
+2026-09-01T09:01:40+00:00 Candidate 4: mu_hat=0.781521 d_hat=0.065188 lambda=1.000000 score=0.716333
+2026-09-01T09:01:40+00:00 Selected: candidate 3
+2026-09-01T09:01:40+00:00 [31/60] evolution event=first_evaluation base_eval=26 accuracy=0.790800 inserted=True
+2026-09-01T09:01:40+00:00 [Surrogate training]
+2026-09-01T09:01:40+00:00 training_size=26 paired_label_count=5
+2026-09-01T09:01:40+00:00 mu_target: min=0.611200 max=0.813600 mean=0.750508 std=0.058873
+2026-09-01T09:01:40+00:00 d_target: min=0.001400 max=0.023800 mean=0.011680 std=0.007989
+2026-09-01T09:01:40+00:00 training_loss=0.00030914 mean_mse=0.00000396 instability_mse=0.00030518
+2026-09-01T09:01:40+00:00 [Surrogate prediction]
+2026-09-01T09:01:40+00:00 predicted_mu: min=0.768095 max=0.802540 mean=0.783586 std=0.011359
+2026-09-01T09:01:40+00:00 predicted_d: min=0.068988 max=0.077243 mean=0.072448 std=0.003035
+2026-09-01T09:04:44+00:00 [RS-SA-RE budget 32 / first eval 27]
+2026-09-01T09:04:44+00:00 Candidate 0: mu_hat=0.768095 d_hat=0.077243 lambda=1.000000 score=0.690852
+2026-09-01T09:04:44+00:00 Candidate 1: mu_hat=0.787349 d_hat=0.069363 lambda=1.000000 score=0.717986
+2026-09-01T09:04:44+00:00 Candidate 2: mu_hat=0.778295 d_hat=0.073146 lambda=1.000000 score=0.705148
+2026-09-01T09:04:44+00:00 Candidate 3: mu_hat=0.781649 d_hat=0.073497 lambda=1.000000 score=0.708152
+2026-09-01T09:04:44+00:00 Candidate 4: mu_hat=0.802540 d_hat=0.068988 lambda=1.000000 score=0.733552
+2026-09-01T09:04:44+00:00 Selected: candidate 4
+2026-09-01T09:04:44+00:00 [32/60] evolution event=first_evaluation base_eval=27 accuracy=0.776200 inserted=True
+2026-09-01T09:04:44+00:00 [Surrogate training]
+2026-09-01T09:04:44+00:00 training_size=27 paired_label_count=5
+2026-09-01T09:04:44+00:00 mu_target: min=0.611200 max=0.813600 mean=0.751459 std=0.057976
+2026-09-01T09:04:44+00:00 d_target: min=0.001400 max=0.023800 mean=0.011680 std=0.007989
+2026-09-01T09:04:44+00:00 training_loss=0.00031098 mean_mse=0.00001190 instability_mse=0.00029909
+2026-09-01T09:04:44+00:00 [Surrogate prediction]
+2026-09-01T09:04:44+00:00 predicted_mu: min=0.797427 max=0.821066 mean=0.806226 std=0.008852
+2026-09-01T09:04:44+00:00 predicted_d: min=0.067274 max=0.082050 mean=0.074186 std=0.005695
+2026-09-01T09:07:05+00:00 [RS-SA-RE budget 33 / first eval 28]
+2026-09-01T09:07:05+00:00 Candidate 0: mu_hat=0.811463 d_hat=0.077849 lambda=1.000000 score=0.733615
+2026-09-01T09:07:05+00:00 Candidate 1: mu_hat=0.797427 d_hat=0.082050 lambda=1.000000 score=0.715378
+2026-09-01T09:07:05+00:00 Candidate 2: mu_hat=0.821066 d_hat=0.067274 lambda=1.000000 score=0.753792
+2026-09-01T09:07:05+00:00 Candidate 3: mu_hat=0.799336 d_hat=0.068104 lambda=1.000000 score=0.731232
+2026-09-01T09:07:05+00:00 Candidate 4: mu_hat=0.801838 d_hat=0.075652 lambda=1.000000 score=0.726186
+2026-09-01T09:07:05+00:00 Selected: candidate 2
+2026-09-01T09:07:05+00:00 [33/60] evolution event=first_evaluation base_eval=28 accuracy=0.801400 inserted=True
+2026-09-01T09:09:57+00:00 [Repeat]
+2026-09-01T09:09:57+00:00 base_eval=20 seed1=20260846 acc1=0.795200
+2026-09-01T09:09:57+00:00 seed2=21260846 acc2=0.787000
+2026-09-01T09:09:57+00:00 mean_target=0.791100 instability=0.008200
+2026-09-01T09:09:57+00:00 budget=34/60 population unchanged
+2026-09-01T09:09:57+00:00 [34/60] periodic_repeat event=repeat_evaluation base_eval=20 accuracy=0.787000 inserted=False
+2026-09-01T09:09:57+00:00 [Surrogate training]
+2026-09-01T09:09:57+00:00 training_size=28 paired_label_count=6
+2026-09-01T09:09:57+00:00 mu_target: min=0.611200 max=0.813600 mean=0.753096 std=0.057579
+2026-09-01T09:09:57+00:00 d_target: min=0.001400 max=0.023800 mean=0.011100 std=0.007407
+2026-09-01T09:09:57+00:00 training_loss=0.00025074 mean_mse=0.00000836 instability_mse=0.00024237
+2026-09-01T09:09:57+00:00 [Surrogate prediction]
+2026-09-01T09:09:57+00:00 predicted_mu: min=0.787917 max=0.834438 mean=0.809014 std=0.014855
+2026-09-01T09:09:57+00:00 predicted_d: min=0.022935 max=0.026520 mean=0.025176 std=0.001252
+2026-09-01T09:12:27+00:00 [RS-SA-RE budget 35 / first eval 29]
+2026-09-01T09:12:27+00:00 Candidate 0: mu_hat=0.807196 d_hat=0.026057 lambda=1.000000 score=0.781139
+2026-09-01T09:12:27+00:00 Candidate 1: mu_hat=0.806105 d_hat=0.025525 lambda=1.000000 score=0.780580
+2026-09-01T09:12:27+00:00 Candidate 2: mu_hat=0.834438 d_hat=0.022935 lambda=1.000000 score=0.811503
+2026-09-01T09:12:27+00:00 Candidate 3: mu_hat=0.809415 d_hat=0.026520 lambda=1.000000 score=0.782895
+2026-09-01T09:12:27+00:00 Candidate 4: mu_hat=0.787917 d_hat=0.024843 lambda=1.000000 score=0.763074
+2026-09-01T09:12:27+00:00 Selected: candidate 2
+2026-09-01T09:12:27+00:00 [35/60] evolution event=first_evaluation base_eval=29 accuracy=0.804600 inserted=True
+2026-09-01T09:12:27+00:00 [Surrogate training]
+2026-09-01T09:12:27+00:00 training_size=29 paired_label_count=6
+2026-09-01T09:12:27+00:00 mu_target: min=0.611200 max=0.813600 mean=0.754872 std=0.057353
+2026-09-01T09:12:27+00:00 d_target: min=0.001400 max=0.023800 mean=0.011100 std=0.007407
+2026-09-01T09:12:27+00:00 training_loss=0.00026934 mean_mse=0.00001007 instability_mse=0.00025927
+2026-09-01T09:12:27+00:00 [Surrogate prediction]
+2026-09-01T09:12:27+00:00 predicted_mu: min=0.760443 max=0.808451 mean=0.786063 std=0.016613
+2026-09-01T09:12:27+00:00 predicted_d: min=0.056342 max=0.062411 mean=0.059807 std=0.002178
+2026-09-01T09:14:45+00:00 [RS-SA-RE budget 36 / first eval 30]
+2026-09-01T09:14:45+00:00 Candidate 0: mu_hat=0.760443 d_hat=0.062411 lambda=1.000000 score=0.698031
+2026-09-01T09:14:45+00:00 Candidate 1: mu_hat=0.779127 d_hat=0.056342 lambda=1.000000 score=0.722785
+2026-09-01T09:14:45+00:00 Candidate 2: mu_hat=0.808451 d_hat=0.058875 lambda=1.000000 score=0.749576
+2026-09-01T09:14:45+00:00 Candidate 3: mu_hat=0.783320 d_hat=0.061813 lambda=1.000000 score=0.721507
+2026-09-01T09:14:45+00:00 Candidate 4: mu_hat=0.798973 d_hat=0.059593 lambda=1.000000 score=0.739380
+2026-09-01T09:14:45+00:00 Selected: candidate 2
+2026-09-01T09:14:45+00:00 [36/60] evolution event=first_evaluation base_eval=30 accuracy=0.767400 inserted=True
+2026-09-01T09:14:45+00:00 [Surrogate training]
+2026-09-01T09:14:45+00:00 training_size=30 paired_label_count=6
+2026-09-01T09:14:45+00:00 mu_target: min=0.611200 max=0.813600 mean=0.755290 std=0.056433
+2026-09-01T09:14:45+00:00 d_target: min=0.001400 max=0.023800 mean=0.011100 std=0.007407
+2026-09-01T09:14:45+00:00 training_loss=0.00029327 mean_mse=0.00002686 instability_mse=0.00026641
+2026-09-01T09:14:45+00:00 [Surrogate prediction]
+2026-09-01T09:14:45+00:00 predicted_mu: min=0.773481 max=0.789234 mean=0.782461 std=0.005792
+2026-09-01T09:14:45+00:00 predicted_d: min=0.023621 max=0.026810 mean=0.025573 std=0.001124
+2026-09-01T09:17:35+00:00 [RS-SA-RE budget 37 / first eval 31]
+2026-09-01T09:17:35+00:00 Candidate 0: mu_hat=0.789234 d_hat=0.026541 lambda=1.000000 score=0.762693
+2026-09-01T09:17:35+00:00 Candidate 1: mu_hat=0.773481 d_hat=0.025503 lambda=1.000000 score=0.747978
+2026-09-01T09:17:35+00:00 Candidate 2: mu_hat=0.787866 d_hat=0.026810 lambda=1.000000 score=0.761056
+2026-09-01T09:17:35+00:00 Candidate 3: mu_hat=0.779008 d_hat=0.023621 lambda=1.000000 score=0.755387
+2026-09-01T09:17:35+00:00 Candidate 4: mu_hat=0.782715 d_hat=0.025391 lambda=1.000000 score=0.757324
+2026-09-01T09:17:35+00:00 Selected: candidate 0
+2026-09-01T09:17:35+00:00 [37/60] evolution event=first_evaluation base_eval=31 accuracy=0.786800 inserted=True
+2026-09-01T09:17:35+00:00 [Surrogate training]
+2026-09-01T09:17:35+00:00 training_size=31 paired_label_count=6
+2026-09-01T09:17:35+00:00 mu_target: min=0.611200 max=0.813600 mean=0.756306 std=0.055794
+2026-09-01T09:17:35+00:00 d_target: min=0.001400 max=0.023800 mean=0.011100 std=0.007407
+2026-09-01T09:17:35+00:00 training_loss=0.00030290 mean_mse=0.00002617 instability_mse=0.00027673
+2026-09-01T09:17:35+00:00 [Surrogate prediction]
+2026-09-01T09:17:35+00:00 predicted_mu: min=0.784845 max=0.825341 mean=0.801265 std=0.013777
+2026-09-01T09:17:35+00:00 predicted_d: min=0.070457 max=0.078808 mean=0.074438 std=0.003293
+2026-09-01T09:19:46+00:00 [RS-SA-RE budget 38 / first eval 32]
+2026-09-01T09:19:46+00:00 Candidate 0: mu_hat=0.793672 d_hat=0.077828 lambda=1.000000 score=0.715844
+2026-09-01T09:19:46+00:00 Candidate 1: mu_hat=0.784845 d_hat=0.078808 lambda=1.000000 score=0.706037
+2026-09-01T09:19:46+00:00 Candidate 2: mu_hat=0.805819 d_hat=0.070457 lambda=1.000000 score=0.735362
+2026-09-01T09:19:46+00:00 Candidate 3: mu_hat=0.796649 d_hat=0.073119 lambda=1.000000 score=0.723530
+2026-09-01T09:19:46+00:00 Candidate 4: mu_hat=0.825341 d_hat=0.071977 lambda=1.000000 score=0.753365
+2026-09-01T09:19:46+00:00 Selected: candidate 4
+2026-09-01T09:19:46+00:00 [38/60] evolution event=first_evaluation base_eval=32 accuracy=0.779200 inserted=True
+2026-09-01T09:22:52+00:00 [Repeat]
+2026-09-01T09:22:52+00:00 base_eval=2 seed1=20260828 acc1=0.734800
+2026-09-01T09:22:52+00:00 seed2=21260828 acc2=0.739400
+2026-09-01T09:22:52+00:00 mean_target=0.737100 instability=0.004600
+2026-09-01T09:22:52+00:00 budget=39/60 population unchanged
+2026-09-01T09:22:52+00:00 [39/60] periodic_repeat event=repeat_evaluation base_eval=2 accuracy=0.739400 inserted=False
+2026-09-01T09:22:52+00:00 [Surrogate training]
+2026-09-01T09:22:52+00:00 training_size=32 paired_label_count=7
+2026-09-01T09:22:52+00:00 mu_target: min=0.611200 max=0.813600 mean=0.757094 std=0.055032
+2026-09-01T09:22:52+00:00 d_target: min=0.001400 max=0.023800 mean=0.010171 std=0.007225
+2026-09-01T09:22:52+00:00 training_loss=0.00031294 mean_mse=0.00002801 instability_mse=0.00028493
+2026-09-01T09:22:52+00:00 [Surrogate prediction]
+2026-09-01T09:22:52+00:00 predicted_mu: min=0.797241 max=0.830050 mean=0.811773 std=0.010983
+2026-09-01T09:22:52+00:00 predicted_d: min=0.067860 max=0.073296 mean=0.070534 std=0.001894
+2026-09-01T09:25:11+00:00 [RS-SA-RE budget 40 / first eval 33]
+2026-09-01T09:25:11+00:00 Candidate 0: mu_hat=0.814637 d_hat=0.070233 lambda=1.000000 score=0.744404
+2026-09-01T09:25:11+00:00 Candidate 1: mu_hat=0.804739 d_hat=0.067860 lambda=1.000000 score=0.736879
+2026-09-01T09:25:11+00:00 Candidate 2: mu_hat=0.812197 d_hat=0.071872 lambda=1.000000 score=0.740325
+2026-09-01T09:25:11+00:00 Candidate 3: mu_hat=0.797241 d_hat=0.073296 lambda=1.000000 score=0.723945
+2026-09-01T09:25:11+00:00 Candidate 4: mu_hat=0.830050 d_hat=0.069406 lambda=1.000000 score=0.760644
+2026-09-01T09:25:11+00:00 Selected: candidate 4
+2026-09-01T09:25:11+00:00 [40/60] evolution event=first_evaluation base_eval=33 accuracy=0.792200 inserted=True
+2026-09-01T09:25:11+00:00 [Surrogate training]
+2026-09-01T09:25:11+00:00 training_size=33 paired_label_count=7
+2026-09-01T09:25:11+00:00 mu_target: min=0.611200 max=0.813600 mean=0.758158 std=0.054525
+2026-09-01T09:25:11+00:00 d_target: min=0.001400 max=0.023800 mean=0.010171 std=0.007225
+2026-09-01T09:25:11+00:00 training_loss=0.00032132 mean_mse=0.00004019 instability_mse=0.00028113
+2026-09-01T09:25:11+00:00 [Surrogate prediction]
+2026-09-01T09:25:11+00:00 predicted_mu: min=0.758634 max=0.788016 mean=0.778545 std=0.010507
+2026-09-01T09:25:11+00:00 predicted_d: min=0.024119 max=0.027418 mean=0.025015 std=0.001211
+2026-09-01T09:27:58+00:00 [RS-SA-RE budget 41 / first eval 34]
+2026-09-01T09:27:58+00:00 Candidate 0: mu_hat=0.788016 d_hat=0.024538 lambda=1.000000 score=0.763478
+2026-09-01T09:27:58+00:00 Candidate 1: mu_hat=0.779279 d_hat=0.024473 lambda=1.000000 score=0.754806
+2026-09-01T09:27:58+00:00 Candidate 2: mu_hat=0.780387 d_hat=0.024119 lambda=1.000000 score=0.756267
+2026-09-01T09:27:58+00:00 Candidate 3: mu_hat=0.758634 d_hat=0.027418 lambda=1.000000 score=0.731216
+2026-09-01T09:27:58+00:00 Candidate 4: mu_hat=0.786409 d_hat=0.024528 lambda=1.000000 score=0.761881
+2026-09-01T09:27:58+00:00 Selected: candidate 0
+2026-09-01T09:27:58+00:00 [41/60] evolution event=first_evaluation base_eval=34 accuracy=0.784200 inserted=True
+2026-09-01T09:27:58+00:00 [Surrogate training]
+2026-09-01T09:27:58+00:00 training_size=34 paired_label_count=7
+2026-09-01T09:27:58+00:00 mu_target: min=0.611200 max=0.813600 mean=0.758924 std=0.053897
+2026-09-01T09:27:58+00:00 d_target: min=0.001400 max=0.023800 mean=0.010171 std=0.007225
+2026-09-01T09:27:58+00:00 training_loss=0.00034119 mean_mse=0.00003974 instability_mse=0.00030146
+2026-09-01T09:27:58+00:00 [Surrogate prediction]
+2026-09-01T09:27:58+00:00 predicted_mu: min=0.771300 max=0.806654 mean=0.793909 std=0.012813
+2026-09-01T09:27:58+00:00 predicted_d: min=0.071574 max=0.081454 mean=0.075880 std=0.003817
+2026-09-01T09:30:13+00:00 [RS-SA-RE budget 42 / first eval 35]
+2026-09-01T09:30:13+00:00 Candidate 0: mu_hat=0.788661 d_hat=0.072019 lambda=1.000000 score=0.716641
+2026-09-01T09:30:13+00:00 Candidate 1: mu_hat=0.803121 d_hat=0.081454 lambda=1.000000 score=0.721667
+2026-09-01T09:30:13+00:00 Candidate 2: mu_hat=0.806654 d_hat=0.078752 lambda=1.000000 score=0.727902
+2026-09-01T09:30:13+00:00 Candidate 3: mu_hat=0.771300 d_hat=0.075600 lambda=1.000000 score=0.695699
+2026-09-01T09:30:13+00:00 Candidate 4: mu_hat=0.799810 d_hat=0.071574 lambda=1.000000 score=0.728237
+2026-09-01T09:30:13+00:00 Selected: candidate 4
+2026-09-01T09:30:13+00:00 [42/60] evolution event=first_evaluation base_eval=35 accuracy=0.805800 inserted=True
+2026-09-01T09:30:13+00:00 [Surrogate training]
+2026-09-01T09:30:13+00:00 training_size=35 paired_label_count=7
+2026-09-01T09:30:13+00:00 mu_target: min=0.611200 max=0.813600 mean=0.760263 std=0.053693
+2026-09-01T09:30:13+00:00 d_target: min=0.001400 max=0.023800 mean=0.010171 std=0.007225
+2026-09-01T09:30:13+00:00 training_loss=0.00032815 mean_mse=0.00003918 instability_mse=0.00028897
+2026-09-01T09:30:13+00:00 [Surrogate prediction]
+2026-09-01T09:30:13+00:00 predicted_mu: min=0.776259 max=0.813819 mean=0.792871 std=0.013270
+2026-09-01T09:30:13+00:00 predicted_d: min=0.074847 max=0.082253 mean=0.077883 std=0.002467
+2026-09-01T09:32:31+00:00 [RS-SA-RE budget 43 / first eval 36]
+2026-09-01T09:32:31+00:00 Candidate 0: mu_hat=0.800622 d_hat=0.078415 lambda=1.000000 score=0.722207
+2026-09-01T09:32:31+00:00 Candidate 1: mu_hat=0.790867 d_hat=0.077155 lambda=1.000000 score=0.713712
+2026-09-01T09:32:31+00:00 Candidate 2: mu_hat=0.813819 d_hat=0.076744 lambda=1.000000 score=0.737075
+2026-09-01T09:32:31+00:00 Candidate 3: mu_hat=0.776259 d_hat=0.082253 lambda=1.000000 score=0.694006
+2026-09-01T09:32:31+00:00 Candidate 4: mu_hat=0.782788 d_hat=0.074847 lambda=1.000000 score=0.707942
+2026-09-01T09:32:31+00:00 Selected: candidate 2
+2026-09-01T09:32:31+00:00 [43/60] evolution event=first_evaluation base_eval=36 accuracy=0.790600 inserted=True
+2026-09-01T09:34:48+00:00 [Repeat]
+2026-09-01T09:34:48+00:00 base_eval=30 seed1=20260856 acc1=0.767400
+2026-09-01T09:34:48+00:00 seed2=21260856 acc2=0.776000
+2026-09-01T09:34:48+00:00 mean_target=0.771700 instability=0.008600
+2026-09-01T09:34:48+00:00 budget=44/60 population unchanged
+2026-09-01T09:34:48+00:00 [44/60] periodic_repeat event=repeat_evaluation base_eval=30 accuracy=0.776000 inserted=False
+2026-09-01T09:34:48+00:00 [Surrogate training]
+2026-09-01T09:34:48+00:00 training_size=36 paired_label_count=8
+2026-09-01T09:34:48+00:00 mu_target: min=0.611200 max=0.813600 mean=0.761225 std=0.053195
+2026-09-01T09:34:48+00:00 d_target: min=0.001400 max=0.023800 mean=0.009975 std=0.006778
+2026-09-01T09:34:48+00:00 training_loss=0.00041977 mean_mse=0.00008564 instability_mse=0.00033414
+2026-09-01T09:34:48+00:00 [Surrogate prediction]
+2026-09-01T09:34:48+00:00 predicted_mu: min=0.817132 max=0.831705 mean=0.825436 std=0.006383
+2026-09-01T09:34:48+00:00 predicted_d: min=0.025301 max=0.026292 mean=0.025743 std=0.000330
+2026-09-01T09:37:17+00:00 [RS-SA-RE budget 45 / first eval 37]
+2026-09-01T09:37:17+00:00 Candidate 0: mu_hat=0.828176 d_hat=0.025879 lambda=1.000000 score=0.802297
+2026-09-01T09:37:17+00:00 Candidate 1: mu_hat=0.831705 d_hat=0.025623 lambda=1.000000 score=0.806082
+2026-09-01T09:37:17+00:00 Candidate 2: mu_hat=0.818460 d_hat=0.026292 lambda=1.000000 score=0.792168
+2026-09-01T09:37:17+00:00 Candidate 3: mu_hat=0.831705 d_hat=0.025623 lambda=1.000000 score=0.806082
+2026-09-01T09:37:17+00:00 Candidate 4: mu_hat=0.817132 d_hat=0.025301 lambda=1.000000 score=0.791831
+2026-09-01T09:37:17+00:00 Selected: candidate 1
+2026-09-01T09:37:17+00:00 [45/60] evolution event=first_evaluation base_eval=37 accuracy=0.807600 inserted=True
+2026-09-01T09:37:17+00:00 [Surrogate training]
+2026-09-01T09:37:17+00:00 training_size=37 paired_label_count=8
+2026-09-01T09:37:17+00:00 mu_target: min=0.611200 max=0.813600 mean=0.762478 std=0.053007
+2026-09-01T09:37:17+00:00 d_target: min=0.001400 max=0.023800 mean=0.009975 std=0.006778
+2026-09-01T09:37:17+00:00 training_loss=0.00044456 mean_mse=0.00008506 instability_mse=0.00035950
+2026-09-01T09:37:17+00:00 [Surrogate prediction]
+2026-09-01T09:37:17+00:00 predicted_mu: min=0.774441 max=0.804451 mean=0.791364 std=0.010977
+2026-09-01T09:37:17+00:00 predicted_d: min=0.075703 max=0.081876 mean=0.078341 std=0.002100
+2026-09-01T09:39:34+00:00 [RS-SA-RE budget 46 / first eval 38]
+2026-09-01T09:39:34+00:00 Candidate 0: mu_hat=0.786694 d_hat=0.077628 lambda=1.000000 score=0.709066
+2026-09-01T09:39:34+00:00 Candidate 1: mu_hat=0.789029 d_hat=0.075703 lambda=1.000000 score=0.713325
+2026-09-01T09:39:34+00:00 Candidate 2: mu_hat=0.774441 d_hat=0.081876 lambda=1.000000 score=0.692566
+2026-09-01T09:39:34+00:00 Candidate 3: mu_hat=0.802204 d_hat=0.077230 lambda=1.000000 score=0.724974
+2026-09-01T09:39:34+00:00 Candidate 4: mu_hat=0.804451 d_hat=0.079267 lambda=1.000000 score=0.725185
+2026-09-01T09:39:34+00:00 Selected: candidate 4
+2026-09-01T09:39:35+00:00 [46/60] evolution event=first_evaluation base_eval=38 accuracy=0.811800 inserted=True
+2026-09-01T09:39:35+00:00 [Surrogate training]
+2026-09-01T09:39:35+00:00 training_size=38 paired_label_count=8
+2026-09-01T09:39:35+00:00 mu_target: min=0.611200 max=0.813600 mean=0.763776 std=0.052897
+2026-09-01T09:39:35+00:00 d_target: min=0.001400 max=0.023800 mean=0.009975 std=0.006778
+2026-09-01T09:39:35+00:00 training_loss=0.00043055 mean_mse=0.00008217 instability_mse=0.00034838
+2026-09-01T09:39:35+00:00 [Surrogate prediction]
+2026-09-01T09:39:35+00:00 predicted_mu: min=0.778046 max=0.816653 mean=0.803129 std=0.013153
+2026-09-01T09:39:35+00:00 predicted_d: min=0.026073 max=0.030312 mean=0.028243 std=0.001612
+2026-09-01T09:41:47+00:00 [RS-SA-RE budget 47 / first eval 39]
+2026-09-01T09:41:47+00:00 Candidate 0: mu_hat=0.807767 d_hat=0.026845 lambda=1.000000 score=0.780922
+2026-09-01T09:41:47+00:00 Candidate 1: mu_hat=0.808529 d_hat=0.029671 lambda=1.000000 score=0.778859
+2026-09-01T09:41:47+00:00 Candidate 2: mu_hat=0.778046 d_hat=0.030312 lambda=1.000000 score=0.747734
+2026-09-01T09:41:47+00:00 Candidate 3: mu_hat=0.816653 d_hat=0.026073 lambda=1.000000 score=0.790580
+2026-09-01T09:41:47+00:00 Candidate 4: mu_hat=0.804652 d_hat=0.028314 lambda=1.000000 score=0.776339
+2026-09-01T09:41:47+00:00 Selected: candidate 3
+2026-09-01T09:41:47+00:00 [47/60] evolution event=first_evaluation base_eval=39 accuracy=0.815600 inserted=True
+2026-09-01T09:41:48+00:00 [Surrogate training]
+2026-09-01T09:41:48+00:00 training_size=39 paired_label_count=8
+2026-09-01T09:41:48+00:00 mu_target: min=0.611200 max=0.815600 mean=0.765105 std=0.052853
+2026-09-01T09:41:48+00:00 d_target: min=0.001400 max=0.023800 mean=0.009975 std=0.006778
+2026-09-01T09:41:48+00:00 training_loss=0.00046875 mean_mse=0.00007998 instability_mse=0.00038877
+2026-09-01T09:41:48+00:00 [Surrogate prediction]
+2026-09-01T09:41:48+00:00 predicted_mu: min=0.788789 max=0.812287 mean=0.799054 std=0.007734
+2026-09-01T09:41:48+00:00 predicted_d: min=0.068609 max=0.076177 mean=0.071524 std=0.002554
+2026-09-01T09:43:50+00:00 [RS-SA-RE budget 48 / first eval 40]
+2026-09-01T09:43:50+00:00 Candidate 0: mu_hat=0.788789 d_hat=0.070885 lambda=1.000000 score=0.717903
+2026-09-01T09:43:50+00:00 Candidate 1: mu_hat=0.796128 d_hat=0.070124 lambda=1.000000 score=0.726004
+2026-09-01T09:43:50+00:00 Candidate 2: mu_hat=0.812287 d_hat=0.076177 lambda=1.000000 score=0.736110
+2026-09-01T09:43:50+00:00 Candidate 3: mu_hat=0.796795 d_hat=0.071826 lambda=1.000000 score=0.724969
+2026-09-01T09:43:50+00:00 Candidate 4: mu_hat=0.801269 d_hat=0.068609 lambda=1.000000 score=0.732661
+2026-09-01T09:43:50+00:00 Selected: candidate 2
+2026-09-01T09:43:50+00:00 [48/60] evolution event=first_evaluation base_eval=40 accuracy=0.817200 inserted=True
+2026-09-01T09:46:03+00:00 [Repeat]
+2026-09-01T09:46:03+00:00 base_eval=39 seed1=20260865 acc1=0.815600
+2026-09-01T09:46:03+00:00 seed2=21260865 acc2=0.805600
+2026-09-01T09:46:03+00:00 mean_target=0.810600 instability=0.010000
+2026-09-01T09:46:03+00:00 budget=49/60 population unchanged
+2026-09-01T09:46:03+00:00 [49/60] periodic_repeat event=repeat_evaluation base_eval=39 accuracy=0.805600 inserted=False
+2026-09-01T09:46:03+00:00 [Surrogate training]
+2026-09-01T09:46:03+00:00 training_size=40 paired_label_count=9
+2026-09-01T09:46:03+00:00 mu_target: min=0.611200 max=0.817200 mean=0.766283 std=0.052708
+2026-09-01T09:46:03+00:00 d_target: min=0.001400 max=0.023800 mean=0.009978 std=0.006391
+2026-09-01T09:46:03+00:00 training_loss=0.00041059 mean_mse=0.00007080 instability_mse=0.00033979
+2026-09-01T09:46:03+00:00 [Surrogate prediction]
+2026-09-01T09:46:03+00:00 predicted_mu: min=0.764334 max=0.803766 mean=0.789614 std=0.013681
+2026-09-01T09:46:03+00:00 predicted_d: min=0.026499 max=0.029056 mean=0.027588 std=0.001155
+2026-09-01T09:48:11+00:00 [RS-SA-RE budget 50 / first eval 41]
+2026-09-01T09:48:11+00:00 Candidate 0: mu_hat=0.799314 d_hat=0.029056 lambda=1.000000 score=0.770258
+2026-09-01T09:48:11+00:00 Candidate 1: mu_hat=0.789506 d_hat=0.026499 lambda=1.000000 score=0.763007
+2026-09-01T09:48:11+00:00 Candidate 2: mu_hat=0.803766 d_hat=0.026625 lambda=1.000000 score=0.777141
+2026-09-01T09:48:11+00:00 Candidate 3: mu_hat=0.791150 d_hat=0.026823 lambda=1.000000 score=0.764327
+2026-09-01T09:48:11+00:00 Candidate 4: mu_hat=0.764334 d_hat=0.028935 lambda=1.000000 score=0.735399
+2026-09-01T09:48:11+00:00 Selected: candidate 2
+2026-09-01T09:48:11+00:00 [50/60] evolution event=first_evaluation base_eval=41 accuracy=0.807000 inserted=True
+2026-09-01T09:48:11+00:00 [Surrogate training]
+2026-09-01T09:48:11+00:00 training_size=41 paired_label_count=9
+2026-09-01T09:48:11+00:00 mu_target: min=0.611200 max=0.817200 mean=0.767276 std=0.052439
+2026-09-01T09:48:11+00:00 d_target: min=0.001400 max=0.023800 mean=0.009978 std=0.006391
+2026-09-01T09:48:11+00:00 training_loss=0.00041762 mean_mse=0.00007125 instability_mse=0.00034637
+2026-09-01T09:48:11+00:00 [Surrogate prediction]
+2026-09-01T09:48:11+00:00 predicted_mu: min=0.782070 max=0.830751 mean=0.808266 std=0.020250
+2026-09-01T09:48:11+00:00 predicted_d: min=0.066898 max=0.079427 mean=0.072192 std=0.004496
+2026-09-01T09:50:15+00:00 [RS-SA-RE budget 51 / first eval 42]
+2026-09-01T09:50:15+00:00 Candidate 0: mu_hat=0.830324 d_hat=0.066898 lambda=1.000000 score=0.763426
+2026-09-01T09:50:15+00:00 Candidate 1: mu_hat=0.809186 d_hat=0.074164 lambda=1.000000 score=0.735021
+2026-09-01T09:50:15+00:00 Candidate 2: mu_hat=0.782070 d_hat=0.079427 lambda=1.000000 score=0.702643
+2026-09-01T09:50:15+00:00 Candidate 3: mu_hat=0.789002 d_hat=0.072376 lambda=1.000000 score=0.716625
+2026-09-01T09:50:15+00:00 Candidate 4: mu_hat=0.830751 d_hat=0.068093 lambda=1.000000 score=0.762658
+2026-09-01T09:50:15+00:00 Selected: candidate 0
+2026-09-01T09:50:15+00:00 [51/60] evolution event=first_evaluation base_eval=42 accuracy=0.810400 inserted=True
+2026-09-01T09:50:15+00:00 [Surrogate training]
+2026-09-01T09:50:15+00:00 training_size=42 paired_label_count=9
+2026-09-01T09:50:15+00:00 mu_target: min=0.611200 max=0.817200 mean=0.768302 std=0.052226
+2026-09-01T09:50:15+00:00 d_target: min=0.001400 max=0.023800 mean=0.009978 std=0.006391
+2026-09-01T09:50:15+00:00 training_loss=0.00043305 mean_mse=0.00008052 instability_mse=0.00035253
+2026-09-01T09:50:15+00:00 [Surrogate prediction]
+2026-09-01T09:50:15+00:00 predicted_mu: min=0.782198 max=0.803666 mean=0.790731 std=0.007616
+2026-09-01T09:50:15+00:00 predicted_d: min=0.069886 max=0.076907 mean=0.073361 std=0.002541
+2026-09-01T09:52:27+00:00 [RS-SA-RE budget 52 / first eval 43]
+2026-09-01T09:52:27+00:00 Candidate 0: mu_hat=0.782198 d_hat=0.076907 lambda=1.000000 score=0.705291
+2026-09-01T09:52:27+00:00 Candidate 1: mu_hat=0.786864 d_hat=0.075304 lambda=1.000000 score=0.711560
+2026-09-01T09:52:27+00:00 Candidate 2: mu_hat=0.803666 d_hat=0.071396 lambda=1.000000 score=0.732269
+2026-09-01T09:52:27+00:00 Candidate 3: mu_hat=0.786289 d_hat=0.069886 lambda=1.000000 score=0.716404
+2026-09-01T09:52:27+00:00 Candidate 4: mu_hat=0.794637 d_hat=0.073311 lambda=1.000000 score=0.721326
+2026-09-01T09:52:27+00:00 Selected: candidate 2
+2026-09-01T09:52:27+00:00 [52/60] evolution event=first_evaluation base_eval=43 accuracy=0.784000 inserted=True
+2026-09-01T09:52:27+00:00 [Surrogate training]
+2026-09-01T09:52:27+00:00 training_size=43 paired_label_count=9
+2026-09-01T09:52:27+00:00 mu_target: min=0.611200 max=0.817200 mean=0.768667 std=0.051669
+2026-09-01T09:52:27+00:00 d_target: min=0.001400 max=0.023800 mean=0.009978 std=0.006391
+2026-09-01T09:52:27+00:00 training_loss=0.00040369 mean_mse=0.00008013 instability_mse=0.00032356
+2026-09-01T09:52:27+00:00 [Surrogate prediction]
+2026-09-01T09:52:27+00:00 predicted_mu: min=0.789036 max=0.839403 mean=0.811812 std=0.016310
+2026-09-01T09:52:27+00:00 predicted_d: min=0.063748 max=0.068760 mean=0.066283 std=0.001979
+2026-09-01T09:54:29+00:00 [RS-SA-RE budget 53 / first eval 44]
+2026-09-01T09:54:29+00:00 Candidate 0: mu_hat=0.789036 d_hat=0.068760 lambda=1.000000 score=0.720276
+2026-09-01T09:54:29+00:00 Candidate 1: mu_hat=0.812862 d_hat=0.067448 lambda=1.000000 score=0.745415
+2026-09-01T09:54:29+00:00 Candidate 2: mu_hat=0.812867 d_hat=0.067318 lambda=1.000000 score=0.745549
+2026-09-01T09:54:29+00:00 Candidate 3: mu_hat=0.804890 d_hat=0.063748 lambda=1.000000 score=0.741142
+2026-09-01T09:54:29+00:00 Candidate 4: mu_hat=0.839403 d_hat=0.064140 lambda=1.000000 score=0.775263
+2026-09-01T09:54:29+00:00 Selected: candidate 4
+2026-09-01T09:54:30+00:00 [53/60] evolution event=first_evaluation base_eval=44 accuracy=0.806200 inserted=True
+2026-09-01T09:57:20+00:00 [Repeat]
+2026-09-01T09:57:20+00:00 base_eval=27 seed1=20260853 acc1=0.776200
+2026-09-01T09:57:20+00:00 seed2=21260853 acc2=0.806000
+2026-09-01T09:57:20+00:00 mean_target=0.791100 instability=0.029800
+2026-09-01T09:57:20+00:00 budget=54/60 population unchanged
+2026-09-01T09:57:20+00:00 [54/60] periodic_repeat event=repeat_evaluation base_eval=27 accuracy=0.806000 inserted=False
+2026-09-01T09:57:20+00:00 [Surrogate training]
+2026-09-01T09:57:20+00:00 training_size=44 paired_label_count=10
+2026-09-01T09:57:20+00:00 mu_target: min=0.611200 max=0.817200 mean=0.769859 std=0.051476
+2026-09-01T09:57:20+00:00 d_target: min=0.001400 max=0.029800 mean=0.011960 std=0.008492
+2026-09-01T09:57:20+00:00 training_loss=0.00040577 mean_mse=0.00009048 instability_mse=0.00031530
+2026-09-01T09:57:20+00:00 [Surrogate prediction]
+2026-09-01T09:57:20+00:00 predicted_mu: min=0.787240 max=0.834643 mean=0.811951 std=0.015757
+2026-09-01T09:57:20+00:00 predicted_d: min=0.071638 max=0.077013 mean=0.073639 std=0.002061
+2026-09-01T09:59:23+00:00 [RS-SA-RE budget 55 / first eval 45]
+2026-09-01T09:59:23+00:00 Candidate 0: mu_hat=0.819527 d_hat=0.072151 lambda=1.000000 score=0.747376
+2026-09-01T09:59:23+00:00 Candidate 1: mu_hat=0.813812 d_hat=0.072350 lambda=1.000000 score=0.741462
+2026-09-01T09:59:23+00:00 Candidate 2: mu_hat=0.834643 d_hat=0.075042 lambda=1.000000 score=0.759602
+2026-09-01T09:59:23+00:00 Candidate 3: mu_hat=0.787240 d_hat=0.077013 lambda=1.000000 score=0.710227
+2026-09-01T09:59:23+00:00 Candidate 4: mu_hat=0.804534 d_hat=0.071638 lambda=1.000000 score=0.732896
+2026-09-01T09:59:23+00:00 Selected: candidate 2
+2026-09-01T09:59:23+00:00 [55/60] evolution event=first_evaluation base_eval=45 accuracy=0.792000 inserted=True
+2026-09-01T09:59:23+00:00 [Surrogate training]
+2026-09-01T09:59:23+00:00 training_size=45 paired_label_count=10
+2026-09-01T09:59:23+00:00 mu_target: min=0.611200 max=0.817200 mean=0.770351 std=0.051006
+2026-09-01T09:59:23+00:00 d_target: min=0.001400 max=0.029800 mean=0.011960 std=0.008492
+2026-09-01T09:59:23+00:00 training_loss=0.00039520 mean_mse=0.00010965 instability_mse=0.00028555
+2026-09-01T09:59:23+00:00 [Surrogate prediction]
+2026-09-01T09:59:23+00:00 predicted_mu: min=0.788095 max=0.811354 mean=0.800575 std=0.007513
+2026-09-01T09:59:23+00:00 predicted_d: min=0.077983 max=0.080804 mean=0.079352 std=0.000947
+2026-09-01T10:01:27+00:00 [RS-SA-RE budget 56 / first eval 46]
+2026-09-01T10:01:27+00:00 Candidate 0: mu_hat=0.798740 d_hat=0.078944 lambda=1.000000 score=0.719796
+2026-09-01T10:01:27+00:00 Candidate 1: mu_hat=0.788095 d_hat=0.079893 lambda=1.000000 score=0.708202
+2026-09-01T10:01:27+00:00 Candidate 2: mu_hat=0.801755 d_hat=0.080804 lambda=1.000000 score=0.720951
+2026-09-01T10:01:27+00:00 Candidate 3: mu_hat=0.811354 d_hat=0.079137 lambda=1.000000 score=0.732216
+2026-09-01T10:01:27+00:00 Candidate 4: mu_hat=0.802931 d_hat=0.077983 lambda=1.000000 score=0.724948
+2026-09-01T10:01:27+00:00 Selected: candidate 3
+2026-09-01T10:01:27+00:00 [56/60] evolution event=first_evaluation base_eval=46 accuracy=0.807000 inserted=True
+2026-09-01T10:01:27+00:00 [Surrogate training]
+2026-09-01T10:01:27+00:00 training_size=46 paired_label_count=10
+2026-09-01T10:01:27+00:00 mu_target: min=0.611200 max=0.817200 mean=0.771148 std=0.050730
+2026-09-01T10:01:27+00:00 d_target: min=0.001400 max=0.029800 mean=0.011960 std=0.008492
+2026-09-01T10:01:27+00:00 training_loss=0.00039505 mean_mse=0.00011676 instability_mse=0.00027829
+2026-09-01T10:01:27+00:00 [Surrogate prediction]
+2026-09-01T10:01:27+00:00 predicted_mu: min=0.805547 max=0.821811 mean=0.812566 std=0.005497
+2026-09-01T10:01:27+00:00 predicted_d: min=0.021800 max=0.024316 mean=0.023624 std=0.000924
+2026-09-01T10:03:55+00:00 [RS-SA-RE budget 57 / first eval 47]
+2026-09-01T10:03:55+00:00 Candidate 0: mu_hat=0.808794 d_hat=0.023876 lambda=1.000000 score=0.784917
+2026-09-01T10:03:55+00:00 Candidate 1: mu_hat=0.812649 d_hat=0.023981 lambda=1.000000 score=0.788668
+2026-09-01T10:03:55+00:00 Candidate 2: mu_hat=0.814030 d_hat=0.024316 lambda=1.000000 score=0.789714
+2026-09-01T10:03:55+00:00 Candidate 3: mu_hat=0.821811 d_hat=0.021800 lambda=1.000000 score=0.800011
+2026-09-01T10:03:55+00:00 Candidate 4: mu_hat=0.805547 d_hat=0.024146 lambda=1.000000 score=0.781401
+2026-09-01T10:03:55+00:00 Selected: candidate 3
+2026-09-01T10:03:55+00:00 [57/60] evolution event=first_evaluation base_eval=47 accuracy=0.804200 inserted=True
+2026-09-01T10:03:55+00:00 [Surrogate training]
+2026-09-01T10:03:55+00:00 training_size=47 paired_label_count=10
+2026-09-01T10:03:55+00:00 mu_target: min=0.611200 max=0.817200 mean=0.771851 std=0.050414
+2026-09-01T10:03:55+00:00 d_target: min=0.001400 max=0.029800 mean=0.011960 std=0.008492
+2026-09-01T10:03:55+00:00 training_loss=0.00040496 mean_mse=0.00010698 instability_mse=0.00029798
+2026-09-01T10:03:55+00:00 [Surrogate prediction]
+2026-09-01T10:03:55+00:00 predicted_mu: min=0.782470 max=0.802641 mean=0.795473 std=0.007411
+2026-09-01T10:03:55+00:00 predicted_d: min=0.079452 max=0.084389 mean=0.081771 std=0.001815
+2026-09-01T10:06:01+00:00 [RS-SA-RE budget 58 / first eval 48]
+2026-09-01T10:06:01+00:00 Candidate 0: mu_hat=0.793381 d_hat=0.079452 lambda=1.000000 score=0.713929
+2026-09-01T10:06:01+00:00 Candidate 1: mu_hat=0.802641 d_hat=0.083246 lambda=1.000000 score=0.719395
+2026-09-01T10:06:01+00:00 Candidate 2: mu_hat=0.796407 d_hat=0.084389 lambda=1.000000 score=0.712018
+2026-09-01T10:06:01+00:00 Candidate 3: mu_hat=0.802467 d_hat=0.080387 lambda=1.000000 score=0.722080
+2026-09-01T10:06:01+00:00 Candidate 4: mu_hat=0.782470 d_hat=0.081383 lambda=1.000000 score=0.701087
+2026-09-01T10:06:01+00:00 Selected: candidate 3
+2026-09-01T10:06:01+00:00 [58/60] evolution event=first_evaluation base_eval=48 accuracy=0.796800 inserted=True
+2026-09-01T10:08:42+00:00 [Repeat]
+2026-09-01T10:08:42+00:00 base_eval=14 seed1=20260840 acc1=0.758400
+2026-09-01T10:08:42+00:00 seed2=21260840 acc2=0.754000
+2026-09-01T10:08:42+00:00 mean_target=0.756200 instability=0.004400
+2026-09-01T10:08:42+00:00 budget=59/60 population unchanged
+2026-09-01T10:08:42+00:00 [59/60] periodic_repeat event=repeat_evaluation base_eval=14 accuracy=0.754000 inserted=False
+2026-09-01T10:08:42+00:00 [Surrogate training]
+2026-09-01T10:08:42+00:00 training_size=48 paired_label_count=11
+2026-09-01T10:08:42+00:00 mu_target: min=0.611200 max=0.817200 mean=0.772325 std=0.050027
+2026-09-01T10:08:42+00:00 d_target: min=0.001400 max=0.029800 mean=0.011273 std=0.008384
+2026-09-01T10:08:42+00:00 training_loss=0.00089008 mean_mse=0.00007317 instability_mse=0.00081691
+2026-09-01T10:08:42+00:00 [Surrogate prediction]
+2026-09-01T10:08:42+00:00 predicted_mu: min=0.763365 max=0.796010 mean=0.784453 std=0.011176
+2026-09-01T10:08:42+00:00 predicted_d: min=0.101583 max=0.112133 mean=0.106819 std=0.003865
+2026-09-01T10:10:46+00:00 [RS-SA-RE budget 60 / first eval 49]
+2026-09-01T10:10:46+00:00 Candidate 0: mu_hat=0.789200 d_hat=0.105624 lambda=1.000000 score=0.683576
+2026-09-01T10:10:46+00:00 Candidate 1: mu_hat=0.796010 d_hat=0.101583 lambda=1.000000 score=0.694427
+2026-09-01T10:10:46+00:00 Candidate 2: mu_hat=0.789321 d_hat=0.110292 lambda=1.000000 score=0.679028
+2026-09-01T10:10:46+00:00 Candidate 3: mu_hat=0.784369 d_hat=0.104464 lambda=1.000000 score=0.679905
+2026-09-01T10:10:46+00:00 Candidate 4: mu_hat=0.763365 d_hat=0.112133 lambda=1.000000 score=0.651232
+2026-09-01T10:10:46+00:00 Selected: candidate 1
+2026-09-01T10:10:46+00:00 [60/60] evolution event=first_evaluation base_eval=49 accuracy=0.802800 inserted=True
+2026-09-01T10:10:46+00:00 [Surrogate training]
+2026-09-01T10:10:46+00:00 training_size=49 paired_label_count=11
+2026-09-01T10:10:46+00:00 mu_target: min=0.611200 max=0.817200 mean=0.772947 std=0.049701
+2026-09-01T10:10:46+00:00 d_target: min=0.001400 max=0.029800 mean=0.011273 std=0.008384
+2026-09-01T10:10:46+00:00 training_loss=0.00087955 mean_mse=0.00007293 instability_mse=0.00080662
+2026-09-01T10:10:46+00:00 RS-SA-RE completed real_training_runs=60 first_evaluations=49 repeat_evaluations=11 best_fitness=0.817200
+FORMAL START method=RS-SA-RE search_seed=1002 time=2026-09-01T07:46:40Z
+START method=RS-SA-RE search_seed=1002 repeat_seed=1801002 surrogate_seed=901002 population_size=20 tournament_size=5 budget=60 candidate_count=5 lambda=1.0
+[1/60] initialization event=first_evaluation base_eval=1 accuracy=0.704600 inserted=True
+[2/60] initialization event=first_evaluation base_eval=2 accuracy=0.734800 inserted=True
+[3/60] initialization event=first_evaluation base_eval=3 accuracy=0.785400 inserted=True
+[4/60] initialization event=first_evaluation base_eval=4 accuracy=0.807400 inserted=True
+[5/60] initialization event=first_evaluation base_eval=5 accuracy=0.714000 inserted=True
+[6/60] initialization event=first_evaluation base_eval=6 accuracy=0.672000 inserted=True
+[7/60] initialization event=first_evaluation base_eval=7 accuracy=0.780400 inserted=True
+[8/60] initialization event=first_evaluation base_eval=8 accuracy=0.793200 inserted=True
+[9/60] initialization event=first_evaluation base_eval=9 accuracy=0.668000 inserted=True
+[10/60] initialization event=first_evaluation base_eval=10 accuracy=0.685400 inserted=True
+[11/60] initialization event=first_evaluation base_eval=11 accuracy=0.738600 inserted=True
+[12/60] initialization event=first_evaluation base_eval=12 accuracy=0.783200 inserted=True
+[13/60] initialization event=first_evaluation base_eval=13 accuracy=0.637000 inserted=True
+[14/60] initialization event=first_evaluation base_eval=14 accuracy=0.758400 inserted=True
+[15/60] initialization event=first_evaluation base_eval=15 accuracy=0.611200 inserted=True
+[16/60] initialization event=first_evaluation base_eval=16 accuracy=0.812200 inserted=True
+[17/60] initialization event=first_evaluation base_eval=17 accuracy=0.803200 inserted=True
+[18/60] initialization event=first_evaluation base_eval=18 accuracy=0.789000 inserted=True
+[19/60] initialization event=first_evaluation base_eval=19 accuracy=0.712200 inserted=True
+[20/60] initialization event=first_evaluation base_eval=20 accuracy=0.795200 inserted=True
+[Repeat]
+base_eval=13 seed1=20260839 acc1=0.637000
+seed2=21260839 acc2=0.621000
+mean_target=0.629000 instability=0.016000
+budget=21/60 population unchanged
+[21/60] warmup_repeat event=repeat_evaluation base_eval=13 accuracy=0.621000 inserted=False
+[Repeat]
+base_eval=17 seed1=20260843 acc1=0.803200
+seed2=21260843 acc2=0.801800
+mean_target=0.802500 instability=0.001400
+budget=22/60 population unchanged
+[22/60] warmup_repeat event=repeat_evaluation base_eval=17 accuracy=0.801800 inserted=False
+[Repeat]
+base_eval=11 seed1=20260837 acc1=0.738600
+seed2=21260837 acc2=0.751000
+mean_target=0.744800 instability=0.012400
+budget=23/60 population unchanged
+[23/60] warmup_repeat event=repeat_evaluation base_eval=11 accuracy=0.751000 inserted=False
+[Repeat]
+base_eval=10 seed1=20260836 acc1=0.685400
+seed2=21260836 acc2=0.680600
+mean_target=0.683000 instability=0.004800
+budget=24/60 population unchanged
+[24/60] warmup_repeat event=repeat_evaluation base_eval=10 accuracy=0.680600 inserted=False
+[Surrogate training]
+training_size=20 paired_label_count=4
+mu_target: min=0.611200 max=0.812200 mean=0.739025 std=0.060224
+d_target: min=0.001400 max=0.016000 mean=0.008650 std=0.005820
+training_loss=0.00050068 mean_mse=0.00000028 instability_mse=0.00050040
+[Surrogate prediction]
+predicted_mu: min=0.718200 max=0.740898 mean=0.731141 std=0.008654
+predicted_d: min=0.100038 max=0.109536 mean=0.105684 std=0.003128
+[RS-SA-RE budget 25 / first eval 21]
+Candidate 0: mu_hat=0.725684 d_hat=0.106800 lambda=1.000000 score=0.618883
+Candidate 1: mu_hat=0.718200 d_hat=0.106627 lambda=1.000000 score=0.611574
+Candidate 2: mu_hat=0.740898 d_hat=0.100038 lambda=1.000000 score=0.640860
+Candidate 3: mu_hat=0.730735 d_hat=0.109536 lambda=1.000000 score=0.621199
+Candidate 4: mu_hat=0.740187 d_hat=0.105420 lambda=1.000000 score=0.634767
+Selected: candidate 2
+[25/60] evolution event=first_evaluation base_eval=21 accuracy=0.739200 inserted=True
+[Surrogate training]
+training_size=21 paired_label_count=4
+mu_target: min=0.611200 max=0.812200 mean=0.739033 std=0.058773
+d_target: min=0.001400 max=0.016000 mean=0.008650 std=0.005820
+training_loss=0.00048165 mean_mse=0.00000035 instability_mse=0.00048131
+[Surrogate prediction]
+predicted_mu: min=0.782518 max=0.820905 mean=0.797607 std=0.014381
+predicted_d: min=0.027431 max=0.031772 mean=0.029421 std=0.001475
+[RS-SA-RE budget 26 / first eval 22]
+Candidate 0: mu_hat=0.820905 d_hat=0.029047 lambda=1.000000 score=0.791857
+Candidate 1: mu_hat=0.791420 d_hat=0.030220 lambda=1.000000 score=0.761200
+Candidate 2: mu_hat=0.782518 d_hat=0.028636 lambda=1.000000 score=0.753882
+Candidate 3: mu_hat=0.786032 d_hat=0.031772 lambda=1.000000 score=0.754261
+Candidate 4: mu_hat=0.807161 d_hat=0.027431 lambda=1.000000 score=0.779730
+Selected: candidate 0
+[26/60] evolution event=first_evaluation base_eval=22 accuracy=0.809800 inserted=True
+[Surrogate training]
+training_size=22 paired_label_count=4
+mu_target: min=0.611200 max=0.812200 mean=0.742250 std=0.059283
+d_target: min=0.001400 max=0.016000 mean=0.008650 std=0.005820
+training_loss=0.00046196 mean_mse=0.00000032 instability_mse=0.00046164
+[Surrogate prediction]
+predicted_mu: min=0.798281 max=0.822959 mean=0.808966 std=0.008612
+predicted_d: min=0.091842 max=0.097822 mean=0.094944 std=0.002313
+[RS-SA-RE budget 27 / first eval 23]
+Candidate 0: mu_hat=0.805597 d_hat=0.091842 lambda=1.000000 score=0.713755
+Candidate 1: mu_hat=0.822959 d_hat=0.094203 lambda=1.000000 score=0.728756
+Candidate 2: mu_hat=0.813972 d_hat=0.097822 lambda=1.000000 score=0.716150
+Candidate 3: mu_hat=0.798281 d_hat=0.097403 lambda=1.000000 score=0.700878
+Candidate 4: mu_hat=0.804018 d_hat=0.093448 lambda=1.000000 score=0.710570
+Selected: candidate 1
+[27/60] evolution event=first_evaluation base_eval=23 accuracy=0.813600 inserted=True
+[Surrogate training]
+training_size=23 paired_label_count=4
+mu_target: min=0.611200 max=0.813600 mean=0.745352 std=0.059778
+d_target: min=0.001400 max=0.016000 mean=0.008650 std=0.005820
+training_loss=0.00049095 mean_mse=0.00000176 instability_mse=0.00048919
+[Surrogate prediction]
+predicted_mu: min=0.790763 max=0.825548 mean=0.809067 std=0.013355
+predicted_d: min=0.086752 max=0.095021 mean=0.090906 std=0.002998
+[RS-SA-RE budget 28 / first eval 24]
+Candidate 0: mu_hat=0.825548 d_hat=0.089299 lambda=1.000000 score=0.736249
+Candidate 1: mu_hat=0.795921 d_hat=0.086752 lambda=1.000000 score=0.709169
+Candidate 2: mu_hat=0.816886 d_hat=0.093576 lambda=1.000000 score=0.723310
+Candidate 3: mu_hat=0.816216 d_hat=0.089886 lambda=1.000000 score=0.726330
+Candidate 4: mu_hat=0.790763 d_hat=0.095021 lambda=1.000000 score=0.695742
+Selected: candidate 0
+[28/60] evolution event=first_evaluation base_eval=24 accuracy=0.809600 inserted=True
+[Repeat]
+base_eval=1 seed1=20260827 acc1=0.704600
+seed2=21260827 acc2=0.680800
+mean_target=0.692700 instability=0.023800
+budget=29/60 population unchanged
+[29/60] periodic_repeat event=repeat_evaluation base_eval=1 accuracy=0.680800 inserted=False
+[Surrogate training]
+training_size=24 paired_label_count=5
+mu_target: min=0.611200 max=0.813600 mean=0.747533 std=0.060316
+d_target: min=0.001400 max=0.023800 mean=0.011680 std=0.007989
+training_loss=0.00025563 mean_mse=0.00000335 instability_mse=0.00025229
+[Surrogate prediction]
+predicted_mu: min=0.763149 max=0.780003 mean=0.771782 std=0.005517
+predicted_d: min=0.086124 max=0.092360 mean=0.089256 std=0.002243
+[RS-SA-RE budget 30 / first eval 25]
+Candidate 0: mu_hat=0.773842 d_hat=0.088418 lambda=1.000000 score=0.685425
+Candidate 1: mu_hat=0.772455 d_hat=0.092360 lambda=1.000000 score=0.680095
+Candidate 2: mu_hat=0.763149 d_hat=0.086124 lambda=1.000000 score=0.677025
+Candidate 3: mu_hat=0.769462 d_hat=0.088165 lambda=1.000000 score=0.681297
+Candidate 4: mu_hat=0.780003 d_hat=0.091212 lambda=1.000000 score=0.688791
+Selected: candidate 4
+[30/60] evolution event=first_evaluation base_eval=25 accuracy=0.781600 inserted=True
+[Surrogate training]
+training_size=25 paired_label_count=5
+mu_target: min=0.611200 max=0.813600 mean=0.748896 std=0.059474
+d_target: min=0.001400 max=0.023800 mean=0.011680 std=0.007989
+training_loss=0.00030361 mean_mse=0.00000403 instability_mse=0.00029959
+[Surrogate prediction]
+predicted_mu: min=0.775877 max=0.794925 mean=0.786797 std=0.007040
+predicted_d: min=0.060830 max=0.071985 mean=0.066015 std=0.003622
+[RS-SA-RE budget 31 / first eval 26]
+Candidate 0: mu_hat=0.794925 d_hat=0.064948 lambda=1.000000 score=0.729977
+Candidate 1: mu_hat=0.789815 d_hat=0.071985 lambda=1.000000 score=0.717830
+Candidate 2: mu_hat=0.775877 d_hat=0.067126 lambda=1.000000 score=0.708751
+Candidate 3: mu_hat=0.791849 d_hat=0.060830 lambda=1.000000 score=0.731019
+Candidate 4: mu_hat=0.781521 d_hat=0.065188 lambda=1.000000 score=0.716333
+Selected: candidate 3
+[31/60] evolution event=first_evaluation base_eval=26 accuracy=0.790800 inserted=True
+[Surrogate training]
+training_size=26 paired_label_count=5
+mu_target: min=0.611200 max=0.813600 mean=0.750508 std=0.058873
+d_target: min=0.001400 max=0.023800 mean=0.011680 std=0.007989
+training_loss=0.00030914 mean_mse=0.00000396 instability_mse=0.00030518
+[Surrogate prediction]
+predicted_mu: min=0.768095 max=0.802540 mean=0.783586 std=0.011359
+predicted_d: min=0.068988 max=0.077243 mean=0.072448 std=0.003035
+[RS-SA-RE budget 32 / first eval 27]
+Candidate 0: mu_hat=0.768095 d_hat=0.077243 lambda=1.000000 score=0.690852
+Candidate 1: mu_hat=0.787349 d_hat=0.069363 lambda=1.000000 score=0.717986
+Candidate 2: mu_hat=0.778295 d_hat=0.073146 lambda=1.000000 score=0.705148
+Candidate 3: mu_hat=0.781649 d_hat=0.073497 lambda=1.000000 score=0.708152
+Candidate 4: mu_hat=0.802540 d_hat=0.068988 lambda=1.000000 score=0.733552
+Selected: candidate 4
+[32/60] evolution event=first_evaluation base_eval=27 accuracy=0.776200 inserted=True
+[Surrogate training]
+training_size=27 paired_label_count=5
+mu_target: min=0.611200 max=0.813600 mean=0.751459 std=0.057976
+d_target: min=0.001400 max=0.023800 mean=0.011680 std=0.007989
+training_loss=0.00031098 mean_mse=0.00001190 instability_mse=0.00029909
+[Surrogate prediction]
+predicted_mu: min=0.797427 max=0.821066 mean=0.806226 std=0.008852
+predicted_d: min=0.067274 max=0.082050 mean=0.074186 std=0.005695
+[RS-SA-RE budget 33 / first eval 28]
+Candidate 0: mu_hat=0.811463 d_hat=0.077849 lambda=1.000000 score=0.733615
+Candidate 1: mu_hat=0.797427 d_hat=0.082050 lambda=1.000000 score=0.715378
+Candidate 2: mu_hat=0.821066 d_hat=0.067274 lambda=1.000000 score=0.753792
+Candidate 3: mu_hat=0.799336 d_hat=0.068104 lambda=1.000000 score=0.731232
+Candidate 4: mu_hat=0.801838 d_hat=0.075652 lambda=1.000000 score=0.726186
+Selected: candidate 2
+[33/60] evolution event=first_evaluation base_eval=28 accuracy=0.801400 inserted=True
+[Repeat]
+base_eval=20 seed1=20260846 acc1=0.795200
+seed2=21260846 acc2=0.787000
+mean_target=0.791100 instability=0.008200
+budget=34/60 population unchanged
+[34/60] periodic_repeat event=repeat_evaluation base_eval=20 accuracy=0.787000 inserted=False
+[Surrogate training]
+training_size=28 paired_label_count=6
+mu_target: min=0.611200 max=0.813600 mean=0.753096 std=0.057579
+d_target: min=0.001400 max=0.023800 mean=0.011100 std=0.007407
+training_loss=0.00025074 mean_mse=0.00000836 instability_mse=0.00024237
+[Surrogate prediction]
+predicted_mu: min=0.787917 max=0.834438 mean=0.809014 std=0.014855
+predicted_d: min=0.022935 max=0.026520 mean=0.025176 std=0.001252
+[RS-SA-RE budget 35 / first eval 29]
+Candidate 0: mu_hat=0.807196 d_hat=0.026057 lambda=1.000000 score=0.781139
+Candidate 1: mu_hat=0.806105 d_hat=0.025525 lambda=1.000000 score=0.780580
+Candidate 2: mu_hat=0.834438 d_hat=0.022935 lambda=1.000000 score=0.811503
+Candidate 3: mu_hat=0.809415 d_hat=0.026520 lambda=1.000000 score=0.782895
+Candidate 4: mu_hat=0.787917 d_hat=0.024843 lambda=1.000000 score=0.763074
+Selected: candidate 2
+[35/60] evolution event=first_evaluation base_eval=29 accuracy=0.804600 inserted=True
+[Surrogate training]
+training_size=29 paired_label_count=6
+mu_target: min=0.611200 max=0.813600 mean=0.754872 std=0.057353
+d_target: min=0.001400 max=0.023800 mean=0.011100 std=0.007407
+training_loss=0.00026934 mean_mse=0.00001007 instability_mse=0.00025927
+[Surrogate prediction]
+predicted_mu: min=0.760443 max=0.808451 mean=0.786063 std=0.016613
+predicted_d: min=0.056342 max=0.062411 mean=0.059807 std=0.002178
+[RS-SA-RE budget 36 / first eval 30]
+Candidate 0: mu_hat=0.760443 d_hat=0.062411 lambda=1.000000 score=0.698031
+Candidate 1: mu_hat=0.779127 d_hat=0.056342 lambda=1.000000 score=0.722785
+Candidate 2: mu_hat=0.808451 d_hat=0.058875 lambda=1.000000 score=0.749576
+Candidate 3: mu_hat=0.783320 d_hat=0.061813 lambda=1.000000 score=0.721507
+Candidate 4: mu_hat=0.798973 d_hat=0.059593 lambda=1.000000 score=0.739380
+Selected: candidate 2
+[36/60] evolution event=first_evaluation base_eval=30 accuracy=0.767400 inserted=True
+[Surrogate training]
+training_size=30 paired_label_count=6
+mu_target: min=0.611200 max=0.813600 mean=0.755290 std=0.056433
+d_target: min=0.001400 max=0.023800 mean=0.011100 std=0.007407
+training_loss=0.00029327 mean_mse=0.00002686 instability_mse=0.00026641
+[Surrogate prediction]
+predicted_mu: min=0.773481 max=0.789234 mean=0.782461 std=0.005792
+predicted_d: min=0.023621 max=0.026810 mean=0.025573 std=0.001124
+[RS-SA-RE budget 37 / first eval 31]
+Candidate 0: mu_hat=0.789234 d_hat=0.026541 lambda=1.000000 score=0.762693
+Candidate 1: mu_hat=0.773481 d_hat=0.025503 lambda=1.000000 score=0.747978
+Candidate 2: mu_hat=0.787866 d_hat=0.026810 lambda=1.000000 score=0.761056
+Candidate 3: mu_hat=0.779008 d_hat=0.023621 lambda=1.000000 score=0.755387
+Candidate 4: mu_hat=0.782715 d_hat=0.025391 lambda=1.000000 score=0.757324
+Selected: candidate 0
+[37/60] evolution event=first_evaluation base_eval=31 accuracy=0.786800 inserted=True
+[Surrogate training]
+training_size=31 paired_label_count=6
+mu_target: min=0.611200 max=0.813600 mean=0.756306 std=0.055794
+d_target: min=0.001400 max=0.023800 mean=0.011100 std=0.007407
+training_loss=0.00030290 mean_mse=0.00002617 instability_mse=0.00027673
+[Surrogate prediction]
+predicted_mu: min=0.784845 max=0.825341 mean=0.801265 std=0.013777
+predicted_d: min=0.070457 max=0.078808 mean=0.074438 std=0.003293
+[RS-SA-RE budget 38 / first eval 32]
+Candidate 0: mu_hat=0.793672 d_hat=0.077828 lambda=1.000000 score=0.715844
+Candidate 1: mu_hat=0.784845 d_hat=0.078808 lambda=1.000000 score=0.706037
+Candidate 2: mu_hat=0.805819 d_hat=0.070457 lambda=1.000000 score=0.735362
+Candidate 3: mu_hat=0.796649 d_hat=0.073119 lambda=1.000000 score=0.723530
+Candidate 4: mu_hat=0.825341 d_hat=0.071977 lambda=1.000000 score=0.753365
+Selected: candidate 4
+[38/60] evolution event=first_evaluation base_eval=32 accuracy=0.779200 inserted=True
+[Repeat]
+base_eval=2 seed1=20260828 acc1=0.734800
+seed2=21260828 acc2=0.739400
+mean_target=0.737100 instability=0.004600
+budget=39/60 population unchanged
+[39/60] periodic_repeat event=repeat_evaluation base_eval=2 accuracy=0.739400 inserted=False
+[Surrogate training]
+training_size=32 paired_label_count=7
+mu_target: min=0.611200 max=0.813600 mean=0.757094 std=0.055032
+d_target: min=0.001400 max=0.023800 mean=0.010171 std=0.007225
+training_loss=0.00031294 mean_mse=0.00002801 instability_mse=0.00028493
+[Surrogate prediction]
+predicted_mu: min=0.797241 max=0.830050 mean=0.811773 std=0.010983
+predicted_d: min=0.067860 max=0.073296 mean=0.070534 std=0.001894
+[RS-SA-RE budget 40 / first eval 33]
+Candidate 0: mu_hat=0.814637 d_hat=0.070233 lambda=1.000000 score=0.744404
+Candidate 1: mu_hat=0.804739 d_hat=0.067860 lambda=1.000000 score=0.736879
+Candidate 2: mu_hat=0.812197 d_hat=0.071872 lambda=1.000000 score=0.740325
+Candidate 3: mu_hat=0.797241 d_hat=0.073296 lambda=1.000000 score=0.723945
+Candidate 4: mu_hat=0.830050 d_hat=0.069406 lambda=1.000000 score=0.760644
+Selected: candidate 4
+[40/60] evolution event=first_evaluation base_eval=33 accuracy=0.792200 inserted=True
+[Surrogate training]
+training_size=33 paired_label_count=7
+mu_target: min=0.611200 max=0.813600 mean=0.758158 std=0.054525
+d_target: min=0.001400 max=0.023800 mean=0.010171 std=0.007225
+training_loss=0.00032132 mean_mse=0.00004019 instability_mse=0.00028113
+[Surrogate prediction]
+predicted_mu: min=0.758634 max=0.788016 mean=0.778545 std=0.010507
+predicted_d: min=0.024119 max=0.027418 mean=0.025015 std=0.001211
+[RS-SA-RE budget 41 / first eval 34]
+Candidate 0: mu_hat=0.788016 d_hat=0.024538 lambda=1.000000 score=0.763478
+Candidate 1: mu_hat=0.779279 d_hat=0.024473 lambda=1.000000 score=0.754806
+Candidate 2: mu_hat=0.780387 d_hat=0.024119 lambda=1.000000 score=0.756267
+Candidate 3: mu_hat=0.758634 d_hat=0.027418 lambda=1.000000 score=0.731216
+Candidate 4: mu_hat=0.786409 d_hat=0.024528 lambda=1.000000 score=0.761881
+Selected: candidate 0
+[41/60] evolution event=first_evaluation base_eval=34 accuracy=0.784200 inserted=True
+[Surrogate training]
+training_size=34 paired_label_count=7
+mu_target: min=0.611200 max=0.813600 mean=0.758924 std=0.053897
+d_target: min=0.001400 max=0.023800 mean=0.010171 std=0.007225
+training_loss=0.00034119 mean_mse=0.00003974 instability_mse=0.00030146
+[Surrogate prediction]
+predicted_mu: min=0.771300 max=0.806654 mean=0.793909 std=0.012813
+predicted_d: min=0.071574 max=0.081454 mean=0.075880 std=0.003817
+[RS-SA-RE budget 42 / first eval 35]
+Candidate 0: mu_hat=0.788661 d_hat=0.072019 lambda=1.000000 score=0.716641
+Candidate 1: mu_hat=0.803121 d_hat=0.081454 lambda=1.000000 score=0.721667
+Candidate 2: mu_hat=0.806654 d_hat=0.078752 lambda=1.000000 score=0.727902
+Candidate 3: mu_hat=0.771300 d_hat=0.075600 lambda=1.000000 score=0.695699
+Candidate 4: mu_hat=0.799810 d_hat=0.071574 lambda=1.000000 score=0.728237
+Selected: candidate 4
+[42/60] evolution event=first_evaluation base_eval=35 accuracy=0.805800 inserted=True
+[Surrogate training]
+training_size=35 paired_label_count=7
+mu_target: min=0.611200 max=0.813600 mean=0.760263 std=0.053693
+d_target: min=0.001400 max=0.023800 mean=0.010171 std=0.007225
+training_loss=0.00032815 mean_mse=0.00003918 instability_mse=0.00028897
+[Surrogate prediction]
+predicted_mu: min=0.776259 max=0.813819 mean=0.792871 std=0.013270
+predicted_d: min=0.074847 max=0.082253 mean=0.077883 std=0.002467
+[RS-SA-RE budget 43 / first eval 36]
+Candidate 0: mu_hat=0.800622 d_hat=0.078415 lambda=1.000000 score=0.722207
+Candidate 1: mu_hat=0.790867 d_hat=0.077155 lambda=1.000000 score=0.713712
+Candidate 2: mu_hat=0.813819 d_hat=0.076744 lambda=1.000000 score=0.737075
+Candidate 3: mu_hat=0.776259 d_hat=0.082253 lambda=1.000000 score=0.694006
+Candidate 4: mu_hat=0.782788 d_hat=0.074847 lambda=1.000000 score=0.707942
+Selected: candidate 2
+[43/60] evolution event=first_evaluation base_eval=36 accuracy=0.790600 inserted=True
+[Repeat]
+base_eval=30 seed1=20260856 acc1=0.767400
+seed2=21260856 acc2=0.776000
+mean_target=0.771700 instability=0.008600
+budget=44/60 population unchanged
+[44/60] periodic_repeat event=repeat_evaluation base_eval=30 accuracy=0.776000 inserted=False
+[Surrogate training]
+training_size=36 paired_label_count=8
+mu_target: min=0.611200 max=0.813600 mean=0.761225 std=0.053195
+d_target: min=0.001400 max=0.023800 mean=0.009975 std=0.006778
+training_loss=0.00041977 mean_mse=0.00008564 instability_mse=0.00033414
+[Surrogate prediction]
+predicted_mu: min=0.817132 max=0.831705 mean=0.825436 std=0.006383
+predicted_d: min=0.025301 max=0.026292 mean=0.025743 std=0.000330
+[RS-SA-RE budget 45 / first eval 37]
+Candidate 0: mu_hat=0.828176 d_hat=0.025879 lambda=1.000000 score=0.802297
+Candidate 1: mu_hat=0.831705 d_hat=0.025623 lambda=1.000000 score=0.806082
+Candidate 2: mu_hat=0.818460 d_hat=0.026292 lambda=1.000000 score=0.792168
+Candidate 3: mu_hat=0.831705 d_hat=0.025623 lambda=1.000000 score=0.806082
+Candidate 4: mu_hat=0.817132 d_hat=0.025301 lambda=1.000000 score=0.791831
+Selected: candidate 1
+[45/60] evolution event=first_evaluation base_eval=37 accuracy=0.807600 inserted=True
+[Surrogate training]
+training_size=37 paired_label_count=8
+mu_target: min=0.611200 max=0.813600 mean=0.762478 std=0.053007
+d_target: min=0.001400 max=0.023800 mean=0.009975 std=0.006778
+training_loss=0.00044456 mean_mse=0.00008506 instability_mse=0.00035950
+[Surrogate prediction]
+predicted_mu: min=0.774441 max=0.804451 mean=0.791364 std=0.010977
+predicted_d: min=0.075703 max=0.081876 mean=0.078341 std=0.002100
+[RS-SA-RE budget 46 / first eval 38]
+Candidate 0: mu_hat=0.786694 d_hat=0.077628 lambda=1.000000 score=0.709066
+Candidate 1: mu_hat=0.789029 d_hat=0.075703 lambda=1.000000 score=0.713325
+Candidate 2: mu_hat=0.774441 d_hat=0.081876 lambda=1.000000 score=0.692566
+Candidate 3: mu_hat=0.802204 d_hat=0.077230 lambda=1.000000 score=0.724974
+Candidate 4: mu_hat=0.804451 d_hat=0.079267 lambda=1.000000 score=0.725185
+Selected: candidate 4
+[46/60] evolution event=first_evaluation base_eval=38 accuracy=0.811800 inserted=True
+[Surrogate training]
+training_size=38 paired_label_count=8
+mu_target: min=0.611200 max=0.813600 mean=0.763776 std=0.052897
+d_target: min=0.001400 max=0.023800 mean=0.009975 std=0.006778
+training_loss=0.00043055 mean_mse=0.00008217 instability_mse=0.00034838
+[Surrogate prediction]
+predicted_mu: min=0.778046 max=0.816653 mean=0.803129 std=0.013153
+predicted_d: min=0.026073 max=0.030312 mean=0.028243 std=0.001612
+[RS-SA-RE budget 47 / first eval 39]
+Candidate 0: mu_hat=0.807767 d_hat=0.026845 lambda=1.000000 score=0.780922
+Candidate 1: mu_hat=0.808529 d_hat=0.029671 lambda=1.000000 score=0.778859
+Candidate 2: mu_hat=0.778046 d_hat=0.030312 lambda=1.000000 score=0.747734
+Candidate 3: mu_hat=0.816653 d_hat=0.026073 lambda=1.000000 score=0.790580
+Candidate 4: mu_hat=0.804652 d_hat=0.028314 lambda=1.000000 score=0.776339
+Selected: candidate 3
+[47/60] evolution event=first_evaluation base_eval=39 accuracy=0.815600 inserted=True
+[Surrogate training]
+training_size=39 paired_label_count=8
+mu_target: min=0.611200 max=0.815600 mean=0.765105 std=0.052853
+d_target: min=0.001400 max=0.023800 mean=0.009975 std=0.006778
+training_loss=0.00046875 mean_mse=0.00007998 instability_mse=0.00038877
+[Surrogate prediction]
+predicted_mu: min=0.788789 max=0.812287 mean=0.799054 std=0.007734
+predicted_d: min=0.068609 max=0.076177 mean=0.071524 std=0.002554
+[RS-SA-RE budget 48 / first eval 40]
+Candidate 0: mu_hat=0.788789 d_hat=0.070885 lambda=1.000000 score=0.717903
+Candidate 1: mu_hat=0.796128 d_hat=0.070124 lambda=1.000000 score=0.726004
+Candidate 2: mu_hat=0.812287 d_hat=0.076177 lambda=1.000000 score=0.736110
+Candidate 3: mu_hat=0.796795 d_hat=0.071826 lambda=1.000000 score=0.724969
+Candidate 4: mu_hat=0.801269 d_hat=0.068609 lambda=1.000000 score=0.732661
+Selected: candidate 2
+[48/60] evolution event=first_evaluation base_eval=40 accuracy=0.817200 inserted=True
+[Repeat]
+base_eval=39 seed1=20260865 acc1=0.815600
+seed2=21260865 acc2=0.805600
+mean_target=0.810600 instability=0.010000
+budget=49/60 population unchanged
+[49/60] periodic_repeat event=repeat_evaluation base_eval=39 accuracy=0.805600 inserted=False
+[Surrogate training]
+training_size=40 paired_label_count=9
+mu_target: min=0.611200 max=0.817200 mean=0.766283 std=0.052708
+d_target: min=0.001400 max=0.023800 mean=0.009978 std=0.006391
+training_loss=0.00041059 mean_mse=0.00007080 instability_mse=0.00033979
+[Surrogate prediction]
+predicted_mu: min=0.764334 max=0.803766 mean=0.789614 std=0.013681
+predicted_d: min=0.026499 max=0.029056 mean=0.027588 std=0.001155
+[RS-SA-RE budget 50 / first eval 41]
+Candidate 0: mu_hat=0.799314 d_hat=0.029056 lambda=1.000000 score=0.770258
+Candidate 1: mu_hat=0.789506 d_hat=0.026499 lambda=1.000000 score=0.763007
+Candidate 2: mu_hat=0.803766 d_hat=0.026625 lambda=1.000000 score=0.777141
+Candidate 3: mu_hat=0.791150 d_hat=0.026823 lambda=1.000000 score=0.764327
+Candidate 4: mu_hat=0.764334 d_hat=0.028935 lambda=1.000000 score=0.735399
+Selected: candidate 2
+[50/60] evolution event=first_evaluation base_eval=41 accuracy=0.807000 inserted=True
+[Surrogate training]
+training_size=41 paired_label_count=9
+mu_target: min=0.611200 max=0.817200 mean=0.767276 std=0.052439
+d_target: min=0.001400 max=0.023800 mean=0.009978 std=0.006391
+training_loss=0.00041762 mean_mse=0.00007125 instability_mse=0.00034637
+[Surrogate prediction]
+predicted_mu: min=0.782070 max=0.830751 mean=0.808266 std=0.020250
+predicted_d: min=0.066898 max=0.079427 mean=0.072192 std=0.004496
+[RS-SA-RE budget 51 / first eval 42]
+Candidate 0: mu_hat=0.830324 d_hat=0.066898 lambda=1.000000 score=0.763426
+Candidate 1: mu_hat=0.809186 d_hat=0.074164 lambda=1.000000 score=0.735021
+Candidate 2: mu_hat=0.782070 d_hat=0.079427 lambda=1.000000 score=0.702643
+Candidate 3: mu_hat=0.789002 d_hat=0.072376 lambda=1.000000 score=0.716625
+Candidate 4: mu_hat=0.830751 d_hat=0.068093 lambda=1.000000 score=0.762658
+Selected: candidate 0
+[51/60] evolution event=first_evaluation base_eval=42 accuracy=0.810400 inserted=True
+[Surrogate training]
+training_size=42 paired_label_count=9
+mu_target: min=0.611200 max=0.817200 mean=0.768302 std=0.052226
+d_target: min=0.001400 max=0.023800 mean=0.009978 std=0.006391
+training_loss=0.00043305 mean_mse=0.00008052 instability_mse=0.00035253
+[Surrogate prediction]
+predicted_mu: min=0.782198 max=0.803666 mean=0.790731 std=0.007616
+predicted_d: min=0.069886 max=0.076907 mean=0.073361 std=0.002541
+[RS-SA-RE budget 52 / first eval 43]
+Candidate 0: mu_hat=0.782198 d_hat=0.076907 lambda=1.000000 score=0.705291
+Candidate 1: mu_hat=0.786864 d_hat=0.075304 lambda=1.000000 score=0.711560
+Candidate 2: mu_hat=0.803666 d_hat=0.071396 lambda=1.000000 score=0.732269
+Candidate 3: mu_hat=0.786289 d_hat=0.069886 lambda=1.000000 score=0.716404
+Candidate 4: mu_hat=0.794637 d_hat=0.073311 lambda=1.000000 score=0.721326
+Selected: candidate 2
+[52/60] evolution event=first_evaluation base_eval=43 accuracy=0.784000 inserted=True
+[Surrogate training]
+training_size=43 paired_label_count=9
+mu_target: min=0.611200 max=0.817200 mean=0.768667 std=0.051669
+d_target: min=0.001400 max=0.023800 mean=0.009978 std=0.006391
+training_loss=0.00040369 mean_mse=0.00008013 instability_mse=0.00032356
+[Surrogate prediction]
+predicted_mu: min=0.789036 max=0.839403 mean=0.811812 std=0.016310
+predicted_d: min=0.063748 max=0.068760 mean=0.066283 std=0.001979
+[RS-SA-RE budget 53 / first eval 44]
+Candidate 0: mu_hat=0.789036 d_hat=0.068760 lambda=1.000000 score=0.720276
+Candidate 1: mu_hat=0.812862 d_hat=0.067448 lambda=1.000000 score=0.745415
+Candidate 2: mu_hat=0.812867 d_hat=0.067318 lambda=1.000000 score=0.745549
+Candidate 3: mu_hat=0.804890 d_hat=0.063748 lambda=1.000000 score=0.741142
+Candidate 4: mu_hat=0.839403 d_hat=0.064140 lambda=1.000000 score=0.775263
+Selected: candidate 4
+[53/60] evolution event=first_evaluation base_eval=44 accuracy=0.806200 inserted=True
+[Repeat]
+base_eval=27 seed1=20260853 acc1=0.776200
+seed2=21260853 acc2=0.806000
+mean_target=0.791100 instability=0.029800
+budget=54/60 population unchanged
+[54/60] periodic_repeat event=repeat_evaluation base_eval=27 accuracy=0.806000 inserted=False
+[Surrogate training]
+training_size=44 paired_label_count=10
+mu_target: min=0.611200 max=0.817200 mean=0.769859 std=0.051476
+d_target: min=0.001400 max=0.029800 mean=0.011960 std=0.008492
+training_loss=0.00040577 mean_mse=0.00009048 instability_mse=0.00031530
+[Surrogate prediction]
+predicted_mu: min=0.787240 max=0.834643 mean=0.811951 std=0.015757
+predicted_d: min=0.071638 max=0.077013 mean=0.073639 std=0.002061
+[RS-SA-RE budget 55 / first eval 45]
+Candidate 0: mu_hat=0.819527 d_hat=0.072151 lambda=1.000000 score=0.747376
+Candidate 1: mu_hat=0.813812 d_hat=0.072350 lambda=1.000000 score=0.741462
+Candidate 2: mu_hat=0.834643 d_hat=0.075042 lambda=1.000000 score=0.759602
+Candidate 3: mu_hat=0.787240 d_hat=0.077013 lambda=1.000000 score=0.710227
+Candidate 4: mu_hat=0.804534 d_hat=0.071638 lambda=1.000000 score=0.732896
+Selected: candidate 2
+[55/60] evolution event=first_evaluation base_eval=45 accuracy=0.792000 inserted=True
+[Surrogate training]
+training_size=45 paired_label_count=10
+mu_target: min=0.611200 max=0.817200 mean=0.770351 std=0.051006
+d_target: min=0.001400 max=0.029800 mean=0.011960 std=0.008492
+training_loss=0.00039520 mean_mse=0.00010965 instability_mse=0.00028555
+[Surrogate prediction]
+predicted_mu: min=0.788095 max=0.811354 mean=0.800575 std=0.007513
+predicted_d: min=0.077983 max=0.080804 mean=0.079352 std=0.000947
+[RS-SA-RE budget 56 / first eval 46]
+Candidate 0: mu_hat=0.798740 d_hat=0.078944 lambda=1.000000 score=0.719796
+Candidate 1: mu_hat=0.788095 d_hat=0.079893 lambda=1.000000 score=0.708202
+Candidate 2: mu_hat=0.801755 d_hat=0.080804 lambda=1.000000 score=0.720951
+Candidate 3: mu_hat=0.811354 d_hat=0.079137 lambda=1.000000 score=0.732216
+Candidate 4: mu_hat=0.802931 d_hat=0.077983 lambda=1.000000 score=0.724948
+Selected: candidate 3
+[56/60] evolution event=first_evaluation base_eval=46 accuracy=0.807000 inserted=True
+[Surrogate training]
+training_size=46 paired_label_count=10
+mu_target: min=0.611200 max=0.817200 mean=0.771148 std=0.050730
+d_target: min=0.001400 max=0.029800 mean=0.011960 std=0.008492
+training_loss=0.00039505 mean_mse=0.00011676 instability_mse=0.00027829
+[Surrogate prediction]
+predicted_mu: min=0.805547 max=0.821811 mean=0.812566 std=0.005497
+predicted_d: min=0.021800 max=0.024316 mean=0.023624 std=0.000924
+[RS-SA-RE budget 57 / first eval 47]
+Candidate 0: mu_hat=0.808794 d_hat=0.023876 lambda=1.000000 score=0.784917
+Candidate 1: mu_hat=0.812649 d_hat=0.023981 lambda=1.000000 score=0.788668
+Candidate 2: mu_hat=0.814030 d_hat=0.024316 lambda=1.000000 score=0.789714
+Candidate 3: mu_hat=0.821811 d_hat=0.021800 lambda=1.000000 score=0.800011
+Candidate 4: mu_hat=0.805547 d_hat=0.024146 lambda=1.000000 score=0.781401
+Selected: candidate 3
+[57/60] evolution event=first_evaluation base_eval=47 accuracy=0.804200 inserted=True
+[Surrogate training]
+training_size=47 paired_label_count=10
+mu_target: min=0.611200 max=0.817200 mean=0.771851 std=0.050414
+d_target: min=0.001400 max=0.029800 mean=0.011960 std=0.008492
+training_loss=0.00040496 mean_mse=0.00010698 instability_mse=0.00029798
+[Surrogate prediction]
+predicted_mu: min=0.782470 max=0.802641 mean=0.795473 std=0.007411
+predicted_d: min=0.079452 max=0.084389 mean=0.081771 std=0.001815
+[RS-SA-RE budget 58 / first eval 48]
+Candidate 0: mu_hat=0.793381 d_hat=0.079452 lambda=1.000000 score=0.713929
+Candidate 1: mu_hat=0.802641 d_hat=0.083246 lambda=1.000000 score=0.719395
+Candidate 2: mu_hat=0.796407 d_hat=0.084389 lambda=1.000000 score=0.712018
+Candidate 3: mu_hat=0.802467 d_hat=0.080387 lambda=1.000000 score=0.722080
+Candidate 4: mu_hat=0.782470 d_hat=0.081383 lambda=1.000000 score=0.701087
+Selected: candidate 3
+[58/60] evolution event=first_evaluation base_eval=48 accuracy=0.796800 inserted=True
+[Repeat]
+base_eval=14 seed1=20260840 acc1=0.758400
+seed2=21260840 acc2=0.754000
+mean_target=0.756200 instability=0.004400
+budget=59/60 population unchanged
+[59/60] periodic_repeat event=repeat_evaluation base_eval=14 accuracy=0.754000 inserted=False
+[Surrogate training]
+training_size=48 paired_label_count=11
+mu_target: min=0.611200 max=0.817200 mean=0.772325 std=0.050027
+d_target: min=0.001400 max=0.029800 mean=0.011273 std=0.008384
+training_loss=0.00089008 mean_mse=0.00007317 instability_mse=0.00081691
+[Surrogate prediction]
+predicted_mu: min=0.763365 max=0.796010 mean=0.784453 std=0.011176
+predicted_d: min=0.101583 max=0.112133 mean=0.106819 std=0.003865
+[RS-SA-RE budget 60 / first eval 49]
+Candidate 0: mu_hat=0.789200 d_hat=0.105624 lambda=1.000000 score=0.683576
+Candidate 1: mu_hat=0.796010 d_hat=0.101583 lambda=1.000000 score=0.694427
+Candidate 2: mu_hat=0.789321 d_hat=0.110292 lambda=1.000000 score=0.679028
+Candidate 3: mu_hat=0.784369 d_hat=0.104464 lambda=1.000000 score=0.679905
+Candidate 4: mu_hat=0.763365 d_hat=0.112133 lambda=1.000000 score=0.651232
+Selected: candidate 1
+[60/60] evolution event=first_evaluation base_eval=49 accuracy=0.802800 inserted=True
+[Surrogate training]
+training_size=49 paired_label_count=11
+mu_target: min=0.611200 max=0.817200 mean=0.772947 std=0.049701
+d_target: min=0.001400 max=0.029800 mean=0.011273 std=0.008384
+training_loss=0.00087955 mean_mse=0.00007293 instability_mse=0.00080662
+RS-SA-RE completed real_training_runs=60 first_evaluations=49 repeat_evaluations=11 best_fitness=0.817200
+output directory: experiments\formal\rs_sa_re_1002
+real training runs: 60
+first evaluations: 49
+warm-up repeats: 4
+periodic repeats: 7
+final population: 20
+candidate rows: 145
+best fitness: 0.817200
+evaluations CSV: experiments\formal\rs_sa_re_1002\evaluations.csv
+candidate predictions CSV: experiments\formal\rs_sa_re_1002\candidate_predictions.csv
+repeat evaluations CSV: experiments\formal\rs_sa_re_1002\repeat_evaluations.csv
+history JSON: experiments\formal\rs_sa_re_1002\history.json
+RS-SA-RE formal audit: PASS
+FORMAL END method=RS-SA-RE search_seed=1002 exit_code=0 time=2026-09-01T10:10:47Z

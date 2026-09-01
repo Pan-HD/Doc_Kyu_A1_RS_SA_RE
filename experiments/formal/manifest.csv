@@ -2,9 +2,9 @@ method,search_seed,config_path,status,start_time,end_time,output_directory,real_
 RE,1001,configs/formal/re/re_1001.yaml,audited,2026-08-31T11:02:31Z,2026-08-31T13:17:46Z,experiments/formal/re_1001,60,60,0,0,passed,
 SA-RE,1001,configs/formal/sa_re/sa_re_1001.yaml,audited,2026-08-31T14:31:24Z,2026-08-31T16:46:51Z,experiments/formal/sa_re_1001,60,60,0,0,passed,
 RS-SA-RE,1001,configs/formal/rs_sa_re/rs_sa_re_1001.yaml,audited,2026-08-31T23:29:20Z,2026-09-01T01:54:30Z,experiments/formal/rs_sa_re_1001,60,49,11,0,passed,post-run audit recovered after repeat-row best.json fix; no retraining
-RE,1002,configs/formal/re/re_1002.yaml,pending,,,experiments/formal/re_1002,,,,,pending,
-SA-RE,1002,configs/formal/sa_re/sa_re_1002.yaml,pending,,,experiments/formal/sa_re_1002,,,,,pending,
-RS-SA-RE,1002,configs/formal/rs_sa_re/rs_sa_re_1002.yaml,pending,,,experiments/formal/rs_sa_re_1002,,,,,pending,
+RE,1002,configs/formal/re/re_1002.yaml,audited,2026-09-01T03:23:00Z,2026-09-01T05:27:23Z,experiments/formal/re_1002,60,60,0,0,passed,
+SA-RE,1002,configs/formal/sa_re/sa_re_1002.yaml,audited,2026-09-01T05:27:23Z,2026-09-01T07:46:39Z,experiments/formal/sa_re_1002,60,60,0,0,passed,
+RS-SA-RE,1002,configs/formal/rs_sa_re/rs_sa_re_1002.yaml,completed,2026-09-01T07:46:40Z,2026-09-01T10:10:47Z,experiments/formal/rs_sa_re_1002,,,,0,failed,audit error: ModuleNotFoundError: No module named 'scripts'
 RE,1003,configs/formal/re/re_1003.yaml,pending,,,experiments/formal/re_1003,,,,,pending,
 SA-RE,1003,configs/formal/sa_re/sa_re_1003.yaml,pending,,,experiments/formal/sa_re_1003,,,,,pending,
 RS-SA-RE,1003,configs/formal/rs_sa_re/rs_sa_re_1003.yaml,pending,,,experiments/formal/rs_sa_re_1003,,,,,pending,

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import subprocess
 import csv
 import json
 import sys
@@ -243,3 +244,30 @@ def test_best_json_ignores_repeat_rows_with_blank_fitness(
     assert best["value"] == 0.82
     assert best["evaluation"]["event_type"] == "first_evaluation"
     assert best["evaluation"]["base_evaluation_index"] == "2"
+
+def test_formal_script_bootstraps_project_root_for_package_imports() -> None:
+    project_root = Path(__file__).resolve().parents[1]
+    script = project_root / "scripts" / "run_formal.py"
+
+    code = (
+        "import runpy, sys\n"
+        f"project_root = {str(project_root)!r}\n"
+        "sys.path = ["
+        "item for item in sys.path "
+        "if item not in {'', project_root}"
+        "]\n"
+        f"runpy.run_path({str(script)!r}, "
+        "run_name='formal_runner_import_test')\n"
+        "assert project_root in sys.path\n"
+        "import scripts.check_rs_sa_re_smoke\n"
+    )
+
+    result = subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=project_root,
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
