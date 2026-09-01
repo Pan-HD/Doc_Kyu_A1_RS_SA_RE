@@ -7,6 +7,7 @@ stdout/stderr, verifies the output contract, and records audited counts.
 
 from __future__ import annotations
 
+import math
 import argparse
 import contextlib
 import csv
@@ -196,9 +197,11 @@ def _write_best_if_missing(output_dir: Path) -> None:
     best_path = output_dir / "best.json"
     if best_path.exists():
         return
+
     rows = _read_csv_rows(output_dir / "evaluations.csv")
     if not rows:
         raise ValueError("cannot derive best.json from an empty evaluations.csv")
+
     metric_names = (
         "fitness",
         "accuracy",
@@ -212,11 +215,34 @@ def _write_best_if_missing(output_dir: Path) -> None:
     )
     if metric_name is None:
         raise ValueError("evaluations.csv has no recognized fitness column")
-    try:
-        best_row = max(rows, key=lambda row: float(row[metric_name]))
-        metric_value = float(best_row[metric_name])
-    except (TypeError, ValueError) as error:
-        raise ValueError("evaluations.csv contains invalid fitness values") from error
+
+    scored_rows: list[tuple[float, dict[str, str]]] = []
+    for row in rows:
+        # RS-SA-RE repeat evaluations consume budget but must never replace
+        # the first-seed population fitness or become the reported best.
+        if str(row.get("event_type", "")).strip() == "repeat_evaluation":
+            continue
+
+        try:
+            metric_value = float(row[metric_name])
+        except (TypeError, ValueError) as error:
+            raise ValueError(
+                "a non-repeat evaluation contains an invalid fitness value"
+            ) from error
+
+        if not math.isfinite(metric_value):
+            raise ValueError(
+                "a non-repeat evaluation contains a non-finite fitness value"
+            )
+
+        scored_rows.append((metric_value, row))
+
+    if not scored_rows:
+        raise ValueError(
+            "evaluations.csv contains no valid non-repeat fitness values"
+        )
+
+    metric_value, best_row = max(scored_rows, key=lambda item: item[0])
     payload = {
         "metric": metric_name,
         "value": metric_value,

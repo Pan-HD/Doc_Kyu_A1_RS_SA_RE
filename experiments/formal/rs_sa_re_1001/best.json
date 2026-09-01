@@ -1,0 +1,33 @@
+{
+  "evaluation": {
+    "architecture": "{\"normal\":{\"pairs\":[{\"branch_1\":{\"input_state\":0,\"op\":\"sep_conv_5x5\"},\"branch_2\":{\"input_state\":0,\"op\":\"identity\"}},{\"branch_1\":{\"input_state\":0,\"op\":\"max_pool_3x3\"},\"branch_2\":{\"input_state\":2,\"op\":\"identity\"}},{\"branch_1\":{\"input_state\":3,\"op\":\"avg_pool_3x3\"},\"branch_2\":{\"input_state\":2,\"op\":\"max_pool_3x3\"}},{\"branch_1\":{\"input_state\":0,\"op\":\"dil_sep_conv_3x3\"},\"branch_2\":{\"input_state\":1,\"op\":\"sep_conv_5x5\"}},{\"branch_1\":{\"input_state\":2,\"op\":\"sep_conv_7x7\"},\"branch_2\":{\"input_state\":3,\"op\":\"sep_conv_5x5\"}}]},\"reduction\":{\"pairs\":[{\"branch_1\":{\"input_state\":1,\"op\":\"dil_sep_conv_3x3\"},\"branch_2\":{\"input_state\":1,\"op\":\"sep_conv_7x7\"}},{\"branch_1\":{\"input_state\":2,\"op\":\"conv_1x7_7x1\"},\"branch_2\":{\"input_state\":2,\"op\":\"dil_sep_conv_3x3\"}},{\"branch_1\":{\"input_state\":1,\"op\":\"identity\"},\"branch_2\":{\"input_state\":1,\"op\":\"max_pool_3x3\"}},{\"branch_1\":{\"input_state\":1,\"op\":\"avg_pool_3x3\"},\"branch_2\":{\"input_state\":4,\"op\":\"conv_1x7_7x1\"}},{\"branch_1\":{\"input_state\":2,\"op\":\"identity\"},\"branch_2\":{\"input_state\":5,\"op\":\"dil_sep_conv_3x3\"}}]}}",
+    "base_evaluation_index": "39",
+    "best_val_accuracy": "0.822",
+    "budget": "60",
+    "budget_index": "47",
+    "event_type": "first_evaluation",
+    "final_val_accuracy": "0.822",
+    "fitness": "0.822",
+    "lambda": "1.0",
+    "method": "RS-SA-RE",
+    "mutation_type": "hidden_state",
+    "observed_final_val_accuracy": "0.822",
+    "paired_label_count": "8",
+    "parameter_count": "922258",
+    "parent_architecture": "{\"normal\":{\"pairs\":[{\"branch_1\":{\"input_state\":0,\"op\":\"sep_conv_5x5\"},\"branch_2\":{\"input_state\":0,\"op\":\"identity\"}},{\"branch_1\":{\"input_state\":2,\"op\":\"max_pool_3x3\"},\"branch_2\":{\"input_state\":2,\"op\":\"identity\"}},{\"branch_1\":{\"input_state\":3,\"op\":\"avg_pool_3x3\"},\"branch_2\":{\"input_state\":2,\"op\":\"max_pool_3x3\"}},{\"branch_1\":{\"input_state\":0,\"op\":\"dil_sep_conv_3x3\"},\"branch_2\":{\"input_state\":1,\"op\":\"sep_conv_5x5\"}},{\"branch_1\":{\"input_state\":2,\"op\":\"sep_conv_7x7\"},\"branch_2\":{\"input_state\":3,\"op\":\"sep_conv_5x5\"}}]},\"reduction\":{\"pairs\":[{\"branch_1\":{\"input_state\":1,\"op\":\"dil_sep_conv_3x3\"},\"branch_2\":{\"input_state\":1,\"op\":\"sep_conv_7x7\"}},{\"branch_1\":{\"input_state\":2,\"op\":\"conv_1x7_7x1\"},\"branch_2\":{\"input_state\":2,\"op\":\"dil_sep_conv_3x3\"}},{\"branch_1\":{\"input_state\":1,\"op\":\"identity\"},\"branch_2\":{\"input_state\":1,\"op\":\"max_pool_3x3\"}},{\"branch_1\":{\"input_state\":1,\"op\":\"avg_pool_3x3\"},\"branch_2\":{\"input_state\":4,\"op\":\"conv_1x7_7x1\"}},{\"branch_1\":{\"input_state\":2,\"op\":\"identity\"},\"branch_2\":{\"input_state\":5,\"op\":\"dil_sep_conv_3x3\"}}]}}",
+    "phase": "evolution",
+    "population_age_order": "{\"ages_in_first_evaluations\":[19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0],\"oldest_to_youngest_evaluation_indices\":[20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39]}",
+    "population_inserted": "True",
+    "predicted_d_before_training": "0.04216273874044418",
+    "predicted_mu_before_training": "0.7836443781852722",
+    "score": "0.7414816617965698",
+    "search_seed": "1001",
+    "selected_candidate_index": "0",
+    "surrogate_training_loss": "0.0005828574066981673",
+    "surrogate_training_size": "38",
+    "training_seed": "20260865",
+    "training_time": "133.5183066999998"
+  },
+  "metric": "fitness",
+  "value": 0.822
+}

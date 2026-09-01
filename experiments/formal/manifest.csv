@@ -1,7 +1,7 @@
 method,search_seed,config_path,status,start_time,end_time,output_directory,real_training_runs,first_evaluations,repeat_evaluations,exit_code,audit_status,notes
 RE,1001,configs/formal/re/re_1001.yaml,audited,2026-08-31T11:02:31Z,2026-08-31T13:17:46Z,experiments/formal/re_1001,60,60,0,0,passed,
-SA-RE,1001,configs/formal/sa_re/sa_re_1001.yaml,failed,2026-08-31T13:47:42Z,2026-08-31T13:47:47Z,experiments/formal/sa_re_1001,,,,1,not_run,runner returned a non-zero exit code
-RS-SA-RE,1001,configs/formal/rs_sa_re/rs_sa_re_1001.yaml,pending,,,experiments/formal/rs_sa_re_1001,,,,,pending,
+SA-RE,1001,configs/formal/sa_re/sa_re_1001.yaml,audited,2026-08-31T14:31:24Z,2026-08-31T16:46:51Z,experiments/formal/sa_re_1001,60,60,0,0,passed,
+RS-SA-RE,1001,configs/formal/rs_sa_re/rs_sa_re_1001.yaml,audited,2026-08-31T23:29:20Z,2026-09-01T01:54:30Z,experiments/formal/rs_sa_re_1001,60,49,11,0,passed,post-run audit recovered after repeat-row best.json fix; no retraining
 RE,1002,configs/formal/re/re_1002.yaml,pending,,,experiments/formal/re_1002,,,,,pending,
 SA-RE,1002,configs/formal/sa_re/sa_re_1002.yaml,pending,,,experiments/formal/sa_re_1002,,,,,pending,
 RS-SA-RE,1002,configs/formal/rs_sa_re/rs_sa_re_1002.yaml,pending,,,experiments/formal/rs_sa_re_1002,,,,,pending,

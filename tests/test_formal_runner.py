@@ -7,7 +7,13 @@ from pathlib import Path
 
 import yaml
 
-from scripts.run_formal import MANIFEST_FIELDS, execute_formal_run, read_manifest
+# from scripts.run_formal import MANIFEST_FIELDS, execute_formal_run, read_manifest
+from scripts.run_formal import (
+    MANIFEST_FIELDS,
+    _write_best_if_missing,
+    execute_formal_run,
+    read_manifest,
+)
 
 
 METHODS = {"RE": "re", "SA-RE": "sa_re", "RS-SA-RE": "rs_sa_re"}
@@ -176,3 +182,64 @@ def test_formal_dry_run_does_not_mutate_manifest(tmp_path: Path) -> None:
     ) == 0
     assert manifest.read_bytes() == before
     assert _row(tmp_path, "RE", 1001)["status"] == "pending"
+
+def test_best_json_ignores_repeat_rows_with_blank_fitness(
+    tmp_path: Path,
+) -> None:
+    output = tmp_path / "rs_sa_re_1001"
+    output.mkdir()
+
+    with (output / "evaluations.csv").open(
+        "w",
+        encoding="utf-8",
+        newline="",
+    ) as stream:
+        writer = csv.DictWriter(
+            stream,
+            fieldnames=(
+                "budget_index",
+                "event_type",
+                "base_evaluation_index",
+                "fitness",
+                "final_val_accuracy",
+            ),
+            lineterminator="\n",
+        )
+        writer.writeheader()
+        writer.writerow(
+            {
+                "budget_index": 1,
+                "event_type": "first_evaluation",
+                "base_evaluation_index": 1,
+                "fitness": 0.80,
+                "final_val_accuracy": 0.80,
+            }
+        )
+        writer.writerow(
+            {
+                "budget_index": 2,
+                "event_type": "repeat_evaluation",
+                "base_evaluation_index": 1,
+                "fitness": "",
+                "final_val_accuracy": 0.99,
+            }
+        )
+        writer.writerow(
+            {
+                "budget_index": 3,
+                "event_type": "first_evaluation",
+                "base_evaluation_index": 2,
+                "fitness": 0.82,
+                "final_val_accuracy": 0.82,
+            }
+        )
+
+    _write_best_if_missing(output)
+
+    best = json.loads(
+        (output / "best.json").read_text(encoding="utf-8")
+    )
+    assert best["metric"] == "fitness"
+    assert best["value"] == 0.82
+    assert best["evaluation"]["event_type"] == "first_evaluation"
+    assert best["evaluation"]["base_evaluation_index"] == "2"
