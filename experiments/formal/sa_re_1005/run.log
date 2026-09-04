@@ -1,0 +1,135 @@
+2026-09-02T01:11:52+00:00 START method=SA-RE search_seed=1005 surrogate_seed=901005 population_size=20 tournament_size=5 budget=60 candidate_count=5
+2026-09-02T01:13:44+00:00 [1/60] initialization mutation=random_initialization fitness=0.726200
+2026-09-02T01:16:12+00:00 [2/60] initialization mutation=random_initialization fitness=0.755400
+2026-09-02T01:18:25+00:00 [3/60] initialization mutation=random_initialization fitness=0.780600
+2026-09-02T01:20:51+00:00 [4/60] initialization mutation=random_initialization fitness=0.730800
+2026-09-02T01:23:38+00:00 [5/60] initialization mutation=random_initialization fitness=0.659200
+2026-09-02T01:26:16+00:00 [6/60] initialization mutation=random_initialization fitness=0.669600
+2026-09-02T01:28:20+00:00 [7/60] initialization mutation=random_initialization fitness=0.711400
+2026-09-02T01:30:51+00:00 [8/60] initialization mutation=random_initialization fitness=0.788800
+2026-09-02T01:33:16+00:00 [9/60] initialization mutation=random_initialization fitness=0.779400
+2026-09-02T01:35:36+00:00 [10/60] initialization mutation=random_initialization fitness=0.728000
+2026-09-02T01:37:22+00:00 [11/60] initialization mutation=random_initialization fitness=0.797200
+2026-09-02T01:39:30+00:00 [12/60] initialization mutation=random_initialization fitness=0.743600
+2026-09-02T01:42:22+00:00 [13/60] initialization mutation=random_initialization fitness=0.658600
+2026-09-02T01:44:25+00:00 [14/60] initialization mutation=random_initialization fitness=0.738400
+2026-09-02T01:45:50+00:00 [15/60] initialization mutation=random_initialization fitness=0.817000
+2026-09-02T01:48:18+00:00 [16/60] initialization mutation=random_initialization fitness=0.781400
+2026-09-02T01:51:28+00:00 [17/60] initialization mutation=random_initialization fitness=0.674800
+2026-09-02T01:53:50+00:00 [18/60] initialization mutation=random_initialization fitness=0.597600
+2026-09-02T01:56:14+00:00 [19/60] initialization mutation=random_initialization fitness=0.735200
+2026-09-02T01:58:23+00:00 [20/60] initialization mutation=random_initialization fitness=0.763400
+2026-09-02T02:00:52+00:00 [21/60] evolution mutation=operation fitness=0.800600 selected_candidate=0 predicted_mu=0.794182
+2026-09-02T02:02:39+00:00 [22/60] evolution mutation=hidden_state fitness=0.812400 selected_candidate=1 predicted_mu=0.811483
+2026-09-02T02:04:47+00:00 [23/60] evolution mutation=identity fitness=0.738600 selected_candidate=1 predicted_mu=0.743495
+2026-09-02T02:06:11+00:00 [24/60] evolution mutation=hidden_state fitness=0.806400 selected_candidate=0 predicted_mu=0.821110
+2026-09-02T02:07:56+00:00 [25/60] evolution mutation=hidden_state fitness=0.765200 selected_candidate=2 predicted_mu=0.814693
+2026-09-02T02:09:22+00:00 [26/60] evolution mutation=hidden_state fitness=0.809200 selected_candidate=0 predicted_mu=0.825085
+2026-09-02T02:10:37+00:00 [27/60] evolution mutation=operation fitness=0.811600 selected_candidate=1 predicted_mu=0.817712
+2026-09-02T02:12:26+00:00 [28/60] evolution mutation=operation fitness=0.798800 selected_candidate=4 predicted_mu=0.815310
+2026-09-02T02:14:12+00:00 [29/60] evolution mutation=hidden_state fitness=0.798400 selected_candidate=4 predicted_mu=0.802061
+2026-09-02T02:16:41+00:00 [30/60] evolution mutation=hidden_state fitness=0.795400 selected_candidate=1 predicted_mu=0.817582
+2026-09-02T02:18:06+00:00 [31/60] evolution mutation=hidden_state fitness=0.804200 selected_candidate=4 predicted_mu=0.817741
+2026-09-02T02:19:30+00:00 [32/60] evolution mutation=hidden_state fitness=0.801200 selected_candidate=3 predicted_mu=0.814179
+2026-09-02T02:20:55+00:00 [33/60] evolution mutation=hidden_state fitness=0.796000 selected_candidate=0 predicted_mu=0.810052
+2026-09-02T02:22:44+00:00 [34/60] evolution mutation=hidden_state fitness=0.810600 selected_candidate=2 predicted_mu=0.812338
+2026-09-02T02:24:08+00:00 [35/60] evolution mutation=operation fitness=0.813000 selected_candidate=0 predicted_mu=0.821126
+2026-09-02T02:26:38+00:00 [36/60] evolution mutation=hidden_state fitness=0.789000 selected_candidate=3 predicted_mu=0.807430
+2026-09-02T02:28:02+00:00 [37/60] evolution mutation=hidden_state fitness=0.809800 selected_candidate=2 predicted_mu=0.804639
+2026-09-02T02:29:36+00:00 [38/60] evolution mutation=operation fitness=0.803200 selected_candidate=3 predicted_mu=0.818090
+2026-09-02T02:31:00+00:00 [39/60] evolution mutation=operation fitness=0.815000 selected_candidate=2 predicted_mu=0.819626
+2026-09-02T02:32:25+00:00 [40/60] evolution mutation=hidden_state fitness=0.820800 selected_candidate=1 predicted_mu=0.822607
+2026-09-02T02:33:40+00:00 [41/60] evolution mutation=hidden_state fitness=0.800200 selected_candidate=1 predicted_mu=0.819986
+2026-09-02T02:34:56+00:00 [42/60] evolution mutation=hidden_state fitness=0.803000 selected_candidate=1 predicted_mu=0.827475
+2026-09-02T02:36:21+00:00 [43/60] evolution mutation=hidden_state fitness=0.814400 selected_candidate=1 predicted_mu=0.812386
+2026-09-02T02:37:44+00:00 [44/60] evolution mutation=operation fitness=0.803200 selected_candidate=4 predicted_mu=0.828693
+2026-09-02T02:39:09+00:00 [45/60] evolution mutation=hidden_state fitness=0.813800 selected_candidate=2 predicted_mu=0.814374
+2026-09-02T02:40:41+00:00 [46/60] evolution mutation=operation fitness=0.794200 selected_candidate=4 predicted_mu=0.824371
+2026-09-02T02:42:06+00:00 [47/60] evolution mutation=hidden_state fitness=0.821000 selected_candidate=2 predicted_mu=0.821853
+2026-09-02T02:43:29+00:00 [48/60] evolution mutation=operation fitness=0.804600 selected_candidate=3 predicted_mu=0.827778
+2026-09-02T02:44:52+00:00 [49/60] evolution mutation=identity fitness=0.810000 selected_candidate=0 predicted_mu=0.807878
+2026-09-02T02:46:18+00:00 [50/60] evolution mutation=operation fitness=0.820600 selected_candidate=2 predicted_mu=0.824280
+2026-09-02T02:47:44+00:00 [51/60] evolution mutation=operation fitness=0.816000 selected_candidate=2 predicted_mu=0.821204
+2026-09-02T02:49:12+00:00 [52/60] evolution mutation=hidden_state fitness=0.824200 selected_candidate=0 predicted_mu=0.831791
+2026-09-02T02:50:40+00:00 [53/60] evolution mutation=hidden_state fitness=0.836000 selected_candidate=0 predicted_mu=0.831484
+2026-09-02T02:52:04+00:00 [54/60] evolution mutation=operation fitness=0.822600 selected_candidate=4 predicted_mu=0.847398
+2026-09-02T02:53:30+00:00 [55/60] evolution mutation=hidden_state fitness=0.807600 selected_candidate=0 predicted_mu=0.820193
+2026-09-02T02:55:13+00:00 [56/60] evolution mutation=operation fitness=0.806400 selected_candidate=4 predicted_mu=0.819070
+2026-09-02T02:56:37+00:00 [57/60] evolution mutation=hidden_state fitness=0.805800 selected_candidate=2 predicted_mu=0.815513
+2026-09-02T02:58:02+00:00 [58/60] evolution mutation=hidden_state fitness=0.819400 selected_candidate=4 predicted_mu=0.836249
+2026-09-02T02:59:38+00:00 [59/60] evolution mutation=operation fitness=0.804000 selected_candidate=0 predicted_mu=0.825733
+2026-09-02T03:01:08+00:00 [60/60] evolution mutation=operation fitness=0.824200 selected_candidate=1 predicted_mu=0.833126
+2026-09-02T03:01:08+00:00 SA-RE completed real_training_runs=60 candidate_predictions=200 best_fitness=0.836000
+FORMAL START method=SA-RE search_seed=1005 time=2026-09-02T01:11:51Z
+START method=SA-RE search_seed=1005 surrogate_seed=901005 population_size=20 tournament_size=5 budget=60 candidate_count=5
+[1/60] initialization mutation=random_initialization fitness=0.726200
+[2/60] initialization mutation=random_initialization fitness=0.755400
+[3/60] initialization mutation=random_initialization fitness=0.780600
+[4/60] initialization mutation=random_initialization fitness=0.730800
+[5/60] initialization mutation=random_initialization fitness=0.659200
+[6/60] initialization mutation=random_initialization fitness=0.669600
+[7/60] initialization mutation=random_initialization fitness=0.711400
+[8/60] initialization mutation=random_initialization fitness=0.788800
+[9/60] initialization mutation=random_initialization fitness=0.779400
+[10/60] initialization mutation=random_initialization fitness=0.728000
+[11/60] initialization mutation=random_initialization fitness=0.797200
+[12/60] initialization mutation=random_initialization fitness=0.743600
+[13/60] initialization mutation=random_initialization fitness=0.658600
+[14/60] initialization mutation=random_initialization fitness=0.738400
+[15/60] initialization mutation=random_initialization fitness=0.817000
+[16/60] initialization mutation=random_initialization fitness=0.781400
+[17/60] initialization mutation=random_initialization fitness=0.674800
+[18/60] initialization mutation=random_initialization fitness=0.597600
+[19/60] initialization mutation=random_initialization fitness=0.735200
+[20/60] initialization mutation=random_initialization fitness=0.763400
+[21/60] evolution mutation=operation fitness=0.800600 selected_candidate=0 predicted_mu=0.794182
+[22/60] evolution mutation=hidden_state fitness=0.812400 selected_candidate=1 predicted_mu=0.811483
+[23/60] evolution mutation=identity fitness=0.738600 selected_candidate=1 predicted_mu=0.743495
+[24/60] evolution mutation=hidden_state fitness=0.806400 selected_candidate=0 predicted_mu=0.821110
+[25/60] evolution mutation=hidden_state fitness=0.765200 selected_candidate=2 predicted_mu=0.814693
+[26/60] evolution mutation=hidden_state fitness=0.809200 selected_candidate=0 predicted_mu=0.825085
+[27/60] evolution mutation=operation fitness=0.811600 selected_candidate=1 predicted_mu=0.817712
+[28/60] evolution mutation=operation fitness=0.798800 selected_candidate=4 predicted_mu=0.815310
+[29/60] evolution mutation=hidden_state fitness=0.798400 selected_candidate=4 predicted_mu=0.802061
+[30/60] evolution mutation=hidden_state fitness=0.795400 selected_candidate=1 predicted_mu=0.817582
+[31/60] evolution mutation=hidden_state fitness=0.804200 selected_candidate=4 predicted_mu=0.817741
+[32/60] evolution mutation=hidden_state fitness=0.801200 selected_candidate=3 predicted_mu=0.814179
+[33/60] evolution mutation=hidden_state fitness=0.796000 selected_candidate=0 predicted_mu=0.810052
+[34/60] evolution mutation=hidden_state fitness=0.810600 selected_candidate=2 predicted_mu=0.812338
+[35/60] evolution mutation=operation fitness=0.813000 selected_candidate=0 predicted_mu=0.821126
+[36/60] evolution mutation=hidden_state fitness=0.789000 selected_candidate=3 predicted_mu=0.807430
+[37/60] evolution mutation=hidden_state fitness=0.809800 selected_candidate=2 predicted_mu=0.804639
+[38/60] evolution mutation=operation fitness=0.803200 selected_candidate=3 predicted_mu=0.818090
+[39/60] evolution mutation=operation fitness=0.815000 selected_candidate=2 predicted_mu=0.819626
+[40/60] evolution mutation=hidden_state fitness=0.820800 selected_candidate=1 predicted_mu=0.822607
+[41/60] evolution mutation=hidden_state fitness=0.800200 selected_candidate=1 predicted_mu=0.819986
+[42/60] evolution mutation=hidden_state fitness=0.803000 selected_candidate=1 predicted_mu=0.827475
+[43/60] evolution mutation=hidden_state fitness=0.814400 selected_candidate=1 predicted_mu=0.812386
+[44/60] evolution mutation=operation fitness=0.803200 selected_candidate=4 predicted_mu=0.828693
+[45/60] evolution mutation=hidden_state fitness=0.813800 selected_candidate=2 predicted_mu=0.814374
+[46/60] evolution mutation=operation fitness=0.794200 selected_candidate=4 predicted_mu=0.824371
+[47/60] evolution mutation=hidden_state fitness=0.821000 selected_candidate=2 predicted_mu=0.821853
+[48/60] evolution mutation=operation fitness=0.804600 selected_candidate=3 predicted_mu=0.827778
+[49/60] evolution mutation=identity fitness=0.810000 selected_candidate=0 predicted_mu=0.807878
+[50/60] evolution mutation=operation fitness=0.820600 selected_candidate=2 predicted_mu=0.824280
+[51/60] evolution mutation=operation fitness=0.816000 selected_candidate=2 predicted_mu=0.821204
+[52/60] evolution mutation=hidden_state fitness=0.824200 selected_candidate=0 predicted_mu=0.831791
+[53/60] evolution mutation=hidden_state fitness=0.836000 selected_candidate=0 predicted_mu=0.831484
+[54/60] evolution mutation=operation fitness=0.822600 selected_candidate=4 predicted_mu=0.847398
+[55/60] evolution mutation=hidden_state fitness=0.807600 selected_candidate=0 predicted_mu=0.820193
+[56/60] evolution mutation=operation fitness=0.806400 selected_candidate=4 predicted_mu=0.819070
+[57/60] evolution mutation=hidden_state fitness=0.805800 selected_candidate=2 predicted_mu=0.815513
+[58/60] evolution mutation=hidden_state fitness=0.819400 selected_candidate=4 predicted_mu=0.836249
+[59/60] evolution mutation=operation fitness=0.804000 selected_candidate=0 predicted_mu=0.825733
+[60/60] evolution mutation=operation fitness=0.824200 selected_candidate=1 predicted_mu=0.833126
+SA-RE completed real_training_runs=60 candidate_predictions=200 best_fitness=0.836000
+output directory: experiments\formal\sa_re_1005
+real evaluations: 60
+final population: 20
+candidate rows: 200
+selected rows: 40
+best fitness: 0.836000
+evaluations CSV: experiments\formal\sa_re_1005\evaluations.csv
+candidate predictions CSV: experiments\formal\sa_re_1005\candidate_predictions.csv
+history JSON: experiments\formal\sa_re_1005\history.json
+FORMAL END method=SA-RE search_seed=1005 exit_code=0 time=2026-09-02T03:01:08Z

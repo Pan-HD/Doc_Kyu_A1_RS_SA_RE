@@ -1,0 +1,21 @@
+{
+  "evaluation": {
+    "architecture": "{\"normal\":{\"pairs\":[{\"branch_1\":{\"input_state\":0,\"op\":\"sep_conv_5x5\"},\"branch_2\":{\"input_state\":0,\"op\":\"dil_sep_conv_3x3\"}},{\"branch_1\":{\"input_state\":1,\"op\":\"identity\"},\"branch_2\":{\"input_state\":2,\"op\":\"avg_pool_3x3\"}},{\"branch_1\":{\"input_state\":1,\"op\":\"avg_pool_3x3\"},\"branch_2\":{\"input_state\":2,\"op\":\"avg_pool_3x3\"}},{\"branch_1\":{\"input_state\":2,\"op\":\"sep_conv_5x5\"},\"branch_2\":{\"input_state\":0,\"op\":\"identity\"}},{\"branch_1\":{\"input_state\":1,\"op\":\"sep_conv_5x5\"},\"branch_2\":{\"input_state\":4,\"op\":\"max_pool_3x3\"}}]},\"reduction\":{\"pairs\":[{\"branch_1\":{\"input_state\":1,\"op\":\"sep_conv_3x3\"},\"branch_2\":{\"input_state\":0,\"op\":\"identity\"}},{\"branch_1\":{\"input_state\":1,\"op\":\"identity\"},\"branch_2\":{\"input_state\":0,\"op\":\"avg_pool_3x3\"}},{\"branch_1\":{\"input_state\":1,\"op\":\"identity\"},\"branch_2\":{\"input_state\":0,\"op\":\"identity\"}},{\"branch_1\":{\"input_state\":0,\"op\":\"sep_conv_7x7\"},\"branch_2\":{\"input_state\":0,\"op\":\"avg_pool_3x3\"}},{\"branch_1\":{\"input_state\":0,\"op\":\"avg_pool_3x3\"},\"branch_2\":{\"input_state\":3,\"op\":\"max_pool_3x3\"}}]}}",
+    "best_val_accuracy": "0.8276",
+    "budget": "60",
+    "evaluation_index": "5",
+    "final_val_accuracy": "0.8276",
+    "fitness": "0.8276",
+    "method": "RE",
+    "mutation_type": "random_initialization",
+    "parameter_count": "759826",
+    "parent_architecture": "",
+    "phase": "initialization",
+    "population_age_order": "{\"ages_in_evaluations\":[4,3,2,1,0],\"oldest_to_youngest_evaluation_indices\":[1,2,3,4,5]}",
+    "search_seed": "1008",
+    "training_seed": "20260831",
+    "training_time": "99.07743129998562"
+  },
+  "metric": "fitness",
+  "value": 0.8276
+}

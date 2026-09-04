@@ -1,0 +1,26 @@
+{
+  "evaluation": {
+    "architecture": "{\"normal\":{\"pairs\":[{\"branch_1\":{\"input_state\":1,\"op\":\"max_pool_3x3\"},\"branch_2\":{\"input_state\":0,\"op\":\"sep_conv_3x3\"}},{\"branch_1\":{\"input_state\":0,\"op\":\"sep_conv_5x5\"},\"branch_2\":{\"input_state\":2,\"op\":\"sep_conv_3x3\"}},{\"branch_1\":{\"input_state\":2,\"op\":\"identity\"},\"branch_2\":{\"input_state\":2,\"op\":\"avg_pool_3x3\"}},{\"branch_1\":{\"input_state\":3,\"op\":\"conv_1x7_7x1\"},\"branch_2\":{\"input_state\":1,\"op\":\"identity\"}},{\"branch_1\":{\"input_state\":1,\"op\":\"sep_conv_5x5\"},\"branch_2\":{\"input_state\":5,\"op\":\"sep_conv_3x3\"}}]},\"reduction\":{\"pairs\":[{\"branch_1\":{\"input_state\":0,\"op\":\"dil_sep_conv_3x3\"},\"branch_2\":{\"input_state\":1,\"op\":\"sep_conv_3x3\"}},{\"branch_1\":{\"input_state\":0,\"op\":\"sep_conv_5x5\"},\"branch_2\":{\"input_state\":0,\"op\":\"max_pool_3x3\"}},{\"branch_1\":{\"input_state\":1,\"op\":\"sep_conv_7x7\"},\"branch_2\":{\"input_state\":1,\"op\":\"max_pool_3x3\"}},{\"branch_1\":{\"input_state\":1,\"op\":\"avg_pool_3x3\"},\"branch_2\":{\"input_state\":2,\"op\":\"sep_conv_5x5\"}},{\"branch_1\":{\"input_state\":3,\"op\":\"max_pool_3x3\"},\"branch_2\":{\"input_state\":3,\"op\":\"sep_conv_7x7\"}}]}}",
+    "best_val_accuracy": "0.8306",
+    "budget": "60",
+    "evaluation_index": "47",
+    "final_val_accuracy": "0.8306",
+    "fitness": "0.8306",
+    "method": "SA-RE",
+    "mutation_type": "operation",
+    "observed_final_val_accuracy": "0.8306",
+    "parameter_count": "867982",
+    "parent_architecture": "{\"normal\":{\"pairs\":[{\"branch_1\":{\"input_state\":1,\"op\":\"max_pool_3x3\"},\"branch_2\":{\"input_state\":0,\"op\":\"sep_conv_3x3\"}},{\"branch_1\":{\"input_state\":0,\"op\":\"sep_conv_5x5\"},\"branch_2\":{\"input_state\":2,\"op\":\"sep_conv_3x3\"}},{\"branch_1\":{\"input_state\":2,\"op\":\"identity\"},\"branch_2\":{\"input_state\":2,\"op\":\"avg_pool_3x3\"}},{\"branch_1\":{\"input_state\":3,\"op\":\"conv_1x7_7x1\"},\"branch_2\":{\"input_state\":1,\"op\":\"identity\"}},{\"branch_1\":{\"input_state\":1,\"op\":\"sep_conv_5x5\"},\"branch_2\":{\"input_state\":5,\"op\":\"sep_conv_3x3\"}}]},\"reduction\":{\"pairs\":[{\"branch_1\":{\"input_state\":0,\"op\":\"dil_sep_conv_3x3\"},\"branch_2\":{\"input_state\":1,\"op\":\"sep_conv_3x3\"}},{\"branch_1\":{\"input_state\":0,\"op\":\"sep_conv_5x5\"},\"branch_2\":{\"input_state\":0,\"op\":\"max_pool_3x3\"}},{\"branch_1\":{\"input_state\":1,\"op\":\"sep_conv_7x7\"},\"branch_2\":{\"input_state\":1,\"op\":\"max_pool_3x3\"}},{\"branch_1\":{\"input_state\":1,\"op\":\"avg_pool_3x3\"},\"branch_2\":{\"input_state\":2,\"op\":\"sep_conv_5x5\"}},{\"branch_1\":{\"input_state\":3,\"op\":\"max_pool_3x3\"},\"branch_2\":{\"input_state\":3,\"op\":\"sep_conv_5x5\"}}]}}",
+    "phase": "evolution",
+    "population_age_order": "{\"ages_in_evaluations\":[19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0],\"oldest_to_youngest_evaluation_indices\":[28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47]}",
+    "predicted_mu_before_training": "0.8216846585273743",
+    "search_seed": "1008",
+    "selected_candidate_index": "3",
+    "surrogate_training_mse": "9.533066622680053e-05",
+    "surrogate_training_size": "46",
+    "training_seed": "20260873",
+    "training_time": "122.00446680001915"
+  },
+  "metric": "fitness",
+  "value": 0.8306
+}

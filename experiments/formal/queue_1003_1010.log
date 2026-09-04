@@ -1,0 +1,347 @@
+﻿**********************
+Windows PowerShell 脚本开始
+开始时间: 20260901194930
+用户名: PAN_DEVICENAME\PanHD
+RunAs 用户: PAN_DEVICENAME\PanHD
+配置名称: 
+计算机: PAN_DEVICENAME (Microsoft Windows NT 10.0.26200.0)
+主机应用程序: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+进程 ID: 7304
+PSVersion: 5.1.26100.8875
+PSEdition: Desktop
+PSCompatibleVersions: 1.0, 2.0, 3.0, 4.0, 5.0, 5.1.26100.8875
+BuildVersion: 10.0.26100.8875
+CLRVersion: 4.0.30319.42000
+WSManStackVersion: 3.0
+PSRemotingProtocolVersion: 2.3
+SerializationVersion: 1.1.0.1
+**********************
+已启动脚本，输出文件为 experiments\formal\queue_1003_1010.log
+PS D:\Pro_Doc_Kyu\A1_RS_SA_RE>
+PS D:\Pro_Doc_Kyu\A1_RS_SA_RE>
+(.venv) try {
+    Write-Host "Running formal preflight..." -ForegroundColor Cyan
+
+    & $pythonPath scripts\check_formal_preflight.py --no-report
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "Formal preflight 失败，队列未启动。"
+    }
+
+    foreach ($job in $jobs) {
+        $row = Get-FormalRow `
+            -Method $job.Method `
+            -Seed $job.Seed
+
+        if ($row.status -eq "audited") {
+            Assert-FormalAudit `
+                -Row $row `
+                -Method $job.Method `
+                -Seed $job.Seed
+
+            Write-Host "SKIP already audited: $($job.Method) $($job.Seed)" `
+                -ForegroundColor Yellow
+            continue
+        }
+
+        if ($row.status -ne "pending") {
+            throw "$($job.Method) $($job.Seed) 状态为 $($row.status)，不是 pending；队列停止。"
+        }
+
+        if (Test-Path $row.output_directory) {
+            throw "输出目录已存在但状态为 pending：$($row.output_directory)"
+        }
+
+        Write-Host ""
+        Write-Host "==================================================" `
+            -ForegroundColor Cyan
+        Write-Host "START $($job.Method) seed $($job.Seed)" `
+            -ForegroundColor Cyan
+        Write-Host "Config: $($row.config_path)"
+        Write-Host "Start time: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+        Write-Host "==================================================" `
+            -ForegroundColor Cyan
+
+        & $pythonPath scripts\run_formal.py `
+            --config $row.config_path
+
+        $runExitCode = $LASTEXITCODE
+
+        if ($runExitCode -ne 0) {
+            throw "$($job.Method) $($job.Seed) 失败，exit code=$runExitCode。队列停止。"
+        }
+
+        $row = Get-FormalRow `
+            -Method $job.Method `
+            -Seed $job.Seed
+
+        Assert-FormalAudit `
+            -Row $row `
+            -Method $job.Method `
+            -Seed $job.Seed
+
+        Write-Host "AUDIT PASSED: $($job.Method) seed $($job.Seed)" `
+            -ForegroundColor Green
+        Write-Host "End time: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+    }
+
+    $finishedRows = @(
+        Import-Csv $manifestPath |
+        Where-Object {
+            [int]$_.search_seed -ge 1003 -and
+            [int]$_.search_seed -le 1010 -and
+            $_.status -eq "audited" -and
+            $_.audit_status -eq "passed" -and
+            $_.exit_code -eq "0"
+        }
+    )
+
+    if ($finishedRows.Count -ne 24) {
+        throw "最终审计通过的记录应为 24，实际为 $($finishedRows.Count)"
+    }
+
+    Write-Host ""
+    Write-Host "FORMAL SEEDS 1003-1010: ALL 24 RUNS AUDITED" `
+        -ForegroundColor Green
+}
+catch {
+    Write-Host ""
+    Write-Host "FORMAL QUEUE STOPPED" -ForegroundColor Red
+    Write-Host $_.Exception.Message -ForegroundColor Red
+    throw
+}
+Running formal preflight...
+
+
+==================================================
+START RE seed 1003
+Config: configs/formal/re/re_1003.yaml
+Start time: 2026-09-01 19:49:43
+==================================================
+
+AUDIT PASSED: RE seed 1003
+End time: 2026-09-01 21:51:15
+
+==================================================
+START SA-RE seed 1003
+Config: configs/formal/sa_re/sa_re_1003.yaml
+Start time: 2026-09-01 21:51:15
+==================================================
+
+AUDIT PASSED: SA-RE seed 1003
+End time: 2026-09-01 23:46:35
+
+==================================================
+START RS-SA-RE seed 1003
+Config: configs/formal/rs_sa_re/rs_sa_re_1003.yaml
+Start time: 2026-09-01 23:46:35
+==================================================
+
+AUDIT PASSED: RS-SA-RE seed 1003
+End time: 2026-09-02 01:44:45
+
+==================================================
+START RE seed 1004
+Config: configs/formal/re/re_1004.yaml
+Start time: 2026-09-02 01:44:45
+==================================================
+
+AUDIT PASSED: RE seed 1004
+End time: 2026-09-02 03:53:05
+
+==================================================
+START SA-RE seed 1004
+Config: configs/formal/sa_re/sa_re_1004.yaml
+Start time: 2026-09-02 03:53:05
+==================================================
+
+AUDIT PASSED: SA-RE seed 1004
+End time: 2026-09-02 06:04:06
+
+==================================================
+START RS-SA-RE seed 1004
+Config: configs/formal/rs_sa_re/rs_sa_re_1004.yaml
+Start time: 2026-09-02 06:04:06
+==================================================
+
+AUDIT PASSED: RS-SA-RE seed 1004
+End time: 2026-09-02 08:15:59
+
+==================================================
+START RE seed 1005
+Config: configs/formal/re/re_1005.yaml
+Start time: 2026-09-02 08:15:59
+==================================================
+
+AUDIT PASSED: RE seed 1005
+End time: 2026-09-02 10:11:50
+
+==================================================
+START SA-RE seed 1005
+Config: configs/formal/sa_re/sa_re_1005.yaml
+Start time: 2026-09-02 10:11:50
+==================================================
+
+AUDIT PASSED: SA-RE seed 1005
+End time: 2026-09-02 12:01:08
+
+==================================================
+START RS-SA-RE seed 1005
+Config: configs/formal/rs_sa_re/rs_sa_re_1005.yaml
+Start time: 2026-09-02 12:01:08
+==================================================
+
+AUDIT PASSED: RS-SA-RE seed 1005
+End time: 2026-09-02 13:56:22
+
+==================================================
+START RE seed 1006
+Config: configs/formal/re/re_1006.yaml
+Start time: 2026-09-02 13:56:22
+==================================================
+
+AUDIT PASSED: RE seed 1006
+End time: 2026-09-02 16:23:39
+
+==================================================
+START SA-RE seed 1006
+Config: configs/formal/sa_re/sa_re_1006.yaml
+Start time: 2026-09-02 16:23:39
+==================================================
+
+AUDIT PASSED: SA-RE seed 1006
+End time: 2026-09-02 18:58:17
+
+==================================================
+START RS-SA-RE seed 1006
+Config: configs/formal/rs_sa_re/rs_sa_re_1006.yaml
+Start time: 2026-09-02 18:58:17
+==================================================
+
+AUDIT PASSED: RS-SA-RE seed 1006
+End time: 2026-09-02 21:28:10
+
+==================================================
+START RE seed 1007
+Config: configs/formal/re/re_1007.yaml
+Start time: 2026-09-02 21:28:10
+==================================================
+
+AUDIT PASSED: RE seed 1007
+End time: 2026-09-02 23:43:54
+
+==================================================
+START SA-RE seed 1007
+Config: configs/formal/sa_re/sa_re_1007.yaml
+Start time: 2026-09-02 23:43:54
+==================================================
+
+AUDIT PASSED: SA-RE seed 1007
+End time: 2026-09-03 01:48:40
+
+==================================================
+START RS-SA-RE seed 1007
+Config: configs/formal/rs_sa_re/rs_sa_re_1007.yaml
+Start time: 2026-09-03 01:48:40
+==================================================
+
+AUDIT PASSED: RS-SA-RE seed 1007
+End time: 2026-09-03 03:57:08
+
+==================================================
+START RE seed 1008
+Config: configs/formal/re/re_1008.yaml
+Start time: 2026-09-03 03:57:08
+==================================================
+
+AUDIT PASSED: RE seed 1008
+End time: 2026-09-03 05:59:40
+
+==================================================
+START SA-RE seed 1008
+Config: configs/formal/sa_re/sa_re_1008.yaml
+Start time: 2026-09-03 05:59:40
+==================================================
+
+AUDIT PASSED: SA-RE seed 1008
+End time: 2026-09-03 08:08:59
+
+==================================================
+START RS-SA-RE seed 1008
+Config: configs/formal/rs_sa_re/rs_sa_re_1008.yaml
+Start time: 2026-09-03 08:08:59
+==================================================
+
+AUDIT PASSED: RS-SA-RE seed 1008
+End time: 2026-09-03 10:12:21
+
+==================================================
+START RE seed 1009
+Config: configs/formal/re/re_1009.yaml
+Start time: 2026-09-03 10:12:21
+==================================================
+
+AUDIT PASSED: RE seed 1009
+End time: 2026-09-03 12:03:16
+
+==================================================
+START SA-RE seed 1009
+Config: configs/formal/sa_re/sa_re_1009.yaml
+Start time: 2026-09-03 12:03:16
+==================================================
+
+AUDIT PASSED: SA-RE seed 1009
+End time: 2026-09-03 14:02:21
+
+==================================================
+START RS-SA-RE seed 1009
+Config: configs/formal/rs_sa_re/rs_sa_re_1009.yaml
+Start time: 2026-09-03 14:02:21
+==================================================
+
+AUDIT PASSED: RS-SA-RE seed 1009
+End time: 2026-09-03 16:06:48
+
+==================================================
+START RE seed 1010
+Config: configs/formal/re/re_1010.yaml
+Start time: 2026-09-03 16:06:48
+==================================================
+
+AUDIT PASSED: RE seed 1010
+End time: 2026-09-03 18:33:00
+
+==================================================
+START SA-RE seed 1010
+Config: configs/formal/sa_re/sa_re_1010.yaml
+Start time: 2026-09-03 18:33:00
+==================================================
+
+AUDIT PASSED: SA-RE seed 1010
+End time: 2026-09-03 20:51:06
+
+==================================================
+START RS-SA-RE seed 1010
+Config: configs/formal/rs_sa_re/rs_sa_re_1010.yaml
+Start time: 2026-09-03 20:51:06
+==================================================
+
+AUDIT PASSED: RS-SA-RE seed 1010
+End time: 2026-09-03 23:09:13
+
+FORMAL SEEDS 1003-1010: ALL 24 RUNS AUDITED
+PS D:\Pro_Doc_Kyu\A1_RS_SA_RE>
+(.venv) finally {
+    Stop-Transcript
+}
+>> TerminatingError():“无法将“finally”项识别为 cmdlet、函数、脚本文件或可运行程序的名称。请检查名称的拼写，如果包括路径，请确保路径正确，然后再试一次。”
+无法将“finally”项识别为 cmdlet、函数、脚本文件或可运行程序的名称。请检查名称的拼写，如果包括路径，请确保路径正确，然后再试一次。
+finally : 无法将“finally”项识别为 cmdlet、函数、脚本文件或可运行程序的名称。请检查名称的拼写，如果包括路径，请确保路
+径正确，然后再试一次。
+所在位置 行:1 字符: 1
++ finally {
++ ~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (finally:String) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : CommandNotFoundException
+
+PS D:\Pro_Doc_Kyu\A1_RS_SA_RE>
